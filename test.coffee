@@ -1,3 +1,7 @@
+#npm
+npm = require 'npm'
+
+
 #assert
 assert = require 'assert'
 #should
