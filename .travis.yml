@@ -7,7 +7,7 @@ node_js:
   - "0.6"
 
 before_install:
-  - "npm install -g mocha"
+  - "npm install mocha"
   - "npm install should"
 
 script: "mocha test.js"
