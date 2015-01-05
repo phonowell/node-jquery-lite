@@ -5,10 +5,14 @@ main: './index.js'
 repository:
     type: 'git'
     url: 'https://github.com/phonowell/node-jquery-lite.git'
-devDependencies:
-    mocha: '*'
-    should: '*'
 keywords: ['jquery', 'lite']
 author: 'Mimiko Phonowell <phnonwell@gmail.com>'
 license: 'GPL'
 url: 'https://github.com/phonowell/node-jquery-lite'
+bugs:
+    url: 'https://github.com/phonowell/node-jquery-lite/issues'
+homepage: 'https://github.com/phonowell/node-jquery-lite'
+directories:
+    test: 'test'
+scripts:
+    test: 'mocha'
