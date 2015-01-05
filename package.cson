@@ -4,6 +4,9 @@ description: 'Project of jquery lite for node.js.'
 main: './index.js'
 dependencies:
     colors: '*'
+devDependencies:
+    mocha: '*'
+    should: '*'
 repository:
     type: 'git'
     url: 'https://github.com/phonowell/node-jquery-lite.git'
