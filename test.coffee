@@ -4,13 +4,13 @@ assert = require 'assert'
 should = require 'should'
 
 #$
-require '../index'
+require './index'
 
 #test
 test = (obj, str) -> it str, -> obj.should.be.ok
 
 #unit test script lines
-$.info 'debug', 'unit test started'
+$.info 'info', 'unit test started'
 
 #$
 describe '$', ->
