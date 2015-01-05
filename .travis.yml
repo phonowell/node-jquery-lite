@@ -4,10 +4,11 @@ node_js:
   - "0.11"
   - "0.10"
   - "0.8"
-  - "0.6"
 
 before_install:
-  - "npm install mocha"
-  - "npm install should"
+  - "npm install -g mocha"
+  - "npm install -g should"
 
-script: "mocha test.js"
+script:
+  - "cd /home/travis/build/phonowell/node-jquery-lite"
+  - "mocha test.js"
