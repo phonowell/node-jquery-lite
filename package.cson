@@ -1,5 +1,5 @@
 name: 'node-jquery-lite'
-version: '0.0.1'
+version: '0.2.0'
 description: 'Project of jquery lite for node.js.'
 main: './index.js'
 repository:
