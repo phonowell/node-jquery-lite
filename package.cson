@@ -14,7 +14,5 @@ url: 'https://github.com/phonowell/node-jquery-lite'
 bugs:
     url: 'https://github.com/phonowell/node-jquery-lite/issues'
 homepage: 'https://github.com/phonowell/node-jquery-lite'
-directories:
-    test: 'test'
 scripts:
-    test: 'mocha'
+    test: 'test'
