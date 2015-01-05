@@ -1,16 +1,16 @@
-#assert
-assert = require 'assert'
-#should
-should = require 'should'
-
 #$
 require './index'
 
 #test
-test = (obj, str) -> it str, -> obj.should.be.ok
+test = (bool, str) -> $.info (if bool then 'success' else 'error'), str
 
-#unit test script lines
-$.info 'info', 'unit test started'
+#describe
+describe = (title, fn) ->
+  #info
+  $.log ''
+  $.info 'info', title
+  #callback
+  fn?()
 
 #$
 describe '$', ->
