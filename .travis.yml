@@ -7,8 +7,6 @@ node_js:
 
 before_install:
   - "npm install -g mocha"
-  - "npm install -g should"
+  - "npm install should"
 
-script:
-  - "cd /home/travis/build/phonowell/node-jquery-lite"
-  - "mocha test.js"
+script: "mocha test"
