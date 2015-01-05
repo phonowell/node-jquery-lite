@@ -10,4 +10,4 @@ before_install:
   - "npm install -g mocha"
   - "npm install should"
 
-script: "mocha test"
+script: "mocha test.js"
