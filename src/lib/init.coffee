@@ -1,12 +1,3 @@
-#$
-global.$ = {}
-
-#require
-for a in ['error', 'basic', 'parse', 'ajax', 'promise', 'etc']
-  require './lib/' + a
-
-#init
-
 #version
 $.version = '0.1.0'
 
