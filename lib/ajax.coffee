@@ -1,13 +1,14 @@
 #get
 $.get = (param...) ->
+  #param
+  p = param
+
   #require
   #http
-  http = require 'http'
+  http = require if ~p[0].search 'https://' then 'https' else 'http'
   #cache
   cache = $.cache
 
-  #param
-  p = param
   #url
   url = p[0] + if p[1] then '?' + $.param p[1] else ''
 
@@ -41,9 +42,12 @@ $.get = (param...) ->
 
 #post
 $.post = (param...) ->
-  #http
-  http = require 'http'
+  #param
   p = param
+
+  #http
+  http = require if ~p[0].search 'https://' then 'https' else 'http'
+
   #check href
   href = do ->
     arr = p[0].toString().split '//'

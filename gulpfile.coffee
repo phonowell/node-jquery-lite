@@ -25,7 +25,7 @@ lint = require 'gulp-coffeelint'
 #error
 #============
 #uncaughtException
-process.on 'uncaughtException', (err) -> log err.statck
+process.on 'uncaughtException', (err) -> log err.stack
 
 #============
 #function
@@ -48,26 +48,39 @@ gulp.task 'watch', ->
 
   #lib
   watch './lib/*.coffee', ->
-    #src
-    src = ('./lib/' + a + '.coffee' for a in ['ready', 'error', 'basic', 'parse', 'ajax', 'promise', 'etc', 'init'])
-
-    gulp.src src
-    #concat
-    .pipe concat 'index.coffee'
-    #coffee
-    .pipe coffee(bare: true).on('error', gutil.log)
-    #uglify
-    .pipe uglify().on('error', gutil.log)
-    #output
-    .pipe gulp.dest './'
-
-    #delay to clean
-    setTimeout ->
-      gulp.src './lib/*.js'
-      .pipe clean()
-    , 1e3
+    #build
+    gulp.run 'build'
 
   #lint
   watch ['./**/*.coffee', '!./node_modules/**']
   .pipe lint()
   .pipe lint.reporter()
+
+#lint
+gulp.task 'lint', ->
+  gulp.src ['./**/*.coffee', '!./node_modules/**']
+  .pipe lint()
+  .pipe lint.reporter()
+
+#build
+gulp.task 'build', ->
+  #src
+  src = ('./lib/' + a + '.coffee' for a in ['ready', 'error', 'basic', 'parse', 'ajax', 'promise', 'etc', 'init'])
+
+  gulp.src src
+  #plumber
+  .pipe plumber()
+  #concat
+  .pipe concat 'index.coffee'
+  #coffee
+  .pipe coffee bare: true
+  #uglify
+  .pipe uglify()
+  #output
+  .pipe gulp.dest './'
+
+  #delay to clean
+  setTimeout ->
+    gulp.src './lib/*.js'
+    .pipe clean()
+  , 1e3
