@@ -1,9 +1,13 @@
 #============
 #require
 #============
+#exec
 exec = (require 'child_process').exec
 
+#gulp
 gulp = require 'gulp'
+
+#tool
 gutil = require 'gulp-util'
 watch = require 'gulp-watch'
 plumber = require 'gulp-plumber'
@@ -11,14 +15,19 @@ replace = require 'gulp-replace'
 clean = require 'gulp-clean'
 ignore = require 'gulp-ignore'
 concat = require 'gulp-concat'
+rename = require 'gulp-rename'
+next = require 'gulp-callback'
 
-uglify = require 'gulp-uglify'
-
+#type
 jade = require 'gulp-jade'
 coffee = require 'gulp-coffee'
 stylus = require 'gulp-stylus'
 cson = require 'gulp-cson'
 
+#advanced tool
+uglify = require 'gulp-uglify'
+
+#lint
 lint = require 'gulp-coffeelint'
 
 #============
@@ -33,11 +42,31 @@ process.on 'uncaughtException', (err) -> log err.stack
 #log
 log = console.log
 
+#path
+parsePath = (param) ->
+  _path = '!./node_modules/**'
+  switch typeof param
+    when 'string'
+      [param, _path]
+    else
+      param.push _path
+      param
+
 #============
 #param
 #============
 #base
 base = process.cwd()
+
+#path
+path =
+  gulp: 'gulpfile.coffee'
+  source: './source/'
+  build: './build/'
+path.jade = parsePath path.source + '**/*.jade'
+path.stylus = parsePath path.source + '**/*.styl'
+path.coffee = parsePath path.source + '**/*.coffee'
+path.cson = parsePath path.source + '**/*.cson'
 
 #============
 #task
@@ -47,40 +76,51 @@ base = process.cwd()
 gulp.task 'watch', ->
 
   #lib
-  watch './lib/*.coffee', ->
-    #build
-    gulp.run 'build'
-
+  watch path.coffee
+  .pipe plumber()
   #lint
-  watch ['./**/*.coffee', '!./node_modules/**']
   .pipe lint()
   .pipe lint.reporter()
+  #build
+  .pipe next -> gulp.run 'build'
 
 #lint
 gulp.task 'lint', ->
-  gulp.src ['./**/*.coffee', '!./node_modules/**']
+  gulp.src path.coffee
+  .pipe plumber
   .pipe lint()
   .pipe lint.reporter()
 
 #build
 gulp.task 'build', ->
-  #src
-  src = ('./lib/' + a + '.coffee' for a in ['ready', 'error', 'basic', 'parse', 'ajax', 'promise', 'etc', 'init'])
 
-  gulp.src src
-  #plumber
-  .pipe plumber()
-  #concat
-  .pipe concat 'index.coffee'
-  #coffee
-  .pipe coffee bare: true
-  #uglify
-  .pipe uglify()
-  #output
-  .pipe gulp.dest './'
+  gulp.src path.gulp
+  .pipe gulp.dest path.build
+  .pipe next ->
 
-  #delay to clean
-  setTimeout ->
-    gulp.src './lib/*.js'
+    #clean
+    gulp.src path.build
     .pipe clean()
-  , 1e3
+    .pipe next ->
+
+      #src
+      src = (path.source +  'script/' + a + '.coffee' for a in ['ready', 'error', 'basic', 'parse', 'ajax', 'promise', 'etc', 'init'])
+
+      gulp.src src
+      .pipe plumber()
+      #concat
+      .pipe concat 'node-jquery-lite.coffee'
+      #coffee
+      .pipe coffee bare: true
+      .pipe gulp.dest path.build + 'script/'
+      #uglify
+      .pipe uglify()
+      .pipe rename suffix: '.min'
+      .pipe gulp.dest path.build + 'script/'
+
+#clean
+gulp.task 'clean', ->
+
+#remove ./build
+  gulp.src path.build
+  .pipe clean()
