@@ -36,5 +36,8 @@
     "gulp-uglify": "^1.0.2",
     "gulp-util": "^3.0.2",
     "gulp-watch": "^3.0.0"
+  },
+  "dependencies": {
+    "colors": "^1.0.3"
   }
 }
