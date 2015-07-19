@@ -1,5 +1,7 @@
 # node-jquery-lite
 
+[![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/phonowell/node-jquery-lite?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 ---
 
 ## 更新日志：
