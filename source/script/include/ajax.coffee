@@ -1,12 +1,15 @@
+http = require 'http'
+https = require 'https'
+
 #get
 $.get = (param...) ->
   p = param
 
-  http = require if ~p[0].search 'https://' then 'https' else 'http'
+  _http = if ~p[0].search 'https://' then https else http
 
   url = p[0] + if p[1] then '?' + $.param p[1] else ''
 
-  req = http.get url, (res) ->
+  req = _http.get url, (res) ->
     data = []
     len = 0
     res
@@ -25,7 +28,7 @@ $.get = (param...) ->
 $.post = (param...) ->
   p = param
 
-  http = require if ~p[0].search 'https://' then 'https' else 'http'
+  _http = if ~p[0].search 'https://' then https else http
 
   #function
   href = do ->
@@ -33,7 +36,7 @@ $.post = (param...) ->
     arr = p[0].split '//'
 
     #type
-    _http = if ~arr[0].search 'https' then 'https' or 'http'
+    _type = if ~arr[0].search 'https' then 'https' or 'http'
 
     #host
     i = arr[1].indexOf '/'
@@ -49,11 +52,11 @@ $.post = (param...) ->
     _host = _host[0]
 
     #return
-    [_http, _host, _href, _port]
+    [_type, _host, _href, _port]
 
   buffer = $.param p[1]
 
-  req = http.request
+  req = _http.request
     host: href[1]
     port: href[3]
     method: 'POST'
