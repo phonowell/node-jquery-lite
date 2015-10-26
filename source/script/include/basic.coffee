@@ -13,7 +13,7 @@ $.now = _.now
 #type
 $.type = (param) ->
   p = param
-  t = $.type p
+  t = typeof p
   switch t
     when 'object'
       if p
