@@ -48,18 +48,21 @@ $.parsePts = (number) ->
 
 #parseJson
 $.parseJson = (data) ->
-  f = (p) ->
+  d = data
+
+  fn = (p) ->
     try
-      r = eval "(" + p + ")"
-      #check type
-      switch $.type r
+      res = eval "(" + p + ")"
+
+      switch $.type res
         when 'object', 'array'
-          r
+          res
         else
           null
     catch e
       null
-  switch $.type d = data
-    when 'string' then f d
+
+  switch $.type d
+    when 'string' then fn d
     when 'object' then d
     else null
