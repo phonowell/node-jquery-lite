@@ -1,11 +1,7 @@
-#version
-$.version = '0.1.0'
+_ = require 'lodash'
 
-#start time
-$.st = $.now()
-
-#env
+module.exports = $ =
+  version: '0.2.9'
+  startTime: _.now()
 $.env = (process.env.NODE_ENV or 'production').toLowerCase()
-
-#debug
 $.debug = if $.env == 'development' then true else false
