@@ -17,12 +17,12 @@ $.type = (param) ->
   switch t
     when 'object'
       if p
-        #check if buffer
-        if p.fill
-          return 'buffer'
         #check if array
         if toString.call(p) == '[object Array]'
           return 'array'
+        #check if buffer
+        if p.fill
+          return 'buffer'
         #object
         'object'
       else
