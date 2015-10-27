@@ -1,5 +1,5 @@
 _ = require 'lodash'
-$ = require './source/script/core.js'
+$ = require './index.js'
 
 #function
 test = (a, b, msg) ->
@@ -35,7 +35,7 @@ do ->
   $.i '---'
   for a in [
     [_.now(), '刚刚']
-    [_.now() - 1e3, '1秒前']
+    [_.now() - 45e3, '45秒前']
     [_.now() - 6e4, '1分钟前']
     [_.now() - 36e5, '1小时前']
     ['2012.12.21 12:00', '2012年12月21日(星期五) 12时00分']
