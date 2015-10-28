@@ -14,29 +14,30 @@ npm i node-jquery-lite
 ---
 
 ### Methods from jQuery
-- $.now
-- $.type
-- $.trim
-- $.param
-- $.extend
-- $.Callbacks
-- $.Deferred
-- $.get
-- $.post
+- `$.now()`
+- `$.type()`
+- `$.trim()`
+- `$.param()`
+- `$.extend()`
+- `$.Callbacks()`
+- `$.Deferred()`
+- `$.get()`
+- `$.post()`
+- `$.noop()`
 
 ### Methods else
-- $.try
-- $.parseTime
-- $.parseString
-- $.parsePts
-- $.parseJson
-- $.next
-- $.log
-- $.info
-- $.i
-- $.timeStamp
-- $.rnd
-- $.timeString
+- `$.try()`
+- `$.parseTime()`
+- `$.parseString()`
+- `$.parsePts()`
+- `$.parseJson()`
+- `$.next()`
+- `$.log()`
+- `$.info()`
+- `$.i()`
+- `$.timeStamp()`
+- `$.rnd()`
+- `$.timeString()`
     
 ## Attention
 ---
