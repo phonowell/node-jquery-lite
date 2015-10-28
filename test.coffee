@@ -1,5 +1,5 @@
 _ = require 'lodash'
-$ = require './index.js'
+$ = require './index'
 
 #function
 test = (a, b, msg) ->

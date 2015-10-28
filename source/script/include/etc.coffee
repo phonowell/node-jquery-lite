@@ -10,6 +10,7 @@ $.next = (param...) ->
 
 #log
 $.log = console.log
+
 #info
 $.info = (param...) ->
   [type, msg] = if !param[1] then ['default', param[0]] else param
@@ -25,6 +26,7 @@ $.info = (param...) ->
   $.log arr.join ' ' #log
 
   msg
+
 #i
 $.i = (msg) ->
   $.log msg

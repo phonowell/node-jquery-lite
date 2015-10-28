@@ -1,6 +1,7 @@
 #require
 #lodash
 _ = require 'lodash'
+$ = require './index'
 #exec
 exec = (require 'child_process').exec
 
@@ -29,37 +30,6 @@ lint = require 'gulp-coffeelint'
 process.on 'uncaughtException', (err) -> $.log err.stack
 
 #function $
-$ = {}
-#log
-$.log = console.log
-#info
-$.info = (param...) ->
-  [type, msg] = if !param[1] then ['default', param[0]] else param
-
-  #time
-  d = new Date()
-  t = ((if a < 10 then '0' + a else a) for a in [d.getHours(), d.getMinutes(), d.getSeconds()]).join ':'
-
-  arr = ['[' + t + ']']
-  if type != 'default' then arr.push '<' + type.toUpperCase() + '>'
-  arr.push msg
-
-  $.log arr.join ' ' #log
-
-  msg
-#i
-$.i = (msg) ->
-  $.log msg
-  msg
-
-#now
-$.now = _.now
-
-#trim
-$.trim = _.trim
-
-#next
-$.next = process.nextTick
 
 #exec
 $.exe = (cmd, callback) ->
@@ -74,9 +44,6 @@ $.exe = (cmd, callback) ->
   child.stdout.on 'data', (data) -> info data
   child.stderr.on 'data', (data) -> info data
   child.on 'close', -> callback?()
-
-#extend
-$.extend = _.extend
 
 #bind
 task = {}
