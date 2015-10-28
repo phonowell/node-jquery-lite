@@ -144,7 +144,7 @@ $.Deferred = ->
   res
 #parseTime
 $.parseTime = (param) ->
-#trans
+  #trans
   trans = (t) ->
     dt = new Date t
     ts = dt.getTime()
