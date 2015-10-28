@@ -7,11 +7,14 @@ test = (a, b, msg) ->
     $.info 'success', msg
   else
     $.info 'fail', msg
+    fails++
+
+fails = 0
 
 #version
 do ->
   $.i '---'
-  a = '0.2.9'
+  a = '0.3.1'
   test $.version, a, '$.version is ' + a
 
 #type
@@ -20,10 +23,13 @@ do ->
   for a in [
     [199, 'number']
     ['hello world', 'string']
-    [new Buffer('buffer'), 'buffer']
     [true, 'boolean']
     [[1, 2, 3], 'array']
     [{a: 1, b: 2}, 'object']
+    [_.noop, 'function']
+    [new Date(), 'date']
+    [new Error(), 'error']
+    [new Buffer('buffer'), 'buffer']
     [null, 'null']
     [undefined, 'undefined']
     [NaN, 'NaN']
@@ -48,10 +54,12 @@ do ->
   for a in [
     [1096, '1096']
     ['hello world', 'hello world']
-    [new Buffer('buffer'), 'buffer']
     [true, 'true']
     [[1, 2, 3], '[1,2,3]']
     [{a: 1, b: 2}, '{"a":1,"b":2}']
+    [new Date(), (new Date()).toString()]
+    [new Error('concert'), (new Error('concert')).toString()]
+    [new Buffer('buffer'), 'buffer']
     [null, 'null']
     [undefined, 'undefined']
     [NaN, 'NaN']
@@ -77,12 +85,18 @@ do ->
   for a in [
     [1096, null]
     ['hello world', null]
-    [new Buffer('buffer'), null]
     [true, null]
     ['[1, 2, 3]', [1,2,3]]
     ['{"a":1,"b":2}', {a: 1, b: 2}]
+    [new Date(), null]
+    [new Error('error'), null]
+    [new Buffer('buffer'), null]
     [null, null]
     [undefined, null]
     [NaN, null]
   ]
     test _.isEqual($.parseJson(a[0]), a[1]), true, '$.parseJson(' + $.parseString(a[0]) + ') is ' + a[1]
+
+#final
+$.i '---'
+$.info 'result', 'These has got ' + fails + ' fail(s).'

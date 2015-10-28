@@ -1,8 +1,13 @@
 # UPDATES
 ---
 
+### v0.3.1 @ 10.28.2015
+- Added `$.noop()`.
+- Rewrote `$.type()` to add supports for `Date` and `Error`.
+- Updated test files.
+
 ### v0.3.0 @ 10.27.2015
-- rewrote `$.parseTime()`.
+- Rewrote `$.parseTime()`.
 - Added losing files.
 
 ### v0.2.9 @ 10.26.2015
@@ -25,7 +30,7 @@
 - Added files for testing.
 
 ### v0.2.8 @ 1.19.2015
-- Rewrote `$.get()` and `$.post()` to get https support.
+- Rewrote `$.get()` and `$.post()` to add https support.
 
 ### v0.2.7 @ 1.13.2015
 - Rewrote *gulp* files.

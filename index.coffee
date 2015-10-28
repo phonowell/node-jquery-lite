@@ -1,7 +1,7 @@
 _ = require 'lodash'
 
 module.exports = $ =
-  version: '0.3.0'
+  version: '0.3.1'
   startTime: _.now()
 $.env = (process.env.NODE_ENV or 'production').toLowerCase()
 $.debug = if $.env == 'development' then true else false
@@ -58,10 +58,16 @@ $.type = (param) ->
   switch t
     when 'object'
       if p
-        #check if array
+        #if array
         if toString.call(p) == '[object Array]'
           return 'array'
-        #check if buffer
+        #if date
+        if toString.call(p) == '[object Date]'
+          return 'date'
+        #if error
+        if toString.call(p) == '[object Error]'
+          return 'error'
+        #if buffer
         if p.fill
           return 'buffer'
         #object
@@ -79,6 +85,9 @@ $.type = (param) ->
       #number
       t
     else t
+
+#noop
+$.noop = _.noop
 #callback
 $.Callbacks = ->
   res =

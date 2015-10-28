@@ -17,10 +17,16 @@ $.type = (param) ->
   switch t
     when 'object'
       if p
-        #check if array
+        #if array
         if toString.call(p) == '[object Array]'
           return 'array'
-        #check if buffer
+        #if date
+        if toString.call(p) == '[object Date]'
+          return 'date'
+        #if error
+        if toString.call(p) == '[object Error]'
+          return 'error'
+        #if buffer
         if p.fill
           return 'buffer'
         #object
@@ -38,3 +44,6 @@ $.type = (param) ->
       #number
       t
     else t
+
+#noop
+$.noop = _.noop
