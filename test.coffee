@@ -1,6 +1,10 @@
 _ = require 'lodash'
 $ = require './index'
 
+express = require 'express'
+app = express()
+bodyParser = require 'body-parser'
+
 #function
 test = (a, b, msg) ->
   if a == b
@@ -14,7 +18,7 @@ fails = 0
 #version
 do ->
   $.i '---'
-  a = '0.3.1'
+  a = '0.3.2'
   test $.version, a, '$.version is ' + a
 
 #type
@@ -96,6 +100,64 @@ do ->
     [NaN, null]
   ]
     test _.isEqual($.parseJson(a[0]), a[1]), true, '$.parseJson(' + $.parseString(a[0]) + ') is ' + a[1]
+
+#ajax
+do ->
+
+  #server
+  app.use bodyParser.urlencoded extended: true
+
+  #route
+  app.get '/ping', (req, res) -> res.send req.body.salt
+  app.get '/json', (req, res) -> res.json salt: parseInt req.body.salt
+  app.post '/ping', (req, res) -> res.send req.body.salt
+  app.post '/json', (req, res) -> res.json salt: parseInt req.body.salt
+
+  port = 9453
+  app.listen port
+  base = 'http://localhost:' + port
+
+  $.i '---'
+
+  salt = _.now()
+
+  #ping
+  $.get base + '/ping', salt: salt
+  .fail (data) -> $.info 'fail', '$.get("/ping") - ' + data
+  .done (data) ->
+    if salt != parseInt data
+      $.info 'fail', '$.get("/ping") - ' + data
+      return
+    $.info 'success', '$.get("/ping")'
+
+  #json
+  $.get base + '/json', salt: salt
+  .fail (data) -> $.info 'fail', '$.get("/json") - ' + data
+  .done (data) ->
+    if salt != data.salt
+      $.info 'fail', '$.get("/json") - ' + $.parseString data
+      return
+    $.info 'success', '$.get("/json")'
+
+  #ping
+  $.post base + '/ping', salt: salt
+  .fail (data) -> $.info 'fail', '$.post("/ping") - ' + data
+  .done (data) ->
+    if salt != parseInt data
+      $.info 'fail', '$.post("/ping") - ' + data
+      return
+    $.info 'success', '$.post("/ping")'
+
+  #json
+  $.post base + '/json', salt: salt
+  .fail (data) -> $.info 'fail', '$.post("/json") - ' + data
+  .done (data) ->
+    if salt != data.salt
+      $.info 'fail', '$.post("/json") - ' + $.parseString data
+      return
+    $.info 'success', '$.post("/json")'
+
+  $.next 1e3, -> process.exit()
 
 #final
 $.i '---'

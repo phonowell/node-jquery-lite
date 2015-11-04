@@ -1,7 +1,7 @@
 # node-jquery-lite
 ---
 
-A tiny plugin for nodejs to write lines in jQuery style.
+A tiny plugin for Node.js to write lines in jQuery style.
 
 ## Install
 ---
@@ -13,7 +13,7 @@ npm i node-jquery-lite
 ## Methods
 ---
 
-### Methods from jQuery
+### Methods like jQuery
 - `$.now()`
 - `$.type()`
 - `$.trim()`
@@ -48,6 +48,11 @@ This project is not **STABLE**.
 ---
 
 Look [HERE](UPDATE.md).
+
+## Todo
+---
+
+Look [HERE](TODO.md).
 
 ## License
 ---

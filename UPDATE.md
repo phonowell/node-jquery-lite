@@ -1,6 +1,14 @@
 # UPDATES
 ---
 
+### v0.3.2 @ 11.4.2015
+- Removed `$.debug`.
+- Removed `$.env`.
+- Required [request](https://github.com/request/request) now.
+- Rewrote `$.get()`.
+- Rewrote `$.post()`.
+- Updated test files.
+
 ### v0.3.1 @ 10.28.2015
 - Added `$.noop()`.
 - Rewrote `$.type()` to add supports for `Date` and `Error`.
@@ -11,7 +19,7 @@
 - Added losing files.
 
 ### v0.2.9 @ 10.26.2015
-- Required *lodash* now.
+- Required [lodash](https://github.com/lodash/lodash) now.
 - Rewrote `$.Deferred()`.
 - Rewrote `$.Callbacks()`.
 - Rewrote `$.next()`.
