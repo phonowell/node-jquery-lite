@@ -127,10 +127,10 @@ $.task 'prepare', ->
   .pipe gulp.dest ''
 
 #work
-$.task 'work', -> $.exe 'start gulp watch' #watch
+$.task 'work', -> $.exe 'gulp watch' #watch
 
 #noop
 $.task 'noop', -> null
 
 #test
-$.task 'test', -> $.exe 'start node test.js'
+$.task 'test', -> $.exe 'node test.js'

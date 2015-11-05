@@ -1,5 +1,6 @@
 _ = require 'lodash'
 $ = require './index'
+Q = require 'q'
 
 express = require 'express'
 app = express()
@@ -101,8 +102,33 @@ do ->
   ]
     test _.isEqual($.parseJson(a[0]), a[1]), true, '$.parseJson(' + $.parseString(a[0]) + ') is ' + a[1]
 
+#promise
+$.next ->
+
+  $.i '---'
+
+  salt = _.now()
+
+  #fail/reject
+  a = $.Deferred()
+  .fail (data) ->
+    if salt != data
+      $.info 'fail', 'fail/reject'
+      return
+    $.info 'success', 'fail/reject'
+  $.next -> a.reject salt
+
+  #done/resolve
+  b = $.Deferred()
+  .done (data) ->
+    if salt != data
+      $.info 'fail', 'done/resolve'
+      return
+    $.info 'success', 'done/resolve'
+  $.next -> b.resolve salt
+
 #ajax
-do ->
+$.next 500, ->
 
   #server
   app.use bodyParser.urlencoded extended: true
@@ -161,4 +187,4 @@ do ->
 
 #final
 $.i '---'
-$.info 'result', 'These has got ' + fails + ' fail(s).'
+$.info 'result', 'There has got ' + fails + ' fail(s).'

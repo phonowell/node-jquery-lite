@@ -13,9 +13,7 @@ $.Callbacks = ->
     res
 
   res.remove = (fn) ->
-    for f, i in list when f == fn
-      list.splice i, 1
-      break
+    _.remove list, fn
     res
 
   res.has = (fn) -> fn in list
