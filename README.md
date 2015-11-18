@@ -1,7 +1,7 @@
 # node-jquery-lite
 ---
 
-A tiny plugin for Node.js to write lines in jQuery style.
+A tiny module for Node.js to write lines in jQuery style.
 
 ## Install
 ---

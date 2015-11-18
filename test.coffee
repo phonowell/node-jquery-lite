@@ -1,6 +1,5 @@
 _ = require 'lodash'
 $ = require './index'
-Q = require 'q'
 
 express = require 'express'
 app = express()
@@ -37,7 +36,6 @@ do ->
     [new Buffer('buffer'), 'buffer']
     [null, 'null']
     [undefined, 'undefined']
-    [NaN, 'NaN']
   ]
     test $.type(a[0]), a[1], '$.type(' + $.parseString(a[0]) + ') is ' + a[1]
 

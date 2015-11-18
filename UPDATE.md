@@ -1,9 +1,10 @@
 # UPDATES
 ---
 
-### v0.3.3 @ 11.?.2015
+### v0.3.3 @ 11.18.2015
 - Rewrote `$.Callbacks()`.
 - Updated test files.
+- Rewrote `$.type()`.
 
 ### v0.3.2 @ 11.4.2015
 - Removed `$.debug`.

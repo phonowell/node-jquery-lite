@@ -1,6 +1,6 @@
 {
   "name": "node-jquery-lite",
-  "version": "0.3.2",
+  "version": "0.3.3",
   "description": "A tiny plugin for nodejs to write lines in jquery style.",
   "main": "./index.js",
   "repository": {
@@ -30,7 +30,7 @@
     "gulp-coffeelint": "^0.4.0",
     "gulp-concat": "^2.6.0",
     "gulp-plumber": "^1.0.1",
-    "gulp-uglify": "^1.4.2",
+    "gulp-uglify": "^1.5.1",
     "gulp-using": "0.0.1",
     "gulp-util": "^3.0.7",
     "gulp-watch": "^4.3.5",
