@@ -13,14 +13,19 @@ $.log = console.log
 
 #info
 $.info = (param...) ->
+  colors = require 'colors/safe'
   [type, msg] = if !param[1] then ['default', param[0]] else param
 
   #time
   d = new Date()
   t = ((if a < 10 then '0' + a else a) for a in [d.getHours(), d.getMinutes(), d.getSeconds()]).join ':'
 
-  arr = ['[' + t + ']']
-  if type != 'default' then arr.push '<' + type.toUpperCase() + '>'
+  arr = ["[#{colors.gray t}]"]
+  switch type
+    when 'default' then null
+    when 'success', 'done' then arr.push "<#{colors.green type.toUpperCase()}>"
+    when 'fail', 'fatal' then arr.push "<#{colors.red type.toUpperCase()}>"
+    else arr.push "<#{colors.cyan type.toUpperCase()}>"
   arr.push msg
 
   $.log arr.join ' ' #log
@@ -29,7 +34,8 @@ $.info = (param...) ->
 
 #i
 $.i = (msg) ->
-  $.log msg
+  colors = require 'colors/safe'
+  $.log colors.red msg
   msg
 
 #timeStamp

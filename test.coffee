@@ -5,7 +5,10 @@ express = require 'express'
 app = express()
 bodyParser = require 'body-parser'
 
+colors = require 'colors/safe'
+
 #function
+fails = 0
 test = (a, b, msg) ->
   if a == b
     $.info 'success', msg
@@ -13,17 +16,17 @@ test = (a, b, msg) ->
     $.info 'fail', msg
     fails++
 
-fails = 0
+divide = -> $.log colors.gray '------'
 
 #version
 do ->
-  $.i '---'
-  a = '0.3.2'
+  divide()
+  a = '0.3.4'
   test $.version, a, '$.version is ' + a
 
 #type
 do ->
-  $.i '---'
+  divide()
   for a in [
     [199, 'number']
     ['hello world', 'string']
@@ -37,23 +40,43 @@ do ->
     [null, 'null']
     [undefined, 'undefined']
   ]
-    test $.type(a[0]), a[1], '$.type(' + $.parseString(a[0]) + ') is ' + a[1]
+    test $.type(a[0]), a[1], "$.type(#{$.parseString a[0]}) is #{a[1]}"
 
 #parse time
 do ->
-  $.i '---'
+  divide()
   for a in [
-    [_.now(), '刚刚']
-    [_.now() - 45e3, '45秒前']
-    [_.now() - 6e4, '1分钟前']
-    [_.now() - 36e5, '1小时前']
-    ['2012.12.21 12:00', '2012年12月21日(星期五) 12时00分']
+    #before
+    [_.now(), false, '刚刚']
+    [_.now() - 45e3, false, '45秒前']
+    [_.now() - 6e4, false, '1分钟前']
+    [_.now() - 36e5, false, '1小时前']
+    ['2012.12.21 12:00', false, '2012年12月21日(星期五) 12时00分']
+    #after
+    [_.now() + 45e3, true, '45秒后']
+    [_.now() + 6e4, true, '1分钟后']
+    [_.now() + 36e5, true, '1小时后']
+    ['2050.12.21 12:00', true, '2050年12月21日(星期三) 12时00分']
+    #error
+    [_.now() + 1e3, false, '刚刚']
+    [_.now() - 45e3, true, '45秒前']
   ]
-    test $.parseTime(a[0]), a[1], '$.parseTime(' + $.parseString(a[0]) + ') is ' + a[1]
+    #$.i $.parseTime a[0], a[1]
+    test $.parseTime(a[0], a[1]), a[2], "$.parseTime(#{$.parseString a[0]}, #{$.parseString a[1]}) is #{a[2]}"
+
+#parse short date
+do ->
+  divide()
+  for a in [
+    ['2012.12.21', '20121221']
+    ['1999.1.1', '19990101']
+    ['2050.2.28', '20500228']
+  ]
+    test $.parseShortDate($.timeStamp a[0]), a[1], "$.parseShortDate(#{a[0]}) is #{a[1]}"
 
 #parse string
 do ->
-  $.i '---'
+  divide()
   for a in [
     [1096, '1096']
     ['hello world', 'hello world']
@@ -67,11 +90,11 @@ do ->
     [undefined, 'undefined']
     [NaN, 'NaN']
   ]
-    test $.parseString(a[0]), a[1], '$.parseString(' + $.parseString(a[0]) + ') is ' + a[1]
+    test $.parseString(a[0]), a[1], "$.parseString(#{$.parseString a[0]}) is #{a[1]}"
 
 #parse pts
 do ->
-  $.i '---'
+  divide()
   for a in [
     [0, '0']
     [100, '100']
@@ -80,11 +103,11 @@ do ->
     [1e5, '10万']
     [1234567, '123.4万']
   ]
-    test $.parsePts(a[0]), a[1], '$.parsePts(' + $.parseString(a[0]) + ') is ' + a[1]
+    test $.parsePts(a[0]), a[1], "$.parsePts(#{$.parseString a[0]}) is #{a[1]}"
 
 #parse json
 do ->
-  $.i '---'
+  divide()
   for a in [
     [1096, null]
     ['hello world', null]
@@ -98,12 +121,12 @@ do ->
     [undefined, null]
     [NaN, null]
   ]
-    test _.isEqual($.parseJson(a[0]), a[1]), true, '$.parseJson(' + $.parseString(a[0]) + ') is ' + a[1]
+    test _.isEqual($.parseJson(a[0]), a[1]), true, "$.parseJson(#{$.parseString a[0]}) is #{a[1]}"
 
 #promise
 $.next ->
 
-  $.i '---'
+  divide()
 
   salt = _.now()
 
@@ -141,7 +164,7 @@ $.next 500, ->
   app.listen port
   base = 'http://localhost:' + port
 
-  $.i '---'
+  divide()
 
   salt = _.now()
 
@@ -184,5 +207,8 @@ $.next 500, ->
   $.next 1e3, -> process.exit()
 
 #final
-$.i '---'
-$.info 'result', 'There has got ' + fails + ' fail(s).'
+do ->
+  divide()
+  msg = "There has got #{fails} fail(s)."
+  msg = colors[if fails then 'red' else 'green'] msg
+  $.info 'result', msg

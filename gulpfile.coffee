@@ -1,29 +1,18 @@
-#require
-#lodash
-_ = require 'lodash'
-$ = require './index'
-#exec
-exec = (require 'child_process').exec
+_ = require 'lodash' #lodash
+$ = require './index' #index
 
-#gulp
-gulp = require 'gulp'
+exec = (require 'child_process').exec #exec
 
-#tool
+gulp = require 'gulp' #gulp
 watch = require 'gulp-watch'
 plumber = require 'gulp-plumber'
 concat = require 'gulp-concat'
 using = require 'gulp-using'
-
-#type
 coffee = require 'gulp-coffee'
+uglify = require 'gulp-uglify' #minify
+lint = require 'gulp-coffeelint' #lint
 
-#advanced tool
-
-#minify
-uglify = require 'gulp-uglify'
-
-#lint
-lint = require 'gulp-coffeelint'
+colors = require 'colors/safe'
 
 #error
 #uncaughtException
@@ -31,18 +20,23 @@ process.on 'uncaughtException', (err) -> $.log err.stack
 
 #function $
 
-#exec
-$.exe = (cmd, callback) ->
+#shell
+$.shell = (cmd, callback) ->
 
-  #info
-  info = (string) ->
+  if $.type(cmd) == 'array'
+    cmd = if project.platform == 'win32' then cmd.join('&') else cmd.join('&&')
+  $.info 'shell', colors.magenta cmd
+
+  #function
+  fnInfo = (string) ->
     text = $.trim string
     if text.length
-      $.info text.replace /[\r\n]/g, ''
+      $.i text.replace(/\r/g, '\n').replace /\n{2,}/g, ''
 
+  #execute
   child = exec cmd
-  child.stdout.on 'data', (data) -> info data
-  child.stderr.on 'data', (data) -> info data
+  child.stdout.on 'data', (data) -> fnInfo data
+  child.stderr.on 'data', (data) -> fnInfo data
   child.on 'close', -> callback?()
 
 #bind
@@ -50,7 +44,7 @@ task = {}
 $.task = (name, fn) ->
   gulp.task name, ->
     #show base
-    $.info 'base', 'running at ' + project.base
+    $.info 'base', 'running at ' + colors.magenta project.base
     #do
     task[name]()
   task[name] = fn
@@ -127,10 +121,10 @@ $.task 'prepare', ->
   .pipe gulp.dest ''
 
 #work
-$.task 'work', -> $.exe 'gulp watch' #watch
+$.task 'work', -> $.shell 'gulp watch' #watch
 
 #noop
 $.task 'noop', -> null
 
 #test
-$.task 'test', -> $.exe 'node test.js'
+$.task 'test', -> $.shell 'node test.js'

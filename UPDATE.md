@@ -1,6 +1,15 @@
 # UPDATES
 ---
 
+### v0.3.4 @ 2.14.2016
+- Required [colors.js](https://github.com/Marak/colors.js) now.
+- Rewrote `$.i()`.
+- Rewrote `$.info()`.
+- Rewrote `$.parseTime()`.
+- Added `$.parseShortDate()`.
+- Updated *gulp* files.
+- Updated test files.
+
 ### v0.3.3 @ 11.18.2015
 - Rewrote `$.Callbacks()`.
 - Updated test files.

@@ -28,6 +28,7 @@ npm i node-jquery-lite
 ### Methods else
 - `$.try()`
 - `$.parseTime()`
+- `$.parseShortDate()`
 - `$.parseString()`
 - `$.parsePts()`
 - `$.parseJson()`
