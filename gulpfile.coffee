@@ -31,7 +31,7 @@ $.shell = (cmd, callback) ->
   fnInfo = (string) ->
     text = $.trim string
     if text.length
-      $.i text.replace(/\r/g, '\n').replace /\n{2,}/g, ''
+      $.log text.replace(/\r/g, '\n').replace /\n{2,}/g, ''
 
   #execute
   child = exec cmd
