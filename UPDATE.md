@@ -1,6 +1,12 @@
 # UPDATES
 ---
 
+### v0.3.5 @ 2.15.2016
+- Updated `$.info()`.
+- Updated *gulp* files.
+- Updated test files.
+- Removed useless files.
+
 ### v0.3.4 @ 2.14.2016
 - Required [colors.js](https://github.com/Marak/colors.js) now.
 - Rewrote `$.i()`.

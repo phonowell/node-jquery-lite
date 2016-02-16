@@ -45,6 +45,13 @@ npm i node-jquery-lite
 
 This project is not **STABLE**.
 
+## Test
+---
+
+```
+npm test
+```
+
 ## Updates
 ---
 

@@ -11,18 +11,25 @@ colors = require 'colors/safe'
 fails = 0
 test = (a, b, msg) ->
   if a == b
-    $.info 'success', msg
+    $.info 'success', parseOkay msg
   else
-    $.info 'fail', msg
+    $.info 'fail', parseOkay msg, false
     fails++
 
 divide = -> $.log colors.gray '------'
 
+parseOkay = (msg, okay) ->
+  if !~msg.search /\[is]/
+    return msg
+  if okay == false
+    return msg.replace /\[is]/, colors.red 'is not'
+  msg.replace /\[is]/, colors.green 'is'
+
 #version
 do ->
   divide()
-  a = '0.3.4'
-  test $.version, a, '$.version is ' + a
+  a = '0.3.5'
+  test $.version, a, '$.version [is] ' + a
 
 #type
 do ->
@@ -40,7 +47,7 @@ do ->
     [null, 'null']
     [undefined, 'undefined']
   ]
-    test $.type(a[0]), a[1], "$.type(#{$.parseString a[0]}) is #{a[1]}"
+    test $.type(a[0]), a[1], "$.type(#{$.parseString a[0]}) [is] #{a[1]}"
 
 #parse time
 do ->
@@ -56,13 +63,13 @@ do ->
     [_.now() + 45e3, true, '45秒后']
     [_.now() + 6e4, true, '1分钟后']
     [_.now() + 36e5, true, '1小时后']
-    ['2050.12.21 12:00', true, '2050年12月21日(星期三) 12时00分']
+    ['2050.2.28', true, '2050年2月28日(星期一) 0时00分']
     #error
     [_.now() + 1e3, false, '刚刚']
     [_.now() - 45e3, true, '45秒前']
   ]
     #$.i $.parseTime a[0], a[1]
-    test $.parseTime(a[0], a[1]), a[2], "$.parseTime(#{$.parseString a[0]}, #{$.parseString a[1]}) is #{a[2]}"
+    test $.parseTime(a[0], a[1]), a[2], "$.parseTime(#{$.parseString a[0]}, #{$.parseString a[1]}) [is] #{a[2]}"
 
 #parse short date
 do ->
@@ -72,7 +79,7 @@ do ->
     ['1999.1.1', '19990101']
     ['2050.2.28', '20500228']
   ]
-    test $.parseShortDate($.timeStamp a[0]), a[1], "$.parseShortDate(#{a[0]}) is #{a[1]}"
+    test $.parseShortDate($.timeStamp a[0]), a[1], "$.parseShortDate(#{a[0]}) [is] #{a[1]}"
 
 #parse string
 do ->
@@ -90,7 +97,7 @@ do ->
     [undefined, 'undefined']
     [NaN, 'NaN']
   ]
-    test $.parseString(a[0]), a[1], "$.parseString(#{$.parseString a[0]}) is #{a[1]}"
+    test $.parseString(a[0]), a[1], "$.parseString(#{$.parseString a[0]}) [is] #{a[1]}"
 
 #parse pts
 do ->
@@ -103,7 +110,7 @@ do ->
     [1e5, '10万']
     [1234567, '123.4万']
   ]
-    test $.parsePts(a[0]), a[1], "$.parsePts(#{$.parseString a[0]}) is #{a[1]}"
+    test $.parsePts(a[0]), a[1], "$.parsePts(#{$.parseString a[0]}) [is] #{a[1]}"
 
 #parse json
 do ->
@@ -121,7 +128,7 @@ do ->
     [undefined, null]
     [NaN, null]
   ]
-    test _.isEqual($.parseJson(a[0]), a[1]), true, "$.parseJson(#{$.parseString a[0]}) is #{a[1]}"
+    test _.isEqual($.parseJson(a[0]), a[1]), true, "$.parseJson(#{$.parseString a[0]}) [is] #{a[1]}"
 
 #promise
 $.next ->
@@ -134,18 +141,18 @@ $.next ->
   a = $.Deferred()
   .fail (data) ->
     if salt != data
-      $.info 'fail', 'fail/reject'
+      $.info 'fail', parseOkay 'fail/reject [is] okay.', false
       return
-    $.info 'success', 'fail/reject'
+    $.info 'success', parseOkay 'fail/reject [is] okay.'
   $.next -> a.reject salt
 
   #done/resolve
   b = $.Deferred()
   .done (data) ->
     if salt != data
-      $.info 'fail', 'done/resolve'
+      $.info 'fail', parseOkay 'done/resolve [is] okay.', false
       return
-    $.info 'success', 'done/resolve'
+    $.info 'success', parseOkay 'done/resolve [is] okay.'
   $.next -> b.resolve salt
 
 #ajax
@@ -170,39 +177,39 @@ $.next 500, ->
 
   #ping
   $.get base + '/ping', salt: salt
-  .fail (data) -> $.info 'fail', '$.get("/ping") - ' + data
+  .fail (data) -> $.info 'fail', '$.get("/ping") [is] okay: ' + data, false
   .done (data) ->
     if salt != parseInt data
-      $.info 'fail', '$.get("/ping") - ' + data
+      $.info 'fail', parseOkay '$.get("/ping") [is] okay: ' + data, false
       return
-    $.info 'success', '$.get("/ping")'
+    $.info 'success', parseOkay '$.get("/ping") [is] okay.'
 
   #json
   $.get base + '/json', salt: salt
-  .fail (data) -> $.info 'fail', '$.get("/json") - ' + data
+  .fail (data) -> $.info 'fail', parseOkay '$.get("/json") [is] okay: ' + data, false
   .done (data) ->
     if salt != data.salt
-      $.info 'fail', '$.get("/json") - ' + $.parseString data
+      $.info 'fail', parseOkay '$.get("/json") [is] okay: ' + data, false
       return
-    $.info 'success', '$.get("/json")'
+    $.info 'success', parseOkay '$.get("/json") [is] okay.'
 
   #ping
   $.post base + '/ping', salt: salt
-  .fail (data) -> $.info 'fail', '$.post("/ping") - ' + data
+  .fail (data) -> $.info 'fail', parseOkay '$.post("/ping") [is] okay: ' + data, false
   .done (data) ->
     if salt != parseInt data
-      $.info 'fail', '$.post("/ping") - ' + data
+      $.info 'fail', parseOkay '$.post("/ping") [is] okay: ' + data, false
       return
-    $.info 'success', '$.post("/ping")'
+    $.info 'success', parseOkay '$.post("/ping") [is] okay.'
 
   #json
   $.post base + '/json', salt: salt
-  .fail (data) -> $.info 'fail', '$.post("/json") - ' + data
+  .fail (data) -> $.info 'fail', parseOkay '$.post("/json") [is] okay: ' + $.parseString(data), false
   .done (data) ->
     if salt != data.salt
-      $.info 'fail', '$.post("/json") - ' + $.parseString data
+      $.info 'fail', parseOkay '$.post("/json") [is] okay: ' + $.parseString(data), false
       return
-    $.info 'success', '$.post("/json")'
+    $.info 'success', parseOkay '$.post("/json") [is] okay.'
 
   $.next 1e3, -> process.exit()
 
