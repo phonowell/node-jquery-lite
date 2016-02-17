@@ -39,6 +39,7 @@ npm i node-jquery-lite
 - `$.timeStamp()`
 - `$.rnd()`
 - `$.timeString()`
+- `$.shell()`
     
 ## Attention
 ---

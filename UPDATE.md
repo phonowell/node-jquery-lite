@@ -1,6 +1,12 @@
 # UPDATES
 ---
 
+### v0.3.6 @ 2.17.2016
+- Updated `$.i()`.
+- Updated `$.info()`.
+- Added `$.shell()`.
+- Updated *gulp* files.
+
 ### v0.3.5 @ 2.15.2016
 - Updated `$.info()`.
 - Updated *gulp* files.

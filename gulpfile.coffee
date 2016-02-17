@@ -1,7 +1,6 @@
 _ = require 'lodash' #lodash
 $ = require './index' #index
 
-exec = (require 'child_process').exec #exec
 argv = require('minimist')(process.argv.slice 2) #argv
 
 gulp = require 'gulp' #gulp
@@ -20,26 +19,7 @@ colors = require 'colors/safe'
 #uncaughtException
 process.on 'uncaughtException', (err) -> $.log err.stack
 
-#function $
-
-#shell
-$.shell = (cmd, callback) ->
-
-  if $.type(cmd) == 'array'
-    cmd = if project.platform == 'win32' then cmd.join('&') else cmd.join('&&')
-  $.info 'shell', colors.magenta cmd
-
-  #function
-  fnInfo = (string) ->
-    text = $.trim string
-    if text.length
-      $.log text.replace(/\r/g, '\n').replace /\n{2,}/g, ''
-
-  #execute
-  child = exec cmd
-  child.stdout.on 'data', (data) -> fnInfo data
-  child.stderr.on 'data', (data) -> fnInfo data
-  child.on 'close', -> callback?()
+#function
 
 #bind
 task = {}

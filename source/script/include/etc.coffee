@@ -13,7 +13,6 @@ $.log = console.log
 
 #info
 $.info = (param...) ->
-  colors = require 'colors/safe'
   [type, msg] = if !param[1] then ['default', param[0]] else param
 
   #time
@@ -34,7 +33,6 @@ $.info = (param...) ->
 
 #i
 $.i = (msg) ->
-  colors = require 'colors/safe'
   $.log colors.red msg
   msg
 
@@ -105,3 +103,23 @@ $.timeString = (time) ->
     fn d.getMinutes()
     fn d.getSeconds()
   ].join ':'
+
+#shell
+$.shell = (cmd, callback) ->
+  fn = $.shell
+  fn.platform or= (require 'os').platform()
+  fn.exec or= (require 'child_process').exec
+  fn.info or= (string) ->
+    text = $.trim string
+    if !text.length then return
+    $.log text.replace(/\r/g, '\n').replace /\n{2,}/g, ''
+
+  if $.type(cmd) == 'array'
+    cmd = if fn.platform == 'win32' then cmd.join('&') else cmd.join('&&')
+  $.info 'shell', colors.magenta cmd
+
+  #execute
+  child = fn.exec cmd
+  child.stdout.on 'data', (data) -> fn.info data
+  child.stderr.on 'data', (data) -> fn.info data
+  child.on 'close', -> callback?()
