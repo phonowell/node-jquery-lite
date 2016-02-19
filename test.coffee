@@ -28,7 +28,7 @@ parseOkay = (msg, okay) ->
 #version
 do ->
   divide 'VERSION'
-  a = '0.3.6'
+  a = '0.3.7'
   test $.version, a, '$.version [is] ' + a
 
 #$.type()
@@ -218,7 +218,7 @@ do ->
     cb.fireWith a, 2, 3
 
 #$.Deferred()
-$.next ->
+$.next 100, ->
   divide '$.Deferred()'
 
   #state
@@ -266,7 +266,7 @@ $.next ->
         $.next -> def[b[0]] 0
 
 #ajax
-$.next 500, ->
+$.next 200, ->
   divide 'Ajax'
 
   #server

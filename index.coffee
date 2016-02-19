@@ -2,7 +2,7 @@ _ = require 'lodash'
 colors = require 'colors/safe'
 
 module.exports = $ =
-  version: '0.3.6'
+  version: '0.3.7'
   startTime: _.now()
 #require
 domain = require 'domain'
@@ -112,7 +112,6 @@ $.Callbacks = (options) ->
 
   #return
   res
-#deferred
 $.Deferred = ->
   res = {}
   status = res._status =

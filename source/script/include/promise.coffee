@@ -1,4 +1,3 @@
-#deferred
 $.Deferred = ->
   res = {}
   status = res._status =
