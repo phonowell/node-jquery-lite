@@ -59,22 +59,29 @@ $.type = (param) ->
 
 #noop
 $.noop = _.noop
-#callback
-$.Callbacks = ->
-  res =
-    _status:
-      fired: false
-    _list: []
 
-  list = res._list
+#each
+$.each = _.each
+$.Callbacks = (options) ->
+  options = $.extend {}, options
 
-  res.add = (param...) ->
-    for fn in param
+  res = {}
+  status = res._status =
+    fired: false
+  list = res._list = []
+
+  #method
+  res.add = (args...) ->
+    for fn in args when $.type(fn) == 'function'
+      if options.unique
+        if !res.has(fn)
+          list.push fn
+        continue
       list.push fn
     res
 
   res.remove = (fn) ->
-    _.remove list, fn
+    _.remove list, (_fn) -> _fn == fn
     res
 
   res.has = (fn) -> fn in list
@@ -83,16 +90,21 @@ $.Callbacks = ->
     list = []
     res
 
-  res.fire = (param...) ->
+  res.fireWith = (context, args...) ->
     for fn in list
-      fn? param...
-
-    res._status.fired = true
-
+      fn.apply context, args
+    status.fired = true
     res
 
-  res.fired = -> res._status.fired
+  res.fire = (args...) ->
+    for fn in list
+      fn args...
+    status.fired = true
+    res
 
+  res.fired = -> status.fired
+
+  #return
   res
 #deferred
 $.Deferred = ->
@@ -144,7 +156,7 @@ $.parseTime.trans = (t, future) ->
   if tsDistance < 0
     if !future then return '刚刚'
     i = 1
-  if i then tsDistance = -tsDistance + 1e3
+  if i then tsDistance = -tsDistance + 500
 
   #years ago
   if (tsDistance / 31536e6) | 0
@@ -316,7 +328,7 @@ $.info = (param...) ->
   arr = ["[#{colors.gray t}]"]
   switch type
     when 'default' then null
-    when 'success', 'done' then arr.push "<#{colors.green type.toUpperCase()}>"
+    when 'success', 'done', 'ok' then arr.push "<#{colors.green type.toUpperCase()}>"
     when 'fail', 'error', 'fatal' then arr.push "<#{colors.red type.toUpperCase()}>"
     else arr.push "<#{colors.cyan type.toUpperCase()}>"
   arr.push msg

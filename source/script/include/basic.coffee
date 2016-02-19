@@ -19,3 +19,6 @@ $.type = (param) ->
 
 #noop
 $.noop = _.noop
+
+#each
+$.each = _.each

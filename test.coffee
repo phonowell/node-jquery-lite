@@ -16,7 +16,7 @@ test = (a, b, msg) ->
     $.info 'fail', parseOkay msg, false
     fails++
 
-divide = -> $.log colors.gray '------'
+divide = (title) -> $.log colors.gray _.repeat('-', 16) + if title then '> ' + title or ''
 
 parseOkay = (msg, okay) ->
   if !~msg.search /\[is]/
@@ -27,13 +27,13 @@ parseOkay = (msg, okay) ->
 
 #version
 do ->
-  divide()
+  divide 'VERSION'
   a = '0.3.6'
   test $.version, a, '$.version [is] ' + a
 
-#type
+#$.type()
 do ->
-  divide()
+  divide '$.type()'
   for a in [
     [199, 'number']
     ['hello world', 'string']
@@ -49,31 +49,31 @@ do ->
   ]
     test $.type(a[0]), a[1], "$.type(#{$.parseString a[0]}) [is] #{a[1]}"
 
-#parse time
+#$.parseTime()
 do ->
-  divide()
+  divide '$.parseTime()'
   for a in [
     #before
-    [_.now(), false, '刚刚']
-    [_.now() - 45e3, false, '45秒前']
-    [_.now() - 6e4, false, '1分钟前']
-    [_.now() - 36e5, false, '1小时前']
-    ['2012.12.21 12:00', false, '2012年12月21日(星期五) 12时00分']
+    [_.now(), undefined, '刚刚']
+    [_.now() - 45e3, undefined, '45秒前']
+    [_.now() - 6e4, undefined, '1分钟前']
+    [_.now() - 36e5, undefined, '1小时前']
+    ['2012.12.21 12:00', undefined, '2012年12月21日(星期五) 12时00分']
     #after
     [_.now() + 45e3, true, '45秒后']
     [_.now() + 6e4, true, '1分钟后']
     [_.now() + 36e5, true, '1小时后']
     ['2050.2.28', true, '2050年2月28日(星期一) 0时00分']
     #error
-    [_.now() + 1e3, false, '刚刚']
+    [_.now() + 1e3, undefined, '刚刚']
     [_.now() - 45e3, true, '45秒前']
   ]
     #$.i $.parseTime a[0], a[1]
     test $.parseTime(a[0], a[1]), a[2], "$.parseTime(#{$.parseString a[0]}, #{$.parseString a[1]}) [is] #{a[2]}"
 
-#parse short date
+#$.parseShortDate()
 do ->
-  divide()
+  divide '$.parseShortDate()'
   for a in [
     ['2012.12.21', '20121221']
     ['1999.1.1', '19990101']
@@ -81,9 +81,9 @@ do ->
   ]
     test $.parseShortDate($.timeStamp a[0]), a[1], "$.parseShortDate(#{a[0]}) [is] #{a[1]}"
 
-#parse string
+#$.parseString()
 do ->
-  divide()
+  divide '$.parseString()'
   for a in [
     [1096, '1096']
     ['hello world', 'hello world']
@@ -99,9 +99,9 @@ do ->
   ]
     test $.parseString(a[0]), a[1], "$.parseString(#{$.parseString a[0]}) [is] #{a[1]}"
 
-#parse pts
+#$.parsePts
 do ->
-  divide()
+  divide '$.parsePts()'
   for a in [
     [0, '0']
     [100, '100']
@@ -112,9 +112,9 @@ do ->
   ]
     test $.parsePts(a[0]), a[1], "$.parsePts(#{$.parseString a[0]}) [is] #{a[1]}"
 
-#parse json
+#$.parseJson()
 do ->
-  divide()
+  divide '$.parseJson()'
   for a in [
     [1096, null]
     ['hello world', null]
@@ -130,10 +130,85 @@ do ->
   ]
     test _.isEqual($.parseJson(a[0]), a[1]), true, "$.parseJson(#{$.parseString a[0]}) [is] #{a[1]}"
 
+#$.Callbacks()
+do ->
+  divide '$.Callbacks()'
+
+  #add
+  do ->
+    cb = $.Callbacks()
+    a = 0
+    fn = -> a++
+    for i in [0...3]
+      cb.add fn
+    cb.add -> test a, 3, '$.Callbacks().add() [is] okay.'
+    cb.fire()
+
+  #add with options.unique
+  do ->
+    cb = $.Callbacks unique: true
+    a = 0
+    fn = -> a++
+    for i in [0...3]
+      cb.add fn
+    cb.add -> test a, 1, '$.Callbacks({unique: true}).add() [is] okay.'
+    cb.fire()
+
+  #remove
+  do ->
+    cb = $.Callbacks()
+    a = 0
+    fn = -> a++
+    for i in [0...3]
+      cb.add fn
+    cb.remove fn
+    cb.add -> test a, 0, '$.Callbacks().remove() [is] okay.'
+    cb.fire()
+
+  #has
+  do ->
+    cb = $.Callbacks()
+    a = 0
+    fn = -> a++
+    for i in [0...3]
+      cb.add fn
+    cb.add -> test cb.has(fn) == true and cb.has(-> a--) == false, true, '$.Callbacks().has() [is] okay.'
+    cb.fire()
+
+  #empty
+  do ->
+    cb = $.Callbacks()
+    a = 0
+    fn = -> a++
+    for i in [0...3]
+      cb.add fn
+    cb.empty()
+    cb.add -> test a, 0, '$.Callbacks().empty() [is] okay.'
+    cb.fire()
+
+  #fireWith
+  do ->
+    cb = $.Callbacks()
+    a = v: 0
+    fn = (n) -> @v = @v + n
+    for i in [0...3]
+      cb.add fn
+    cb.add -> test a.v, 6, '$.Callbacks().fireWith() [is] okay.'
+    cb.fireWith a, 2
+
+  #fire
+  do ->
+    cb = $.Callbacks()
+    a = 0
+    fn = (n) -> a = a + n
+    for i in [0...3]
+      cb.add fn
+    cb.add -> test a, 6, '$.Callbacks().fire() [is] okay.'
+    cb.fire 2
+
 #promise
 $.next ->
-
-  divide()
+  divide 'Promise'
 
   salt = _.now()
 
@@ -157,6 +232,7 @@ $.next ->
 
 #ajax
 $.next 500, ->
+  divide 'Ajax'
 
   #server
   app.use bodyParser.urlencoded extended: true
@@ -170,8 +246,6 @@ $.next 500, ->
   port = 9453
   app.listen port
   base = 'http://localhost:' + port
-
-  divide()
 
   salt = _.now()
 
@@ -215,7 +289,7 @@ $.next 500, ->
 
 #final
 do ->
-  divide()
+  divide 'FINAL'
   msg = "There has got #{fails} fail(s)."
   msg = colors[if fails then 'red' else 'green'] msg
   $.info 'result', msg

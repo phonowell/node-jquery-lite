@@ -22,7 +22,7 @@ $.parseTime.trans = (t, future) ->
   if tsDistance < 0
     if !future then return '刚刚'
     i = 1
-  if i then tsDistance = -tsDistance + 1e3
+  if i then tsDistance = -tsDistance + 500
 
   #years ago
   if (tsDistance / 31536e6) | 0

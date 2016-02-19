@@ -22,7 +22,7 @@ $.info = (param...) ->
   arr = ["[#{colors.gray t}]"]
   switch type
     when 'default' then null
-    when 'success', 'done' then arr.push "<#{colors.green type.toUpperCase()}>"
+    when 'success', 'done', 'ok' then arr.push "<#{colors.green type.toUpperCase()}>"
     when 'fail', 'error', 'fatal' then arr.push "<#{colors.red type.toUpperCase()}>"
     else arr.push "<#{colors.cyan type.toUpperCase()}>"
   arr.push msg

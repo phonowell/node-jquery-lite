@@ -1,19 +1,23 @@
-#callback
-$.Callbacks = ->
-  res =
-    _status:
-      fired: false
-    _list: []
+$.Callbacks = (options) ->
+  options = $.extend {}, options
 
-  list = res._list
+  res = {}
+  status = res._status =
+    fired: false
+  list = res._list = []
 
-  res.add = (param...) ->
-    for fn in param
+  #method
+  res.add = (args...) ->
+    for fn in args when $.type(fn) == 'function'
+      if options.unique
+        if !res.has(fn)
+          list.push fn
+        continue
       list.push fn
     res
 
   res.remove = (fn) ->
-    _.remove list, fn
+    _.remove list, (_fn) -> _fn == fn
     res
 
   res.has = (fn) -> fn in list
@@ -22,14 +26,19 @@ $.Callbacks = ->
     list = []
     res
 
-  res.fire = (param...) ->
+  res.fireWith = (context, args...) ->
     for fn in list
-      fn? param...
-
-    res._status.fired = true
-
+      fn.apply context, args
+    status.fired = true
     res
 
-  res.fired = -> res._status.fired
+  res.fire = (args...) ->
+    for fn in list
+      fn args...
+    status.fired = true
+    res
 
+  res.fired = -> status.fired
+
+  #return
   res

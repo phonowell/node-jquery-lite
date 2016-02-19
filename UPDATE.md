@@ -1,6 +1,13 @@
 # UPDATES
 ---
 
+### v0.3.7 @ 2.19.2016
+- Added `$.each()`.
+- Fixed `$.parseTime()`.
+- Updated `$.info()`.
+- Rewrote `$.Callbacks()`.
+- Updated test files.
+
 ### v0.3.6 @ 2.17.2016
 - Updated `$.i()`.
 - Updated `$.info()`.

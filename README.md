@@ -7,7 +7,7 @@ A tiny module for Node.js to write lines in jQuery style.
 ---
 
 ```
-npm i node-jquery-lite
+$ npm i node-jquery-lite
 ```
 
 ## Methods
@@ -24,6 +24,7 @@ npm i node-jquery-lite
 - `$.get()`
 - `$.post()`
 - `$.noop()`
+- `$.each()`
 
 ### Methods else
 - `$.try()`
@@ -50,7 +51,7 @@ This project is not **STABLE**.
 ---
 
 ```
-npm test
+$ npm test
 ```
 
 ## Updates
