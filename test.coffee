@@ -186,16 +186,6 @@ do ->
     cb.add -> test a, 0, '$.Callbacks().empty() [is] okay.'
     cb.fire()
 
-  #fireWith
-  do ->
-    cb = $.Callbacks()
-    a = v: 0
-    fn = (n) -> @v = @v + n
-    for i in [0...3]
-      cb.add fn
-    cb.add -> test a.v, 6, '$.Callbacks().fireWith() [is] okay.'
-    cb.fireWith a, 2
-
   #fire
   do ->
     cb = $.Callbacks()
@@ -206,29 +196,74 @@ do ->
     cb.add -> test a, 6, '$.Callbacks().fire() [is] okay.'
     cb.fire 2
 
-#promise
+  #fire with once:true
+  do ->
+    cb = $.Callbacks once: true
+    a = 0
+    fn = -> a++
+    for i in [0...3]
+      cb.add fn
+    cb.add -> test a, 3, '$.Callbacks({once: true}).fire() [is] okay.'
+    cb.fire()
+    cb.fire()
+
+  #fireWith
+  do ->
+    cb = $.Callbacks()
+    a = v: 0
+    fn = (n, m) -> @v = @v + n * m
+    for i in [0...3]
+      cb.add fn
+    cb.add -> test a.v, 18, '$.Callbacks().fireWith() [is] okay.'
+    cb.fireWith a, 2, 3
+
+#$.Deferred()
 $.next ->
-  divide 'Promise'
+  divide '$.Deferred()'
 
-  salt = _.now()
+  #state
+  do ->
+    def = $.Deferred()
+    test def.state(), 'pending', "$.Deferred().state() [is] okay(#{colors.magenta 'pending'})."
 
-  #fail/reject
-  a = $.Deferred()
-  .fail (data) ->
-    if salt != data
-      $.info 'fail', parseOkay 'fail/reject [is] okay.', false
-      return
-    $.info 'success', parseOkay 'fail/reject [is] okay.'
-  $.next -> a.reject salt
+  for a in [
+    ['resolve', 'done', 'resolved']
+    ['reject', 'fail', 'rejected']
+    ['progress', 'notify']
+  ]
+    do (b = a) ->
+      #done, fail & notify
+      do ->
+        def = $.Deferred()
+        def[b[1]] (data) -> test data, 0, "$.Deferred().#{b[1]}() [is] okay."
+        $.next -> def[b[0]] 0
 
-  #done/resolve
-  b = $.Deferred()
-  .done (data) ->
-    if salt != data
-      $.info 'fail', parseOkay 'done/resolve [is] okay.', false
-      return
-    $.info 'success', parseOkay 'done/resolve [is] okay.'
-  $.next -> b.resolve salt
+      #resolveWith, rejectWith & progressWith
+      do ->
+        def = $.Deferred()
+        def[b[1]] (args...) -> test @v, args[0] * args[1], "$.Deferred().#{b[0]}With() [is] okay."
+        $.next -> def[b[0] + 'With'] {v: 6}, 2, 3
+
+      if b[0] == 'progress' then return
+
+      #state
+      do ->
+        def = $.Deferred()
+        def[b[1]] -> test def.state(), b[2], "$.Deferred().state() [is] okay(#{colors.magenta b[2]})."
+        def[b[0]]()
+
+      #then
+      do ->
+        def = $.Deferred()
+        def.then ((data) -> test data, 0, "$.Deferred().then() [is] okay(#{colors.magenta 'resolve'}).")
+        , (data) -> test data, 0, "$.Deferred().then() [is] okay(#{colors.magenta 'reject'})."
+        $.next -> def[b[0]] 0
+
+      #always
+      do ->
+        def = $.Deferred()
+        def.always (data) -> test data, 0, "$.Deferred().always() [is] okay(#{colors.magenta b[0]})."
+        $.next -> def[b[0]] 0
 
 #ajax
 $.next 500, ->
@@ -287,9 +322,9 @@ $.next 500, ->
 
   $.next 1e3, -> process.exit()
 
-#final
+#result
 do ->
-  divide 'FINAL'
+  divide 'RESULT'
   msg = "There has got #{fails} fail(s)."
   msg = colors[if fails then 'red' else 'green'] msg
   $.info 'result', msg

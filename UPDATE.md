@@ -6,6 +6,7 @@
 - Fixed `$.parseTime()`.
 - Updated `$.info()`.
 - Rewrote `$.Callbacks()`.
+- Rewrote `$.Deferred()`.
 - Updated test files.
 
 ### v0.3.6 @ 2.17.2016

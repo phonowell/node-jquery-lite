@@ -90,15 +90,21 @@ $.Callbacks = (options) ->
     list = []
     res
 
-  res.fireWith = (context, args...) ->
+  res.fire = (args...) ->
+    if options.once and status.fired
+      return res
+
     for fn in list
-      fn.apply context, args
+      fn args...
     status.fired = true
     res
 
-  res.fire = (args...) ->
+  res.fireWith = (context, args...) ->
+    if options.once and status.fired
+      return res
+
     for fn in list
-      fn args...
+      fn.apply context, args
     status.fired = true
     res
 
@@ -108,29 +114,52 @@ $.Callbacks = (options) ->
   res
 #deferred
 $.Deferred = ->
-  res =
-    _list:
-      done: $.Callbacks()
-      fail: $.Callbacks()
+  res = {}
+  status = res._status =
+    state: 'pending'
+  list = res._list =
+    done: $.Callbacks once: true
+    fail: $.Callbacks once: true
+    notify: $.Callbacks()
 
-  list = res._list
+  #method
 
-  res.done = (callback) ->
-    list.done.add callback
+  #promise
+  res.promise = (obj) ->
+    if obj? then return $.extend obj, res
     res
 
-  res.fail = (callback) ->
-    list.fail.add callback
-    res
+  #state
+  res.state = -> status.state
 
-  res.resolve = (param...) ->
-    list.done.fire param...
-    res
+  #done, fail, notify
+  for a in ['done', 'fail', 'notify']
+    do (b = a) ->
 
-  res.reject = (param...) ->
-    list.fail.fire param...
-    res
+  #each
+  for a in [
+    ['resolve', 'done', 'resolved']
+    ['reject', 'fail', 'rejected']
+    ['progress', 'notify']
+  ]
+    do (b = a) ->
+      res[b[1]] = (callback) ->
+        if $.type(callback) == 'function' then list[b[1]].add callback
+        res
 
+      fn = (type, args...) ->
+        if b[2] then status.state = b[2]
+        list[b[1]]['fire' + if type then 'With' else ''] args...
+        res
+
+      res[b[0]] = (args...) -> fn false, args...
+      res[b[0] + 'With'] = (context, args...) -> fn true, context, args...
+
+  #then & always
+  res.then = (args...) -> res.done(args[0]).fail args[1]
+  res.always = (callback) -> res.done(callback).fail callback
+
+  #return
   res
 #parseTime
 $.parseTime = (param, future) ->

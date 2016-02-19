@@ -26,15 +26,21 @@ $.Callbacks = (options) ->
     list = []
     res
 
-  res.fireWith = (context, args...) ->
+  res.fire = (args...) ->
+    if options.once and status.fired
+      return res
+
     for fn in list
-      fn.apply context, args
+      fn args...
     status.fired = true
     res
 
-  res.fire = (args...) ->
+  res.fireWith = (context, args...) ->
+    if options.once and status.fired
+      return res
+
     for fn in list
-      fn args...
+      fn.apply context, args
     status.fired = true
     res
 
