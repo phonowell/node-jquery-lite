@@ -274,57 +274,34 @@ $.next 200, ->
 
   #route
   app.get '/ping', (req, res) -> res.send req.body.salt
-  app.get '/json', (req, res) -> res.json salt: parseInt req.body.salt
   app.post '/ping', (req, res) -> res.send req.body.salt
-  app.post '/json', (req, res) -> res.json salt: parseInt req.body.salt
+  app.get '/json', (req, res) -> res.json value: req.body.salt
+  app.post '/json', (req, res) -> res.json value: req.body.salt
 
-  port = 9453
-  app.listen port
+  app.listen port = 9453
   base = 'http://localhost:' + port
 
   salt = _.now()
 
   #ping
-  $.get base + '/ping', salt: salt
-  .fail (data) -> $.info 'fail', '$.get("/ping") [is] okay: ' + data, false
-  .done (data) ->
-    if salt != parseInt data
-      $.info 'fail', parseOkay '$.get("/ping") [is] okay: ' + data, false
-      return
-    $.info 'success', parseOkay '$.get("/ping") [is] okay.'
+  url = base + '/ping'
+  $.get url, salt: salt
+  .always (data) -> test parseInt(data), salt, '$.get("/ping") [is] okay.'
+  $.post url, salt: salt
+  .always (data) -> test parseInt(data), salt, '$.post("/ping") [is] okay.'
 
   #json
-  $.get base + '/json', salt: salt
-  .fail (data) -> $.info 'fail', parseOkay '$.get("/json") [is] okay: ' + data, false
-  .done (data) ->
-    if salt != data.salt
-      $.info 'fail', parseOkay '$.get("/json") [is] okay: ' + data, false
-      return
-    $.info 'success', parseOkay '$.get("/json") [is] okay.'
-
-  #ping
-  $.post base + '/ping', salt: salt
-  .fail (data) -> $.info 'fail', parseOkay '$.post("/ping") [is] okay: ' + data, false
-  .done (data) ->
-    if salt != parseInt data
-      $.info 'fail', parseOkay '$.post("/ping") [is] okay: ' + data, false
-      return
-    $.info 'success', parseOkay '$.post("/ping") [is] okay.'
-
-  #json
-  $.post base + '/json', salt: salt
-  .fail (data) -> $.info 'fail', parseOkay '$.post("/json") [is] okay: ' + $.parseString(data), false
-  .done (data) ->
-    if salt != data.salt
-      $.info 'fail', parseOkay '$.post("/json") [is] okay: ' + $.parseString(data), false
-      return
-    $.info 'success', parseOkay '$.post("/json") [is] okay.'
-
-  $.next 1e3, -> process.exit()
+  url = base + '/json'
+  $.get url, salt: salt
+  .always (data) -> test parseInt(data.value), salt, '$.get("/ping") [is] okay.'
+  $.post url, salt: salt
+  .always (data) -> test parseInt(data.value), salt, '$.post("/ping") [is] okay.'
 
 #result
-do ->
+$.next 500, ->
   divide 'RESULT'
   msg = "There has got #{fails} fail(s)."
   msg = colors[if fails then 'red' else 'green'] msg
   $.info 'result', msg
+
+  $.next 500, -> process.exit()

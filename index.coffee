@@ -131,28 +131,24 @@ $.Deferred = ->
   #state
   res.state = -> status.state
 
-  #done, fail, notify
-  for a in ['done', 'fail', 'notify']
-    do (b = a) ->
-
   #each
-  for a in [
+  for _a in [
     ['resolve', 'done', 'resolved']
     ['reject', 'fail', 'rejected']
     ['progress', 'notify']
   ]
-    do (b = a) ->
-      res[b[1]] = (callback) ->
-        if $.type(callback) == 'function' then list[b[1]].add callback
+    do (a = _a) ->
+      res[a[1]] = (callback) ->
+        if $.type(callback) == 'function' then list[a[1]].add callback
         res
 
       fn = (type, args...) ->
-        if b[2] then status.state = b[2]
-        list[b[1]]['fire' + if type then 'With' else ''] args...
+        if a[2] then status.state = a[2]
+        list[a[1]]['fire' + if type then 'With' else ''] args...
         res
 
-      res[b[0]] = (args...) -> fn false, args...
-      res[b[0] + 'With'] = (context, args...) -> fn true, context, args...
+      res[a[0]] = (args...) -> fn false, args...
+      res[a[0] + 'With'] = (context, args...) -> fn true, context, args...
 
   #then & always
   res.then = (args...) -> res.done(args[0]).fail args[1]

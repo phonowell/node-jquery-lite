@@ -7,7 +7,7 @@
 - Updated `$.info()`.
 - Rewrote `$.Callbacks()`.
 - Rewrote `$.Deferred()`.
-- Updated test files.
+- Updated *test* files.
 
 ### v0.3.6 @ 2.17.2016
 - Updated `$.i()`.
@@ -18,7 +18,7 @@
 ### v0.3.5 @ 2.15.2016
 - Updated `$.info()`.
 - Updated *gulp* files.
-- Updated test files.
+- Updated *test* files.
 - Removed useless files.
 
 ### v0.3.4 @ 2.14.2016
@@ -28,11 +28,11 @@
 - Rewrote `$.parseTime()`.
 - Added `$.parseShortDate()`.
 - Updated *gulp* files.
-- Updated test files.
+- Updated *test* files.
 
 ### v0.3.3 @ 11.18.2015
 - Rewrote `$.Callbacks()`.
-- Updated test files.
+- Updated *test* files.
 - Rewrote `$.type()`.
 
 ### v0.3.2 @ 11.4.2015
@@ -41,12 +41,12 @@
 - Required [request](https://github.com/request/request) now.
 - Rewrote `$.get()`.
 - Rewrote `$.post()`.
-- Updated test files.
+- Updated *test* files.
 
 ### v0.3.1 @ 10.28.2015
 - Added `$.noop()`.
 - Rewrote `$.type()` to add supports for `Date` and `Error`.
-- Updated test files.
+- Updated *test* files.
 
 ### v0.3.0 @ 10.27.2015
 - Rewrote `$.parseTime()`.
