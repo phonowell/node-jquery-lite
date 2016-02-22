@@ -27,8 +27,8 @@ parseOkay = (msg, okay) ->
 
 #version
 do ->
-  divide 'VERSION'
-  a = '0.3.7'
+  divide 'Version'
+  a = '0.3.8'
   test $.version, a, '$.version [is] ' + a
 
 #$.type()
@@ -299,7 +299,7 @@ $.next 200, ->
 
 #result
 $.next 500, ->
-  divide 'RESULT'
+  divide 'Result'
   msg = "There has got #{fails} fail(s)."
   msg = colors[if fails then 'red' else 'green'] msg
   $.info 'result', msg

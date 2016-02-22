@@ -1,6 +1,9 @@
 # UPDATES
 ---
 
+### v0.3.8 @ 2.22.2016
+- Updated *test* files.
+
 ### v0.3.7 @ 2.19.2016
 - Added `$.each()`.
 - Fixed `$.parseTime()`.
