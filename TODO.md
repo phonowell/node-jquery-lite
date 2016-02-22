@@ -2,4 +2,3 @@
 ---
 
 - Fix bugs.
-- Add `$.when()`.

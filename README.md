@@ -25,6 +25,7 @@ $ npm i node-jquery-lite
 - `$.post()`
 - `$.noop()`
 - `$.each()`
+- `$.when()`
 
 ### Methods else
 - `$.try()`

@@ -8,13 +8,14 @@ bodyParser = require 'body-parser'
 colors = require 'colors/safe'
 
 #function
-fails = 0
+total = [0, 0]
 test = (a, b, msg) ->
+  total[0]++
   if a == b
     $.info 'success', parseOkay msg
   else
     $.info 'fail', parseOkay msg, false
-    fails++
+    total[1]++
 
 divide = (title) -> $.log colors.gray _.repeat('-', 16) + if title then '> ' + title or ''
 
@@ -218,7 +219,7 @@ do ->
     cb.fireWith a, 2, 3
 
 #$.Deferred()
-$.next 100, ->
+do ->
   divide '$.Deferred()'
 
   #state
@@ -265,6 +266,66 @@ $.next 100, ->
         def.always (data) -> test data, 0, "$.Deferred().always() [is] okay(#{colors.magenta b[0]})."
         $.next -> def[b[0]] 0
 
+#$.when()
+$.next 100, ->
+  divide '$.when()'
+
+  #resolve
+  do ->
+    index = 0
+    count = 2
+
+    do (i = ++index) ->
+      a = $.Deferred()
+      b = [1, 2]
+      c = $.Deferred()
+      d = $.Deferred().resolve 'a', 'b'
+
+      $.when a, b, c, d
+      .done (args...) ->
+        res = true
+        res = res and args[0] == 0
+        res = res and args[1][0] == 1 and args[1][1] == 2
+        res = res and args[2][0] == 3 and args[2][1] == 4 and args[2][2] == 5
+        res = res and args[3][0] == 'a' and args[3][1] == 'b'
+        test res, true, "$.when() [is] okay(#{colors.magenta "resolve - #{i}/#{count}"})."
+
+      a.resolve 0
+      c.resolve 3, 4, 5
+
+  #reject
+  do ->
+    index = 0
+    count = 3
+
+    do (i = ++index) ->
+      a = $.Deferred()
+      $.when a
+      .fail (args...) ->
+        res = true
+        res = res and args[0] == 1 and args[1] == 2
+        test res, true, "$.when() [is] okay(#{colors.magenta "reject - #{i}/#{count}"})."
+      a.reject 1, 2
+
+    do (i = ++index) ->
+      a = $.Deferred()
+      b = $.Deferred()
+      $.when a, b
+      .fail (args...) ->
+        res = true
+        res = res and args[0] == 1 and args[1] == 2
+        test res, true, "$.when() [is] okay(#{colors.magenta "reject - #{i}/#{count}"})."
+      a.resolve()
+      b.reject 1, 2
+
+    do (i = ++index) ->
+      a = $.Deferred().reject 1, 2
+      $.when a
+      .fail (args...) ->
+        res = true
+        res = res and args[0] == 1 and args[1] == 2
+        test res, true, "$.when() [is] okay(#{colors.magenta "reject - #{i}/#{count}"})."
+
 #ajax
 $.next 200, ->
   divide 'Ajax'
@@ -283,25 +344,23 @@ $.next 200, ->
 
   salt = _.now()
 
-  #ping
-  url = base + '/ping'
-  $.get url, salt: salt
-  .always (data) -> test parseInt(data), salt, '$.get("/ping") [is] okay.'
-  $.post url, salt: salt
-  .always (data) -> test parseInt(data), salt, '$.post("/ping") [is] okay.'
+  #get
+  $.when $.get(base + '/ping', salt: salt), $.get(base + '/json', salt: salt)
+  .always (data...) ->
+    res = parseInt(data[0]) == parseInt(data[1].value) == salt
+    test res, true, '$.get() [is] okay.'
 
-  #json
-  url = base + '/json'
-  $.get url, salt: salt
-  .always (data) -> test parseInt(data.value), salt, '$.get("/ping") [is] okay.'
-  $.post url, salt: salt
-  .always (data) -> test parseInt(data.value), salt, '$.post("/ping") [is] okay.'
+  #post
+  $.when $.post(base + '/ping', salt: salt), $.post(base + '/json', salt: salt)
+  .always (data...) ->
+    res = parseInt(data[0]) == parseInt(data[1].value) == salt
+    test res, true, '$.post() [is] okay.'
 
 #result
 $.next 500, ->
   divide 'Result'
-  msg = "There has got #{fails} fail(s)."
-  msg = colors[if fails then 'red' else 'green'] msg
+  msg = "There has got #{total[1]} fail(s) from #{total[0]} test(s)."
+  msg = colors[if total[1] then 'red' else 'green'] msg
   $.info 'result', msg
 
   $.next 500, -> process.exit()
