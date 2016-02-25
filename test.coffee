@@ -29,7 +29,7 @@ parseOkay = (msg, okay) ->
 #version
 do ->
   divide 'Version'
-  a = '0.3.8'
+  a = '0.3.9'
   test $.version, a, '$.version [is] ' + a
 
 #$.type()

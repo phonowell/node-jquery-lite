@@ -119,3 +119,14 @@ $.parseJson = $.parseJSON = (data) ->
     when 'string' then fn d
     when 'object' then d
     else null
+
+#parseSafe
+$.parseSafe = _.escape
+
+#parseTemp
+$.parseTemp = (string, object) ->
+  s = string
+  for k, v of object
+    s = s.replace (new RegExp '\\[' + k + '\\]', 'g'), v
+  #return
+  s

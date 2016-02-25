@@ -2,7 +2,7 @@ _ = require 'lodash'
 colors = require 'colors/safe'
 
 module.exports = $ =
-  version: '0.3.8'
+  version: '0.3.9'
   startTime: _.now()
 #require
 domain = require 'domain'
@@ -334,6 +334,17 @@ $.parseJson = $.parseJSON = (data) ->
     when 'string' then fn d
     when 'object' then d
     else null
+
+#parseSafe
+$.parseSafe = _.escape
+
+#parseTemp
+$.parseTemp = (string, object) ->
+  s = string
+  for k, v of object
+    s = s.replace (new RegExp '\\[' + k + '\\]', 'g'), v
+  #return
+  s
 request = require 'request'
 
 parseType = (res) ->

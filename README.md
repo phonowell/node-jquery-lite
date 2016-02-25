@@ -42,6 +42,8 @@ $ npm i node-jquery-lite
 - `$.rnd()`
 - `$.timeString()`
 - `$.shell()`
+- `$.parseSafe()`
+- `$.parseTemp()`
     
 ## Attention
 ---

@@ -1,6 +1,10 @@
 # UPDATES
 ---
 
+### v0.3.9 @ 2.25.2016
+- Added `$.parseSafe()`.
+- Added `$.parseTemp()`.
+
 ### v0.3.8 @ 2.22.2016
 - Added `$.when()`.
 - Updated *test* files.
