@@ -1,5 +1,4 @@
 #=require include/init.coffee
-#=require include/error.coffee
 #=require include/basic.coffee
 #=require include/callback.coffee
 #=require include/promise.coffee

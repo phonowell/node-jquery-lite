@@ -1,6 +1,9 @@
 # UPDATES
 ---
 
+### v0.3.10 @ 3.15.2016
+- Removed `$.try()`.
+
 ### v0.3.9 @ 2.25.2016
 - Added `$.parseSafe()`.
 - Added `$.parseTemp()`.

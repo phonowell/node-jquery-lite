@@ -28,7 +28,6 @@ $ npm i node-jquery-lite
 - `$.when()`
 
 ### Methods else
-- `$.try()`
 - `$.parseTime()`
 - `$.parseShortDate()`
 - `$.parseString()`
