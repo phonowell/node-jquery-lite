@@ -29,7 +29,7 @@ parseOkay = (msg, okay) ->
 #version
 do ->
   divide 'Version'
-  a = '0.3.10'
+  a = '0.3.11'
   test $.version, a, '$.version [is] ' + a
 
 #$.type()
@@ -116,18 +116,26 @@ do ->
 #$.parseJson()
 do ->
   divide '$.parseJson()'
+  arr = [
+    new Date()
+    new Error 'error'
+    new Buffer 'buffer'
+    null
+    undefined
+    NaN
+  ]
   for a in [
-    [1096, null]
-    ['hello world', null]
-    [true, null]
+    [1096, 1096]
+    ['hello world', 'hello world']
+    [true, true]
     ['[1, 2, 3]', [1,2,3]]
     ['{"a":1,"b":2}', {a: 1, b: 2}]
-    [new Date(), null]
-    [new Error('error'), null]
-    [new Buffer('buffer'), null]
-    [null, null]
-    [undefined, null]
-    [NaN, null]
+    [arr[0], arr[0]]
+    [arr[1], arr[1]]
+    [arr[2], arr[2]]
+    [arr[3], arr[3]]
+    [arr[4], arr[4]]
+    [arr[5], arr[5]]
   ]
     test _.isEqual($.parseJson(a[0]), a[1]), true, "$.parseJson(#{$.parseString a[0]}) [is] #{a[1]}"
 

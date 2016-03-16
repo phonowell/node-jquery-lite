@@ -2,7 +2,7 @@ _ = require 'lodash'
 colors = require 'colors/safe'
 
 module.exports = $ =
-  version: '0.3.10'
+  version: '0.3.11'
   startTime: _.now()
 #extend
 $.extend = _.extend
@@ -270,10 +270,8 @@ $.parseString = (data) ->
     when 'undefined' then 'undefined'
     when 'null' then 'null'
     else
-      try
-        d.toString()
-      catch e
-        ''
+      try d.toString()
+      catch err then ''
 
 #parsePts
 $.parsePts = (number) ->
@@ -282,24 +280,15 @@ $.parsePts = (number) ->
 
 #parseJson
 $.parseJson = $.parseJSON = (data) ->
-  d = data
+  if $.type(data) != 'string'
+    return data
 
-  fn = (p) ->
-    try
-      res = eval "(" + p + ")"
-
-      switch $.type res
-        when 'object', 'array'
-          res
-        else
-          null
-    catch e
-      null
-
-  switch $.type d
-    when 'string' then fn d
-    when 'object' then d
-    else null
+  try
+    res = eval "(" + data + ")"
+    switch $.type res
+      when 'object', 'array' then res
+      else data
+  catch err then data
 
 #parseSafe
 $.parseSafe = _.escape

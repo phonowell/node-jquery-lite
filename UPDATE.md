@@ -1,6 +1,10 @@
 # UPDATES
 ---
 
+### v0.3.11 @ 3.16.2016
+- Updated `$.parseJson()`.
+- Updated *test* files.
+
 ### v0.3.10 @ 3.15.2016
 - Removed `$.try()`.
 
