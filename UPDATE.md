@@ -1,6 +1,9 @@
 # UPDATES
 ---
 
+### v0.3.12 @ 4.13.2016
+- Added `$._`.
+
 ### v0.3.11 @ 3.16.2016
 - Updated `$.parseJson()`.
 - Updated *test* files.

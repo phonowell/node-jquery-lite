@@ -1,14 +1,9 @@
-#extend
-$.extend = _.extend
-
-#param
-$.param = (require 'querystring').stringify
-
-#trim
-$.trim = _.trim
-
-#now
-$.now = _.now
+$.extend = _.extend #extend
+$.param = (require 'querystring').stringify #param
+$.trim = _.trim #trim
+$.now = _.now #now
+$.each = _.each #each
+$.noop = _.noop #noop
 
 #type
 $.type = (param) ->
@@ -16,9 +11,3 @@ $.type = (param) ->
   if type == 'uint8array'
     return 'buffer'
   type
-
-#noop
-$.noop = _.noop
-
-#each
-$.each = _.each

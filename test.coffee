@@ -1,5 +1,5 @@
-_ = require 'lodash'
 $ = require './index'
+_ = $._
 
 express = require 'express'
 app = express()
@@ -29,7 +29,7 @@ parseOkay = (msg, okay) ->
 #version
 do ->
   divide 'Version'
-  a = '0.3.11'
+  a = '0.3.12'
   test $.version, a, '$.version [is] ' + a
 
 #$.type()

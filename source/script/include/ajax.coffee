@@ -27,7 +27,7 @@ $.get = (url, query) ->
 
     def.resolve if type == 'json' then $.parseJson(body) else body
 
-  def
+  def.promise()
 
 #post
 $.post = (url, query) ->
@@ -48,4 +48,4 @@ $.post = (url, query) ->
 
     def.resolve if type == 'json' then $.parseJson(body) else body
 
-  def
+  def.promise()

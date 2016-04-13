@@ -2,19 +2,14 @@ _ = require 'lodash'
 colors = require 'colors/safe'
 
 module.exports = $ =
-  version: '0.3.11'
-  startTime: _.now()
-#extend
-$.extend = _.extend
-
-#param
-$.param = (require 'querystring').stringify
-
-#trim
-$.trim = _.trim
-
-#now
-$.now = _.now
+  _: _
+  version: '0.3.12'
+$.extend = _.extend #extend
+$.param = (require 'querystring').stringify #param
+$.trim = _.trim #trim
+$.now = _.now #now
+$.each = _.each #each
+$.noop = _.noop #noop
 
 #type
 $.type = (param) ->
@@ -22,12 +17,6 @@ $.type = (param) ->
   if type == 'uint8array'
     return 'buffer'
   type
-
-#noop
-$.noop = _.noop
-
-#each
-$.each = _.each
 $.Callbacks = (options) ->
   options = $.extend {}, options
 
@@ -116,7 +105,7 @@ $.Deferred = ->
         res
 
       res[a[0]] = (args...) -> fn false, args...
-      res[a[0] + 'With'] = (context, args...) -> fn true, context, args...
+      res[a[0] + 'With'] = (args...) -> fn true, args...
 
   #then & always
   res.then = (args...) -> res.done(args[0]).fail args[1]
@@ -329,7 +318,7 @@ $.get = (url, query) ->
 
     def.resolve if type == 'json' then $.parseJson(body) else body
 
-  def
+  def.promise()
 
 #post
 $.post = (url, query) ->
@@ -350,7 +339,7 @@ $.post = (url, query) ->
 
     def.resolve if type == 'json' then $.parseJson(body) else body
 
-  def
+  def.promise()
 #next
 $.next = (param...) ->
   [time, fn] = if !param[1] then [0, param[0]] else param
