@@ -14,35 +14,34 @@ $ npm i node-jquery-lite
 ---
 
 ### Methods like jQuery
-- `$.now()`
-- `$.type()`
-- `$.trim()`
-- `$.param()`
-- `$.extend()`
 - `$.Callbacks()`
 - `$.Deferred()`
-- `$.get()`
-- `$.post()`
-- `$.noop()`
 - `$.each()`
+- `$.extend()`
+- `$.get()`
+- `$.noop()`
+- `$.now()`
+- `$.param()`
+- `$.post()`
+- `$.trim()`
+- `$.type()`
 - `$.when()`
 
 ### Methods else
-- `$.parseTime()`
+- `$.i()`
+- `$.info()`
+- `$.log()`
+- `$.next()`
+- `$.parseJson()`
+- `$.parsePts()`
+- `$.parseSafe()`
 - `$.parseShortDate()`
 - `$.parseString()`
-- `$.parsePts()`
-- `$.parseJson()`
-- `$.next()`
-- `$.log()`
-- `$.info()`
-- `$.i()`
-- `$.timeStamp()`
-- `$.rnd()`
-- `$.timeString()`
-- `$.shell()`
-- `$.parseSafe()`
 - `$.parseTemp()`
+- `$.parseTime()`
+- `$.shell()`
+- `$.timeStamp()`
+- `$.timeString()`
     
 ## Attention
 ---

@@ -74,24 +74,6 @@ $.timeStamp = (param) ->
       parseInt(d.getTime() / 1e3) * 1e3
     else $.now()
 
-#rnd
-$.rnd = (p...) ->
-  r = Math.random()
-  #check param
-  switch p.length
-    when 1
-      #check type
-      switch $.type p[0]
-        #number
-        when 'number'
-          (r * p[0]) | 0
-        #array
-        when 'array'
-          p[0][(r * p[0].length) | 0]
-    when 2
-      (p[0] + r * (p[1] - p[0])) | 0
-    else (r * 2) | 0
-
 #time
 $.timeString = (time) ->
   d = if time then new Date time else new Date()

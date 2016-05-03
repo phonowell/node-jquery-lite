@@ -1,5 +1,6 @@
-_ = require 'lodash' #lodash
-$ = require './index' #index
+#require
+$ = require './index'
+_ = $._
 
 argv = require('minimist')(process.argv.slice 2) #argv
 

@@ -12,24 +12,25 @@ total = [0, 0]
 test = (a, b, msg) ->
   total[0]++
   if a == b
-    $.info 'success', parseOkay msg
+    $.info 'success', parseOk msg
   else
-    $.info 'fail', parseOkay msg, false
+    $.info 'fail', parseOk msg, false
+    $.log "#{colors.gray '# '}#{colors.red a}#{colors.gray ' is not '}#{colors.green b}"
     total[1]++
 
-divide = (title) -> $.log colors.gray _.repeat('-', 16) + if title then '> ' + title or ''
+divide = (title) -> $.log colors.gray _.repeat('-', 16) + if title then '> ' + title else ''
 
-parseOkay = (msg, okay) ->
+parseOk = (msg, ok) ->
   if !~msg.search /\[is]/
     return msg
-  if okay == false
+  if ok == false
     return msg.replace /\[is]/, colors.red 'is not'
   msg.replace /\[is]/, colors.green 'is'
 
 #version
 do ->
   divide 'Version'
-  a = '0.3.12'
+  a = '0.3.13'
   test $.version, a, '$.version [is] ' + a
 
 #$.type()
@@ -150,7 +151,7 @@ do ->
     fn = -> a++
     for i in [0...3]
       cb.add fn
-    cb.add -> test a, 3, '$.Callbacks().add() [is] okay.'
+    cb.add -> test a, 3, '$.Callbacks().add() [is] ok'
     cb.fire()
 
   #add with options.unique
@@ -160,7 +161,7 @@ do ->
     fn = -> a++
     for i in [0...3]
       cb.add fn
-    cb.add -> test a, 1, '$.Callbacks({unique: true}).add() [is] okay.'
+    cb.add -> test a, 1, '$.Callbacks({unique: true}).add() [is] ok'
     cb.fire()
 
   #remove
@@ -171,7 +172,7 @@ do ->
     for i in [0...3]
       cb.add fn
     cb.remove fn
-    cb.add -> test a, 0, '$.Callbacks().remove() [is] okay.'
+    cb.add -> test a, 0, '$.Callbacks().remove() [is] ok'
     cb.fire()
 
   #has
@@ -181,7 +182,7 @@ do ->
     fn = -> a++
     for i in [0...3]
       cb.add fn
-    cb.add -> test cb.has(fn) == true and cb.has(-> a--) == false, true, '$.Callbacks().has() [is] okay.'
+    cb.add -> test cb.has(fn) == true and cb.has(-> a--) == false, true, '$.Callbacks().has() [is] ok'
     cb.fire()
 
   #empty
@@ -192,7 +193,7 @@ do ->
     for i in [0...3]
       cb.add fn
     cb.empty()
-    cb.add -> test a, 0, '$.Callbacks().empty() [is] okay.'
+    cb.add -> test a, 0, '$.Callbacks().empty() [is] ok'
     cb.fire()
 
   #fire
@@ -202,7 +203,7 @@ do ->
     fn = (n) -> a = a + n
     for i in [0...3]
       cb.add fn
-    cb.add -> test a, 6, '$.Callbacks().fire() [is] okay.'
+    cb.add -> test a, 6, '$.Callbacks().fire() [is] ok'
     cb.fire 2
 
   #fire with once:true
@@ -212,7 +213,7 @@ do ->
     fn = -> a++
     for i in [0...3]
       cb.add fn
-    cb.add -> test a, 3, '$.Callbacks({once: true}).fire() [is] okay.'
+    cb.add -> test a, 3, '$.Callbacks({once: true}).fire() [is] ok'
     cb.fire()
     cb.fire()
 
@@ -223,7 +224,7 @@ do ->
     fn = (n, m) -> @v = @v + n * m
     for i in [0...3]
       cb.add fn
-    cb.add -> test a.v, 18, '$.Callbacks().fireWith() [is] okay.'
+    cb.add -> test a.v, 18, '$.Callbacks().fireWith() [is] ok'
     cb.fireWith a, 2, 3
 
 #$.Deferred()
@@ -233,7 +234,7 @@ do ->
   #state
   do ->
     def = $.Deferred()
-    test def.state(), 'pending', "$.Deferred().state() [is] okay(#{colors.magenta 'pending'})."
+    test def.state(), 'pending', "$.Deferred().state() [is] ok(#{colors.magenta 'pending'})"
 
   for a in [
     ['resolve', 'done', 'resolved']
@@ -244,13 +245,13 @@ do ->
       #done, fail & notify
       do ->
         def = $.Deferred()
-        def[b[1]] (data) -> test data, 0, "$.Deferred().#{b[1]}() [is] okay."
+        def[b[1]] (data) -> test data, 0, "$.Deferred().#{b[1]}() [is] ok"
         $.next -> def[b[0]] 0
 
       #resolveWith, rejectWith & progressWith
       do ->
         def = $.Deferred()
-        def[b[1]] (args...) -> test @v, args[0] * args[1], "$.Deferred().#{b[0]}With() [is] okay."
+        def[b[1]] (args...) -> test @v, args[0] * args[1], "$.Deferred().#{b[0]}With() [is] ok"
         $.next -> def[b[0] + 'With'] {v: 6}, 2, 3
 
       if b[0] == 'progress' then return
@@ -258,20 +259,20 @@ do ->
       #state
       do ->
         def = $.Deferred()
-        def[b[1]] -> test def.state(), b[2], "$.Deferred().state() [is] okay(#{colors.magenta b[2]})."
+        def[b[1]] -> test def.state(), b[2], "$.Deferred().state() [is] ok(#{colors.magenta b[2]})"
         def[b[0]]()
 
       #then
       do ->
         def = $.Deferred()
-        def.then ((data) -> test data, 0, "$.Deferred().then() [is] okay(#{colors.magenta 'resolve'}).")
-        , (data) -> test data, 0, "$.Deferred().then() [is] okay(#{colors.magenta 'reject'})."
+        def.then ((data) -> test data, 0, "$.Deferred().then() [is] ok(#{colors.magenta 'resolve'})")
+        , (data) -> test data, 0, "$.Deferred().then() [is] ok(#{colors.magenta 'reject'})"
         $.next -> def[b[0]] 0
 
       #always
       do ->
         def = $.Deferred()
-        def.always (data) -> test data, 0, "$.Deferred().always() [is] okay(#{colors.magenta b[0]})."
+        def.always (data) -> test data, 0, "$.Deferred().always() [is] ok(#{colors.magenta b[0]})"
         $.next -> def[b[0]] 0
 
 #$.when()
@@ -296,7 +297,7 @@ $.next 100, ->
         res = res and args[1][0] == 1 and args[1][1] == 2
         res = res and args[2][0] == 3 and args[2][1] == 4 and args[2][2] == 5
         res = res and args[3][0] == 'a' and args[3][1] == 'b'
-        test res, true, "$.when() [is] okay(#{colors.magenta "resolve - #{i}/#{count}"})."
+        test res, true, "$.when() [is] ok(#{colors.magenta "resolve - #{i}/#{count}"})"
 
       a.resolve 0
       c.resolve 3, 4, 5
@@ -312,7 +313,7 @@ $.next 100, ->
       .fail (args...) ->
         res = true
         res = res and args[0] == 1 and args[1] == 2
-        test res, true, "$.when() [is] okay(#{colors.magenta "reject - #{i}/#{count}"})."
+        test res, true, "$.when() [is] ok(#{colors.magenta "reject - #{i}/#{count}"})"
       a.reject 1, 2
 
     do (i = ++index) ->
@@ -322,7 +323,7 @@ $.next 100, ->
       .fail (args...) ->
         res = true
         res = res and args[0] == 1 and args[1] == 2
-        test res, true, "$.when() [is] okay(#{colors.magenta "reject - #{i}/#{count}"})."
+        test res, true, "$.when() [is] ok(#{colors.magenta "reject - #{i}/#{count}"})"
       a.resolve()
       b.reject 1, 2
 
@@ -332,7 +333,7 @@ $.next 100, ->
       .fail (args...) ->
         res = true
         res = res and args[0] == 1 and args[1] == 2
-        test res, true, "$.when() [is] okay(#{colors.magenta "reject - #{i}/#{count}"})."
+        test res, true, "$.when() [is] ok(#{colors.magenta "reject - #{i}/#{count}"})"
 
 #ajax
 $.next 200, ->
@@ -356,13 +357,13 @@ $.next 200, ->
   $.when $.get(base + '/ping', salt: salt), $.get(base + '/json', salt: salt)
   .always (data...) ->
     res = parseInt(data[0]) == parseInt(data[1].value) == salt
-    test res, true, '$.get() [is] okay.'
+    test res, true, '$.get() [is] ok'
 
   #post
   $.when $.post(base + '/ping', salt: salt), $.post(base + '/json', salt: salt)
   .always (data...) ->
     res = parseInt(data[0]) == parseInt(data[1].value) == salt
-    test res, true, '$.post() [is] okay.'
+    test res, true, '$.post() [is] ok'
 
 #result
 $.next 500, ->

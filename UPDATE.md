@@ -1,6 +1,10 @@
 # UPDATES
 ---
 
+### v0.3.13 @ 5.3.2016
+- Removed `$.rnd()`.
+- Updated *test* files.
+
 ### v0.3.12 @ 4.13.2016
 - Added `$._`.
 
