@@ -1,0 +1,72 @@
+########################
+# node.js / npm
+########################
+lib-cov
+*.seed
+*.log
+*.csv
+*.dat
+*.out
+*.pid
+*.gz
+
+pids
+logs
+results
+node_modules
+npm-debug.log
+
+
+########################
+# misc / editors
+########################
+*~
+*#
+.DS_STORE
+.netbeans
+nbproject
+.idea
+
+
+########################
+# version control
+########################
+.svn
+
+########################
+# local cache
+########################
+bak
+*.bak
+*.origin.*
+
+########################
+# cordova
+########################
+hooks
+platforms
+plugins
+www
+build
+
+########################
+# compiled
+########################
+*.html
+*.css
+*.js
+*.map
+*.json
+
+########################
+# document
+########################
+doc
+
+########################
+# linked
+########################
+.kokoro
+.gitattributes
+.gitignore
+gurumin

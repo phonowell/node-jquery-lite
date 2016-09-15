@@ -23,6 +23,7 @@ $ npm i node-jquery-lite
 - `$.now()`
 - `$.param()`
 - `$.post()`
+- `$.serialize()`
 - `$.trim()`
 - `$.type()`
 - `$.when()`

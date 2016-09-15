@@ -13,10 +13,15 @@ $.get = (url, query) ->
 
   def = $.Deferred()
 
+  if query
+    _url = url.replace /\?.*/, ''
+    _query = $.serialize url.replace /.*\?/, ''
+    _.extend _query, query
+    url = "#{_url}?#{$.param _query}"
+
   request
     method: 'GET'
     url: url
-    form: query
     gzip: true
   , (err, res, body) ->
     if err

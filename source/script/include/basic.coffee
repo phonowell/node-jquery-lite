@@ -8,6 +8,5 @@ $.noop = _.noop #noop
 #type
 $.type = (param) ->
   type = Object::toString.call(param).replace(/^\[object\s(.+)\]$/, '$1').toLowerCase()
-  if type == 'uint8array'
-    return 'buffer'
+  if type == 'uint8array' then return 'buffer'
   type

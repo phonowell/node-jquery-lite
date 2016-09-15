@@ -103,7 +103,7 @@ $.parseJson = $.parseJSON = (data) ->
     return data
 
   try
-    res = eval "(" + data + ")"
+    res = eval "(#{data})"
     switch $.type res
       when 'object', 'array' then res
       else data

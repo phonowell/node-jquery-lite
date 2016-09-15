@@ -5,55 +5,70 @@ express = require 'express'
 app = express()
 bodyParser = require 'body-parser'
 
-colors = require 'colors/safe'
-
 #function
-total = [0, 0]
-test = (a, b, msg) ->
-  total[0]++
+$total = [0, 0]
+$test = (a, b, msg) ->
+  $total[0]++
   if a == b
-    $.info 'success', parseOk msg
+    $.info 'success', $parseOk msg
   else
-    $.info 'fail', parseOk msg, false
-    $.log "#{colors.gray '# '}#{colors.red a}#{colors.gray ' is not '}#{colors.green b}"
-    total[1]++
+    $.info 'fail', $parseOk msg, false
+    $.log "# #{a} is not #{b}"
+    $total[1]++
 
-divide = (title) -> $.log colors.gray _.repeat('-', 16) + if title then '> ' + title else ''
+$divide = (title) -> $.log _.repeat('-', 16) + if title then '> ' + title else ''
 
-parseOk = (msg, ok) ->
+$parseOk = (msg, ok) ->
   if !~msg.search /\[is]/
     return msg
   if ok == false
-    return msg.replace /\[is]/, colors.red 'is not'
-  msg.replace /\[is]/, colors.green 'is'
+    return msg.replace /\[is]/, 'is not'
+  msg.replace /\[is]/, 'is'
+
+$subject = [
+  1024 #number
+  'hello world' #string
+  true #boolean
+  [1, 2, 3] #array
+  {a: 1, b: 2} #object
+  -> return null #function
+  new Date() #date
+  new Error('All Right') #error
+  new Buffer('String') #buffer
+  null #null
+  undefined #undefined
+  NaN #nan
+]
 
 #version
 do ->
-  divide 'Version'
-  a = '0.3.13'
-  test $.version, a, '$.version [is] ' + a
+  $divide 'Version'
+  a = '0.3.14'
+  $test $.version, a, '$.version [is] ' + a
 
 #$.type()
 do ->
-  divide '$.type()'
-  for a in [
-    [199, 'number']
-    ['hello world', 'string']
-    [true, 'boolean']
-    [[1, 2, 3], 'array']
-    [{a: 1, b: 2}, 'object']
-    [_.noop, 'function']
-    [new Date(), 'date']
-    [new Error(), 'error']
-    [new Buffer('buffer'), 'buffer']
-    [null, 'null']
-    [undefined, 'undefined']
+  $divide '$.type()'
+  for a, i in [
+    'number'
+    'string'
+    'boolean'
+    'array'
+    'object'
+    'function'
+    'date'
+    'error'
+    'buffer'
+    'null'
+    'undefined'
+    'number'
   ]
-    test $.type(a[0]), a[1], "$.type(#{$.parseString a[0]}) [is] #{a[1]}"
+    $test $.type($subject[i]), a
+    , "$.type(#{$.parseString $subject[i]}) [is] #{$.parseString a}"
 
 #$.parseTime()
 do ->
-  divide '$.parseTime()'
+  $divide '$.parseTime()'
   for a in [
     #before
     [_.now(), undefined, '刚刚']
@@ -71,39 +86,43 @@ do ->
     [_.now() - 45e3, true, '45秒前']
   ]
     #$.i $.parseTime a[0], a[1]
-    test $.parseTime(a[0], a[1]), a[2], "$.parseTime(#{$.parseString a[0]}, #{$.parseString a[1]}) [is] #{a[2]}"
+    $test $.parseTime(a[0], a[1]), a[2]
+    , "$.parseTime(#{$.parseString a[0]}, #{$.parseString a[1]}) [is] #{a[2]}"
 
 #$.parseShortDate()
 do ->
-  divide '$.parseShortDate()'
+  $divide '$.parseShortDate()'
   for a in [
     ['2012.12.21', '20121221']
     ['1999.1.1', '19990101']
     ['2050.2.28', '20500228']
   ]
-    test $.parseShortDate($.timeStamp a[0]), a[1], "$.parseShortDate(#{a[0]}) [is] #{a[1]}"
+    $test $.parseShortDate($.timeStamp a[0]), a[1]
+    , "$.parseShortDate(#{a[0]}) [is] #{a[1]}"
 
 #$.parseString()
 do ->
-  divide '$.parseString()'
-  for a in [
-    [1096, '1096']
-    ['hello world', 'hello world']
-    [true, 'true']
-    [[1, 2, 3], '[1,2,3]']
-    [{a: 1, b: 2}, '{"a":1,"b":2}']
-    [new Date(), (new Date()).toString()]
-    [new Error('concert'), (new Error('concert')).toString()]
-    [new Buffer('buffer'), 'buffer']
-    [null, 'null']
-    [undefined, 'undefined']
-    [NaN, 'NaN']
+  $divide '$.parseString()'
+  for a, i in [
+    '1024'
+    'hello world'
+    'true'
+    '[1,2,3]'
+    '{"a":1,"b":2}'
+    $subject[5].toString()
+    $subject[6].toString()
+    $subject[7].toString()
+    $subject[8].toString()
+    'null'
+    'undefined'
+    'NaN'
   ]
-    test $.parseString(a[0]), a[1], "$.parseString(#{$.parseString a[0]}) [is] #{a[1]}"
+    $test $.parseString($subject[i]), a
+    , "$.parseString(#{$.parseString $subject[i]}) [is] #{$.parseString a}"
 
 #$.parsePts
 do ->
-  divide '$.parsePts()'
+  $divide '$.parsePts()'
   for a in [
     [0, '0']
     [100, '100']
@@ -112,37 +131,56 @@ do ->
     [1e5, '10万']
     [1234567, '123.4万']
   ]
-    test $.parsePts(a[0]), a[1], "$.parsePts(#{$.parseString a[0]}) [is] #{a[1]}"
+    $test $.parsePts(a[0]), a[1]
+    , "$.parsePts(#{$.parseString a[0]}) [is] #{a[1]}"
 
 #$.parseJson()
 do ->
-  divide '$.parseJson()'
-  arr = [
-    new Date()
-    new Error 'error'
-    new Buffer 'buffer'
-    null
-    undefined
-    NaN
+  $divide '$.parseJson()'
+  for a, i in $subject
+    $test _.isEqual($.parseJson($subject[i]), a), true
+    , "$.parseJson(#{$.parseString $subject[i]}) [is] #{$.parseString a}"
+  map =[
+    ['[1,2,3]', [1, 2, 3]]
+    ['{a:1,b:2}', {a: 1, b: 2}]
   ]
-  for a in [
-    [1096, 1096]
-    ['hello world', 'hello world']
-    [true, true]
-    ['[1, 2, 3]', [1,2,3]]
-    ['{"a":1,"b":2}', {a: 1, b: 2}]
-    [arr[0], arr[0]]
-    [arr[1], arr[1]]
-    [arr[2], arr[2]]
-    [arr[3], arr[3]]
-    [arr[4], arr[4]]
-    [arr[5], arr[5]]
+  for a in map
+    $test _.isEqual($.parseJson(a[0]), a[1]), true
+    , "$.parseJson(#{$.parseString a[0]}) [is] #{$.parseString a[1]}"
+
+#$.serialize()
+do ->
+  $divide '$.serialize()'
+
+  for a, i in [
+    {}
+    {}
+    {}
+    {}
+    {a: 1, b: 2}
+    {}
+    {}
+    {}
+    {}
+    {}
+    {}
+    {}
   ]
-    test _.isEqual($.parseJson(a[0]), a[1]), true, "$.parseJson(#{$.parseString a[0]}) [is] #{a[1]}"
+    $test _.isEqual($.serialize($subject[i]), a), true
+    , "$.serialize(#{$.parseString $subject[i]}) [is] #{$.parseString a}"
+
+  a = '?a=1&b=2&c=3&d=4'
+  b =
+    a: '1'
+    b: '2'
+    c: '3'
+    d: '4'
+  $test _.isEqual($.serialize(a), b), true
+  , "$.serialize(#{$.parseString a}) [is] #{$.parseString b}"
 
 #$.Callbacks()
 do ->
-  divide '$.Callbacks()'
+  $divide '$.Callbacks()'
 
   #add
   do ->
@@ -151,7 +189,7 @@ do ->
     fn = -> a++
     for i in [0...3]
       cb.add fn
-    cb.add -> test a, 3, '$.Callbacks().add() [is] ok'
+    cb.add -> $test a, 3, '$.Callbacks().add() [is] ok'
     cb.fire()
 
   #add with options.unique
@@ -161,7 +199,7 @@ do ->
     fn = -> a++
     for i in [0...3]
       cb.add fn
-    cb.add -> test a, 1, '$.Callbacks({unique: true}).add() [is] ok'
+    cb.add -> $test a, 1, '$.Callbacks({unique: true}).add() [is] ok'
     cb.fire()
 
   #remove
@@ -172,7 +210,7 @@ do ->
     for i in [0...3]
       cb.add fn
     cb.remove fn
-    cb.add -> test a, 0, '$.Callbacks().remove() [is] ok'
+    cb.add -> $test a, 0, '$.Callbacks().remove() [is] ok'
     cb.fire()
 
   #has
@@ -182,7 +220,9 @@ do ->
     fn = -> a++
     for i in [0...3]
       cb.add fn
-    cb.add -> test cb.has(fn) == true and cb.has(-> a--) == false, true, '$.Callbacks().has() [is] ok'
+    cb.add ->
+      $test cb.has(fn) == true and cb.has(-> a--) == false, true
+      , '$.Callbacks().has() [is] ok'
     cb.fire()
 
   #empty
@@ -193,7 +233,7 @@ do ->
     for i in [0...3]
       cb.add fn
     cb.empty()
-    cb.add -> test a, 0, '$.Callbacks().empty() [is] ok'
+    cb.add -> $test a, 0, '$.Callbacks().empty() [is] ok'
     cb.fire()
 
   #fire
@@ -203,7 +243,7 @@ do ->
     fn = (n) -> a = a + n
     for i in [0...3]
       cb.add fn
-    cb.add -> test a, 6, '$.Callbacks().fire() [is] ok'
+    cb.add -> $test a, 6, '$.Callbacks().fire() [is] ok'
     cb.fire 2
 
   #fire with once:true
@@ -213,7 +253,7 @@ do ->
     fn = -> a++
     for i in [0...3]
       cb.add fn
-    cb.add -> test a, 3, '$.Callbacks({once: true}).fire() [is] ok'
+    cb.add -> $test a, 3, '$.Callbacks({once: true}).fire() [is] ok'
     cb.fire()
     cb.fire()
 
@@ -224,17 +264,17 @@ do ->
     fn = (n, m) -> @v = @v + n * m
     for i in [0...3]
       cb.add fn
-    cb.add -> test a.v, 18, '$.Callbacks().fireWith() [is] ok'
+    cb.add -> $test a.v, 18, '$.Callbacks().fireWith() [is] ok'
     cb.fireWith a, 2, 3
 
 #$.Deferred()
 do ->
-  divide '$.Deferred()'
+  $divide '$.Deferred()'
 
   #state
   do ->
     def = $.Deferred()
-    test def.state(), 'pending', "$.Deferred().state() [is] ok(#{colors.magenta 'pending'})"
+    $test def.state(), 'pending', '$.Deferred().state() [is] ok(pending)'
 
   for a in [
     ['resolve', 'done', 'resolved']
@@ -245,13 +285,15 @@ do ->
       #done, fail & notify
       do ->
         def = $.Deferred()
-        def[b[1]] (data) -> test data, 0, "$.Deferred().#{b[1]}() [is] ok"
+        def[b[1]] (data) -> $test data, 0, "$.Deferred().#{b[1]}() [is] ok"
         $.next -> def[b[0]] 0
 
       #resolveWith, rejectWith & progressWith
       do ->
         def = $.Deferred()
-        def[b[1]] (args...) -> test @v, args[0] * args[1], "$.Deferred().#{b[0]}With() [is] ok"
+        def[b[1]] (args...) ->
+          $test @v, args[0] * args[1]
+          , "$.Deferred().#{b[0]}With() [is] ok"
         $.next -> def[b[0] + 'With'] {v: 6}, 2, 3
 
       if b[0] == 'progress' then return
@@ -259,25 +301,26 @@ do ->
       #state
       do ->
         def = $.Deferred()
-        def[b[1]] -> test def.state(), b[2], "$.Deferred().state() [is] ok(#{colors.magenta b[2]})"
+        def[b[1]] -> $test def.state(), b[2], "$.Deferred().state() [is] ok(#{b[2]})"
         def[b[0]]()
 
       #then
       do ->
         def = $.Deferred()
-        def.then ((data) -> test data, 0, "$.Deferred().then() [is] ok(#{colors.magenta 'resolve'})")
-        , (data) -> test data, 0, "$.Deferred().then() [is] ok(#{colors.magenta 'reject'})"
+        def.then ((data) -> $test data, 0, '$.Deferred().then() [is] ok(resolve)')
+        , (data) -> $test data, 0, '$.Deferred().then() [is] ok(reject)'
         $.next -> def[b[0]] 0
 
       #always
       do ->
         def = $.Deferred()
-        def.always (data) -> test data, 0, "$.Deferred().always() [is] ok(#{colors.magenta b[0]})"
+        def.always (data) ->
+          $test data, 0, "$.Deferred().always() [is] ok(#{b[0]})"
         $.next -> def[b[0]] 0
 
 #$.when()
 $.next 100, ->
-  divide '$.when()'
+  $divide '$.when()'
 
   #resolve
   do ->
@@ -297,7 +340,7 @@ $.next 100, ->
         res = res and args[1][0] == 1 and args[1][1] == 2
         res = res and args[2][0] == 3 and args[2][1] == 4 and args[2][2] == 5
         res = res and args[3][0] == 'a' and args[3][1] == 'b'
-        test res, true, "$.when() [is] ok(#{colors.magenta "resolve - #{i}/#{count}"})"
+        $test res, true, "$.when() [is] ok(resolve - #{i}/#{count})"
 
       a.resolve 0
       c.resolve 3, 4, 5
@@ -313,7 +356,7 @@ $.next 100, ->
       .fail (args...) ->
         res = true
         res = res and args[0] == 1 and args[1] == 2
-        test res, true, "$.when() [is] ok(#{colors.magenta "reject - #{i}/#{count}"})"
+        $test res, true, "$.when() [is] ok(reject - #{i}/#{count})"
       a.reject 1, 2
 
     do (i = ++index) ->
@@ -323,7 +366,7 @@ $.next 100, ->
       .fail (args...) ->
         res = true
         res = res and args[0] == 1 and args[1] == 2
-        test res, true, "$.when() [is] ok(#{colors.magenta "reject - #{i}/#{count}"})"
+        $test res, true, "$.when() [is] ok(reject - #{i}/#{count})"
       a.resolve()
       b.reject 1, 2
 
@@ -333,43 +376,42 @@ $.next 100, ->
       .fail (args...) ->
         res = true
         res = res and args[0] == 1 and args[1] == 2
-        test res, true, "$.when() [is] ok(#{colors.magenta "reject - #{i}/#{count}"})"
+        $test res, true, "$.when() [is] ok(reject - #{i}/#{count})"
 
 #ajax
 $.next 200, ->
-  divide 'Ajax'
+  $divide 'Ajax'
 
   #server
   app.use bodyParser.urlencoded extended: true
 
   #route
-  app.get '/ping', (req, res) -> res.send req.body.salt
+  app.get '/ping', (req, res) -> res.send req.query.salt
   app.post '/ping', (req, res) -> res.send req.body.salt
-  app.get '/json', (req, res) -> res.json value: req.body.salt
+  app.get '/json', (req, res) -> res.json value: req.query.salt
   app.post '/json', (req, res) -> res.json value: req.body.salt
 
   app.listen port = 9453
-  base = 'http://localhost:' + port
+  base = "http://localhost:#{port}"
 
   salt = _.now()
 
   #get
-  $.when $.get(base + '/ping', salt: salt), $.get(base + '/json', salt: salt)
+  $.when $.get("#{base}/ping", salt: salt), $.get("#{base}/json", salt: salt)
   .always (data...) ->
     res = parseInt(data[0]) == parseInt(data[1].value) == salt
-    test res, true, '$.get() [is] ok'
+    $test res, true, '$.get() [is] ok'
 
   #post
-  $.when $.post(base + '/ping', salt: salt), $.post(base + '/json', salt: salt)
+  $.when $.post("#{base}/ping", salt: salt), $.post("#{base}/json", salt: salt)
   .always (data...) ->
     res = parseInt(data[0]) == parseInt(data[1].value) == salt
-    test res, true, '$.post() [is] ok'
+    $test res, true, '$.post() [is] ok'
 
 #result
 $.next 500, ->
-  divide 'Result'
-  msg = "There has got #{total[1]} fail(s) from #{total[0]} test(s)."
-  msg = colors[if total[1] then 'red' else 'green'] msg
+  $divide 'Result'
+  msg = "There has got #{$total[1]} fail(s) from #{$total[0]} test(s)."
   $.info 'result', msg
 
   $.next 500, -> process.exit()

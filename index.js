@@ -1,1 +1,601 @@
-(function(){var $,_,colors,parseType,request,slice=[].slice,indexOf=[].indexOf||function(e){for(var r=0,t=this.length;t>r;r++)if(r in this&&this[r]===e)return r;return-1};_=require("lodash"),colors=require("colors/safe"),module.exports=$={_:_,version:"0.3.13"},$.extend=_.extend,$.param=require("querystring").stringify,$.trim=_.trim,$.now=_.now,$.each=_.each,$.noop=_.noop,$.type=function(e){var r;return r=Object.prototype.toString.call(e).replace(/^\[object\s(.+)\]$/,"$1").toLowerCase(),"uint8array"===r?"buffer":r},$.Callbacks=function(e){var r,t,n;return e=$.extend({},e),t={},n=t._status={fired:!1},r=t._list=[],t.add=function(){var n,a,s,o;for(n=1<=arguments.length?slice.call(arguments,0):[],s=0,o=n.length;o>s;s++)a=n[s],"function"===$.type(a)&&(e.unique?t.has(a)||r.push(a):r.push(a));return t},t.remove=function(e){return _.remove(r,function(r){return r===e}),t},t.has=function(e){return indexOf.call(r,e)>=0},t.empty=function(){return r=[],t},t.fire=function(){var a,s,o,i;if(a=1<=arguments.length?slice.call(arguments,0):[],e.once&&n.fired)return t;for(o=0,i=r.length;i>o;o++)s=r[o],s.apply(null,a);return n.fired=!0,t},t.fireWith=function(){var a,s,o,i,u;if(s=arguments[0],a=2<=arguments.length?slice.call(arguments,1):[],e.once&&n.fired)return t;for(i=0,u=r.length;u>i;i++)o=r[i],o.apply(s,a);return n.fired=!0,t},t.fired=function(){return n.fired},t},$.Deferred=function(){var e,r,t,n,a,s,o,i;for(o={},i=o._status={state:"pending",_arguments:null},a=o._list={done:$.Callbacks({once:!0}),fail:$.Callbacks({once:!0}),notify:$.Callbacks()},o.promise=function(e){return null!=e?$.extend(e,o):o},o.state=function(){return i.state},s=[["resolve","done","resolved"],["reject","fail","rejected"],["progress","notify"]],r=function(e){var r;return o[e[1]]=function(r){return"function"===$.type(r)&&a[e[1]].add(r),o},r=function(){var r,t,n;return n=arguments[0],r=2<=arguments.length?slice.call(arguments,1):[],e[2]&&(i.state=e[2]),i._arguments=r,(t=a[e[1]])["fire"+(n?"With":"")].apply(t,r),o},o[e[0]]=function(){var e;return e=1<=arguments.length?slice.call(arguments,0):[],r.apply(null,[!1].concat(slice.call(e)))},o[e[0]+"With"]=function(){var e;return e=1<=arguments.length?slice.call(arguments,0):[],r.apply(null,[!0].concat(slice.call(e)))}},t=0,n=s.length;n>t;t++)e=s[t],r(e);return o.then=function(){var e;return e=1<=arguments.length?slice.call(arguments,0):[],o.done(e[0]).fail(e[1])},o.always=function(e){return o.done(e).fail(e)},o},$.when=function(){var e,r,t,n,a,s,o,i,u;for(t=1<=arguments.length?slice.call(arguments,0):[],n=$.Deferred(),u=function(e){return 1===e.length?e[0]:e},i={state:[],args:[]},a=function(e,r){var t,a;return(null!=e&&null!=(t=e._status)?t.state:void 0)?(a=e._status.state,"resolved"===a?(i.state.push(1),void(i.args[r]=u(e._status._arguments))):"rejected"===a?(i.state=null,void(i.args=e._status._arguments)):(i.state.push(0),e.done(function(){var e;return e=1<=arguments.length?slice.call(arguments,0):[],n.progress(r,1,e)}).fail(function(){var e;return e=1<=arguments.length?slice.call(arguments,0):[],n.reject.apply(n,e)}))):(i.state.push(1),void(i.args[r]=e))},r=s=0,o=t.length;o>s&&(e=t[r],a(e,r),i.state);r=++s);return i.state?indexOf.call(i.state,0)>=0?(n.notify(function(e,r,t){return i.state[e]=r,i.args[e]=u(t),indexOf.call(i.state,0)>=0?void 0:n.resolve.apply(n,i.args)}),n.promise()):($.next(function(){return n.resolve.apply(n,i.args)}),n.promise()):($.next(function(){return n.reject.apply(n,i.args)}),n.promise())},$.parseTime=function(e,r){return $.parseTime.trans($.timeStamp(e),r)},$.parseTime.trans=function(e,r){var t,n,a,s,o,i,u,l,c,f,p,g,d;if(n=new Date(e),p=n.getTime(),a=new Date,d=a.getTime(),g=d-p,o=n.getHours()+"时"+(n.getMinutes()<10?"0":"")+n.getMinutes()+"分",u=n.getMonth()+1+"月"+n.getDate()+"日(星期"+["日","一","二","三","四","五","六"][n.getDay()]+") "+o,l=n.getFullYear()+"年"+u,i=0,0>g){if(!r)return"刚刚";i=1}return i&&(g=-g+500),g/31536e6|0?l:(t=g/864e5)>3?n.getFullYear()!==a.getFullYear()?l:u:t>1?["前天 ","后天 "][i]+o:(s=g/36e5)>12?(n.getDay()!==a.getDay()?["昨天 ","明天 "][i]:"今天 ")+o:(s=g/36e5%60|0)?s+["小时前","小时后"][i]:(c=g/6e4%60|0)?c+["分钟前","分钟后"][i]:(f=g/1e3%60|0)>30?f+["秒前","秒后"][i]:"刚刚"},$.parseShortDate=function(e){var r,t,n,a,s,o;for(n="date"===$.type(e)?e:new Date(e),t=[n.getFullYear(),1+n.getMonth(),n.getDate()],a=s=0,o=t.length;o>s;a=++s)r=t[a],t[a]=$.parseString(r),a&&t[a].length<2&&(t[a]="0"+t[a]);return t.join("")},$.parseString=function(e){var r,t,n;switch($.type(r=e)){case"string":return r;case"number":return r.toString();case"array":return JSON.stringify({_obj:r}).replace(/\{(.*)\}/,"$1").replace(/"_obj":/,"");case"object":return JSON.stringify(r);case"boolean":return r.toString();case"undefined":return"undefined";case"null":return"null";default:try{return r.toString()}catch(n){return t=n,""}}},$.parsePts=function(e){var r;return(r=0|(e||0))>=1e5?(.001*r|0)/10+"万":r.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g,"$1,")},$.parseJson=$.parseJSON=function(data){var err,error,res;if("string"!==$.type(data))return data;try{switch(res=eval("("+data+")"),$.type(res)){case"object":case"array":return res;default:return data}}catch(error){return err=error,data}},$.parseSafe=_.escape,$.parseTemp=function(e,r){var t,n,a;n=e;for(t in r)a=r[t],n=n.replace(new RegExp("\\["+t+"\\]","g"),a);return n},request=require("request"),parseType=function(e){var r;return r=e.headers["content-type"],r&&~r.search(/application\/json/)?"json":"text"},$.get=function(e,r){var t;return t=$.Deferred(),request({method:"GET",url:e,form:r,gzip:!0},function(e,r,n){var a;return e?void t.reject(e):(a=parseType(r),t.resolve("json"===a?$.parseJson(n):n))}),t.promise()},$.post=function(e,r){var t;return t=$.Deferred(),request({method:"POST",url:e,form:r,gzip:!0},function(e,r,n){var a;return e?void t.reject(e):(a=parseType(r),t.resolve("json"===a?$.parseJson(n):n))}),t.promise()},$.next=function(){var e,r,t,n;return r=1<=arguments.length?slice.call(arguments,0):[],t=r[1]?r:[0,r[0]],n=t[0],e=t[1],n?void setTimeout(e,n):process.nextTick(e)},$.log=console.log,$.info=function(){var e,r,t,n,a,s,o,i;switch(a=1<=arguments.length?slice.call(arguments,0):[],s=a[1]?a:["default",a[0]],i=s[0],n=s[1],t=new Date,o=function(){var r,n,a,s;for(a=[t.getHours(),t.getMinutes(),t.getSeconds()],s=[],r=0,n=a.length;n>r;r++)e=a[r],s.push(10>e?"0"+e:e);return s}().join(":"),r=["["+colors.gray(o)+"]"],i){case"default":break;case"success":case"done":case"ok":r.push("<"+colors.green(i.toUpperCase())+">");break;case"fail":case"error":case"fatal":r.push("<"+colors.red(i.toUpperCase())+">");break;default:r.push("<"+colors.cyan(i.toUpperCase())+">")}return r.push(n),$.log(r.join(" ")),n},$.i=function(e){return $.log(colors.red(e)),e},$.timeStamp=function(e){var r,t,n,a,s,o,i;switch($.type(i=e)){case"number":return i;case"string":if(!~i.search(/[\s\.\-\/]/))return $.now();for(~i.search(/\:/)?(r=i.split(" "),~r[0].search(/\:/)?(t=r[1].replace(/[\-\/]/g,".").split("."),n=r[0].split(":")):(t=r[0].replace(/[\-\/]/g,".").split("."),n=r[1].split(":"))):(t=i.replace(/[\-\/]/g,".").split("."),n=[0,0,0]),s=o=0;2>=o;s=++o)t[s]=parseInt(t[s]),n[s]=parseInt(n[s]||0);return a=new Date,a.setFullYear(t[0],t[1]-1,t[2]),a.setHours(n[0],n[1],n[2]),1e3*parseInt(a.getTime()/1e3);default:return $.now()}},$.timeString=function(e){var r,t;return r=e?new Date(e):new Date,t=function(e){return 10>e?"0"+e:e},[t(r.getHours()),t(r.getMinutes()),t(r.getSeconds())].join(":")},$.shell=function(e,r){var t,n;return n=$.shell,n.platform||(n.platform=require("os").platform()),n.exec||(n.exec=require("child_process").exec),n.info||(n.info=function(e){var r;return r=$.trim(e),r.length?$.log(r.replace(/\r/g,"\n").replace(/\n{2,}/g,"")):void 0}),"array"===$.type(e)&&(e="win32"===n.platform?e.join("&"):e.join("&&")),$.info("shell",colors.magenta(e)),t=n.exec(e),t.stdout.on("data",function(e){return n.info(e)}),t.stderr.on("data",function(e){return n.info(e)}),t.on("close",function(){return"function"==typeof r?r():void 0})}}).call(this);
+// Generated by CoffeeScript 1.10.0
+(function() {
+  var $, _, parseType, request,
+    slice = [].slice,
+    indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
+
+  _ = require('lodash');
+
+  module.exports = $ = {
+    _: _,
+    version: '0.3.14'
+  };
+
+  $.extend = _.extend;
+
+  $.param = (require('querystring')).stringify;
+
+  $.trim = _.trim;
+
+  $.now = _.now;
+
+  $.each = _.each;
+
+  $.noop = _.noop;
+
+  $.type = function(param) {
+    var type;
+    type = Object.prototype.toString.call(param).replace(/^\[object\s(.+)\]$/, '$1').toLowerCase();
+    if (type === 'uint8array') {
+      return 'buffer';
+    }
+    return type;
+  };
+
+  $.Callbacks = function(options) {
+    var list, res, status;
+    options = $.extend({}, options);
+    res = {};
+    status = res._status = {
+      fired: false
+    };
+    list = res._list = [];
+    res.add = function() {
+      var args, fn, j, len;
+      args = 1 <= arguments.length ? slice.call(arguments, 0) : [];
+      for (j = 0, len = args.length; j < len; j++) {
+        fn = args[j];
+        if (!($.type(fn) === 'function')) {
+          continue;
+        }
+        if (options.unique) {
+          if (!res.has(fn)) {
+            list.push(fn);
+          }
+          continue;
+        }
+        list.push(fn);
+      }
+      return res;
+    };
+    res.remove = function(fn) {
+      _.remove(list, function(_fn) {
+        return _fn === fn;
+      });
+      return res;
+    };
+    res.has = function(fn) {
+      return indexOf.call(list, fn) >= 0;
+    };
+    res.empty = function() {
+      list = [];
+      return res;
+    };
+    res.fire = function() {
+      var args, fn, j, len;
+      args = 1 <= arguments.length ? slice.call(arguments, 0) : [];
+      if (options.once && status.fired) {
+        return res;
+      }
+      for (j = 0, len = list.length; j < len; j++) {
+        fn = list[j];
+        fn.apply(null, args);
+      }
+      status.fired = true;
+      return res;
+    };
+    res.fireWith = function() {
+      var args, context, fn, j, len;
+      context = arguments[0], args = 2 <= arguments.length ? slice.call(arguments, 1) : [];
+      if (options.once && status.fired) {
+        return res;
+      }
+      for (j = 0, len = list.length; j < len; j++) {
+        fn = list[j];
+        fn.apply(context, args);
+      }
+      status.fired = true;
+      return res;
+    };
+    res.fired = function() {
+      return status.fired;
+    };
+    return res;
+  };
+
+  $.Deferred = function() {
+    var _a, fn1, j, len, list, ref, res, status;
+    res = {};
+    status = res._status = {
+      state: 'pending',
+      _arguments: null
+    };
+    list = res._list = {
+      done: $.Callbacks({
+        once: true
+      }),
+      fail: $.Callbacks({
+        once: true
+      }),
+      notify: $.Callbacks()
+    };
+    res.promise = function(obj) {
+      if (obj != null) {
+        return $.extend(obj, res);
+      }
+      return res;
+    };
+    res.state = function() {
+      return status.state;
+    };
+    ref = [['resolve', 'done', 'resolved'], ['reject', 'fail', 'rejected'], ['progress', 'notify']];
+    fn1 = function(a) {
+      var fn;
+      res[a[1]] = function(callback) {
+        if ($.type(callback) === 'function') {
+          list[a[1]].add(callback);
+        }
+        return res;
+      };
+      fn = function() {
+        var args, ref1, type;
+        type = arguments[0], args = 2 <= arguments.length ? slice.call(arguments, 1) : [];
+        if (a[2]) {
+          status.state = a[2];
+        }
+        status._arguments = args;
+        (ref1 = list[a[1]])['fire' + (type ? 'With' : '')].apply(ref1, args);
+        return res;
+      };
+      res[a[0]] = function() {
+        var args;
+        args = 1 <= arguments.length ? slice.call(arguments, 0) : [];
+        return fn.apply(null, [false].concat(slice.call(args)));
+      };
+      return res[a[0] + 'With'] = function() {
+        var args;
+        args = 1 <= arguments.length ? slice.call(arguments, 0) : [];
+        return fn.apply(null, [true].concat(slice.call(args)));
+      };
+    };
+    for (j = 0, len = ref.length; j < len; j++) {
+      _a = ref[j];
+      fn1(_a);
+    }
+    res.then = function() {
+      var args;
+      args = 1 <= arguments.length ? slice.call(arguments, 0) : [];
+      return res.done(args[0]).fail(args[1]);
+    };
+    res.always = function(callback) {
+      return res.done(callback).fail(callback);
+    };
+    return res;
+  };
+
+  $.when = function() {
+    var _arg, _i, args, def, fn1, j, len, list, parseArgs;
+    args = 1 <= arguments.length ? slice.call(arguments, 0) : [];
+    def = $.Deferred();
+    parseArgs = function(arr) {
+      if (arr.length === 1) {
+        return arr[0];
+      } else {
+        return arr;
+      }
+    };
+    list = {
+      state: [],
+      args: []
+    };
+    fn1 = function(arg, i) {
+      var ref, state;
+      if (!(arg != null ? (ref = arg._status) != null ? ref.state : void 0 : void 0)) {
+        list.state.push(1);
+        list.args[i] = arg;
+        return;
+      }
+      state = arg._status.state;
+      if (state === 'resolved') {
+        list.state.push(1);
+        list.args[i] = parseArgs(arg._status._arguments);
+        return;
+      }
+      if (state === 'rejected') {
+        list.state = null;
+        list.args = arg._status._arguments;
+        return;
+      }
+      list.state.push(0);
+      return arg.done(function() {
+        var p;
+        p = 1 <= arguments.length ? slice.call(arguments, 0) : [];
+        return def.progress(i, 1, p);
+      }).fail(function() {
+        var p;
+        p = 1 <= arguments.length ? slice.call(arguments, 0) : [];
+        return def.reject.apply(def, p);
+      });
+    };
+    for (_i = j = 0, len = args.length; j < len; _i = ++j) {
+      _arg = args[_i];
+      fn1(_arg, _i);
+      if (!list.state) {
+        break;
+      }
+    }
+    if (!list.state) {
+      $.next(function() {
+        return def.reject.apply(def, list.args);
+      });
+      return def.promise();
+    }
+    if (!(indexOf.call(list.state, 0) >= 0)) {
+      $.next(function() {
+        return def.resolve.apply(def, list.args);
+      });
+      return def.promise();
+    }
+    def.notify(function(i, state, p) {
+      list.state[i] = state;
+      list.args[i] = parseArgs(p);
+      if (indexOf.call(list.state, 0) >= 0) {
+        return;
+      }
+      return def.resolve.apply(def, list.args);
+    });
+    return def.promise();
+  };
+
+  $.parseTime = function(param, future) {
+    return $.parseTime.trans($.timeStamp(param), future);
+  };
+
+  $.parseTime.trans = function(t, future) {
+    var dayAgo, dt, dtNow, hrAgo, hrMin, i, longAgo, longLongAgo, minAgo, secAgo, ts, tsDistance, tsNow;
+    dt = new Date(t);
+    ts = dt.getTime();
+    dtNow = new Date();
+    tsNow = dtNow.getTime();
+    tsDistance = tsNow - ts;
+    hrMin = dt.getHours() + '时' + (dt.getMinutes() < 10 ? '0' : '') + dt.getMinutes() + '分';
+    longAgo = (dt.getMonth() + 1) + '月' + dt.getDate() + '日(星期' + ['日', '一', '二', '三', '四', '五', '六'][dt.getDay()] + ') ' + hrMin;
+    longLongAgo = dt.getFullYear() + '年' + longAgo;
+    i = 0;
+    if (tsDistance < 0) {
+      if (!future) {
+        return '刚刚';
+      }
+      i = 1;
+    }
+    if (i) {
+      tsDistance = -tsDistance + 500;
+    }
+    if ((tsDistance / 31536e6) | 0) {
+      return longLongAgo;
+    }
+    if ((dayAgo = tsDistance / 864e5) > 3) {
+      if (dt.getFullYear() !== dtNow.getFullYear()) {
+        return longLongAgo;
+      }
+      return longAgo;
+    }
+    if (dayAgo > 1) {
+      return ['前天 ', '后天 '][i] + hrMin;
+    }
+    if ((hrAgo = tsDistance / 36e5) > 12) {
+      return (dt.getDay() !== dtNow.getDay() ? ['昨天 ', '明天 '][i] : '今天 ') + hrMin;
+    }
+    if (hrAgo = (tsDistance / 36e5 % 60) | 0) {
+      return hrAgo + ['小时前', '小时后'][i];
+    }
+    if (minAgo = (tsDistance / 6e4 % 60) | 0) {
+      return minAgo + ['分钟前', '分钟后'][i];
+    }
+    if ((secAgo = (tsDistance / 1e3 % 60) | 0) > 30) {
+      return secAgo + ['秒前', '秒后'][i];
+    }
+    return '刚刚';
+  };
+
+  $.parseShortDate = function(param) {
+    var a, arr, date, i, j, len;
+    date = $.type(param) === 'date' ? param : new Date(param);
+    arr = [date.getFullYear(), 1 + date.getMonth(), date.getDate()];
+    for (i = j = 0, len = arr.length; j < len; i = ++j) {
+      a = arr[i];
+      arr[i] = $.parseString(a);
+      if (i && arr[i].length < 2) {
+        arr[i] = '0' + arr[i];
+      }
+    }
+    return arr.join('');
+  };
+
+  $.parseString = function(data) {
+    var d, err, error;
+    switch ($.type(d = data)) {
+      case 'string':
+        return d;
+      case 'number':
+        return d.toString();
+      case 'array':
+        return (JSON.stringify({
+          _obj: d
+        })).replace(/\{(.*)\}/, '$1').replace(/"_obj":/, '');
+      case 'object':
+        return JSON.stringify(d);
+      case 'boolean':
+        return d.toString();
+      case 'undefined':
+        return 'undefined';
+      case 'null':
+        return 'null';
+      default:
+        try {
+          return d.toString();
+        } catch (error) {
+          err = error;
+          return '';
+        }
+    }
+  };
+
+  $.parsePts = function(number) {
+    var n;
+    if ((n = (number || 0) | 0) >= 1e5) {
+      return (((n * 0.001) | 0) / 10) + '万';
+    } else {
+      return n.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,');
+    }
+  };
+
+  $.parseJson = $.parseJSON = function(data) {
+    var err, error, res;
+    if ($.type(data) !== 'string') {
+      return data;
+    }
+    try {
+      res = eval("(" + data + ")");
+      switch ($.type(res)) {
+        case 'object':
+        case 'array':
+          return res;
+        default:
+          return data;
+      }
+    } catch (error) {
+      err = error;
+      return data;
+    }
+  };
+
+  $.parseSafe = _.escape;
+
+  $.parseTemp = function(string, object) {
+    var k, s, v;
+    s = string;
+    for (k in object) {
+      v = object[k];
+      s = s.replace(new RegExp('\\[' + k + '\\]', 'g'), v);
+    }
+    return s;
+  };
+
+  request = require('request');
+
+  parseType = function(res) {
+    var type;
+    type = res.headers['content-type'];
+    if (type && ~type.search(/application\/json/)) {
+      return 'json';
+    }
+    return 'text';
+  };
+
+  $.get = function(url, query) {
+    var _query, _url, def;
+    def = $.Deferred();
+    if (query) {
+      _url = url.replace(/\?.*/, '');
+      _query = $.serialize(url.replace(/.*\?/, ''));
+      _.extend(_query, query);
+      url = _url + "?" + ($.param(_query));
+    }
+    request({
+      method: 'GET',
+      url: url,
+      gzip: true
+    }, function(err, res, body) {
+      var type;
+      if (err) {
+        def.reject(err);
+        return;
+      }
+      type = parseType(res);
+      return def.resolve(type === 'json' ? $.parseJson(body) : body);
+    });
+    return def.promise();
+  };
+
+  $.post = function(url, query) {
+    var def;
+    def = $.Deferred();
+    request({
+      method: 'POST',
+      url: url,
+      form: query,
+      gzip: true
+    }, function(err, res, body) {
+      var type;
+      if (err) {
+        def.reject(err);
+        return;
+      }
+      type = parseType(res);
+      return def.resolve(type === 'json' ? $.parseJson(body) : body);
+    });
+    return def.promise();
+  };
+
+  $.next = function() {
+    var fn, param, ref, time;
+    param = 1 <= arguments.length ? slice.call(arguments, 0) : [];
+    ref = !param[1] ? [0, param[0]] : param, time = ref[0], fn = ref[1];
+    if (time) {
+      setTimeout(fn, time);
+      return;
+    }
+    return process.nextTick(fn);
+  };
+
+  $.log = console.log;
+
+  $.info = function() {
+    var a, arr, d, msg, param, ref, t, type;
+    param = 1 <= arguments.length ? slice.call(arguments, 0) : [];
+    ref = !param[1] ? ['default', param[0]] : param, type = ref[0], msg = ref[1];
+    d = new Date();
+    t = ((function() {
+      var j, len, ref1, results;
+      ref1 = [d.getHours(), d.getMinutes(), d.getSeconds()];
+      results = [];
+      for (j = 0, len = ref1.length; j < len; j++) {
+        a = ref1[j];
+        results.push(a < 10 ? '0' + a : a);
+      }
+      return results;
+    })()).join(':');
+    arr = ["[" + t + "]"];
+    switch (type) {
+      case 'default':
+        null;
+        break;
+      case 'success':
+      case 'done':
+      case 'ok':
+        arr.push("<" + (type.toUpperCase()) + ">");
+        break;
+      case 'fail':
+      case 'error':
+      case 'fatal':
+        arr.push("<" + (type.toUpperCase()) + ">");
+        break;
+      default:
+        arr.push("<" + (type.toUpperCase()) + ">");
+    }
+    arr.push(msg);
+    $.log(arr.join(' '));
+    return msg;
+  };
+
+  $.i = function(msg) {
+    $.log(msg);
+    return msg;
+  };
+
+  $.timeStamp = function(param) {
+    var a, b, c, d, i, j, p;
+    switch ($.type(p = param)) {
+      case 'number':
+        return p;
+      case 'string':
+        if (!~p.search(/[\s\.\-\/]/)) {
+          return $.now();
+        }
+        if (~p.search(/\:/)) {
+          a = p.split(' ');
+          if (!~a[0].search(/\:/)) {
+            b = a[0].replace(/[\-\/]/g, '.').split('.');
+            c = a[1].split(':');
+          } else {
+            b = a[1].replace(/[\-\/]/g, '.').split('.');
+            c = a[0].split(':');
+          }
+        } else {
+          b = p.replace(/[\-\/]/g, '.').split('.');
+          c = [0, 0, 0];
+        }
+        for (i = j = 0; j <= 2; i = ++j) {
+          b[i] = parseInt(b[i]);
+          c[i] = parseInt(c[i] || 0);
+        }
+        d = new Date();
+        d.setFullYear(b[0], b[1] - 1, b[2]);
+        d.setHours(c[0], c[1], c[2]);
+        return parseInt(d.getTime() / 1e3) * 1e3;
+      default:
+        return $.now();
+    }
+  };
+
+  $.timeString = function(time) {
+    var d, fn;
+    d = time ? new Date(time) : new Date();
+    fn = function(n) {
+      if (n < 10) {
+        return '0' + n;
+      } else {
+        return n;
+      }
+    };
+    return [fn(d.getHours()), fn(d.getMinutes()), fn(d.getSeconds())].join(':');
+  };
+
+  $.shell = function(cmd, callback) {
+    var child, fn;
+    fn = $.shell;
+    fn.platform || (fn.platform = (require('os')).platform());
+    fn.exec || (fn.exec = (require('child_process')).exec);
+    fn.info || (fn.info = function(string) {
+      var text;
+      text = $.trim(string);
+      if (!text.length) {
+        return;
+      }
+      return $.log(text.replace(/\r/g, '\n').replace(/\n{2,}/g, ''));
+    });
+    if ($.type(cmd) === 'array') {
+      cmd = fn.platform === 'win32' ? cmd.join('&') : cmd.join('&&');
+    }
+    $.info('shell', cmd);
+    child = fn.exec(cmd);
+    child.stdout.on('data', function(data) {
+      return fn.info(data);
+    });
+    child.stderr.on('data', function(data) {
+      return fn.info(data);
+    });
+    return child.on('close', function() {
+      return typeof callback === "function" ? callback() : void 0;
+    });
+  };
+
+  $.serialize = function(string) {
+    var a, b, j, key, len, ref, ref1, res, value;
+    switch ($.type(string)) {
+      case 'object':
+        return string;
+      case 'string':
+        if (!~string.search(/=/)) {
+          return {};
+        }
+        res = {};
+        ref = _.trim(string.replace(/\?/g, '')).split('&');
+        for (j = 0, len = ref.length; j < len; j++) {
+          a = ref[j];
+          b = a.split('=');
+          ref1 = [_.trim(b[0]), _.trim(b[1])], key = ref1[0], value = ref1[1];
+          if (key.length) {
+            res[key] = value;
+          }
+        }
+        return res;
+      default:
+        return {};
+    }
+  };
+
+}).call(this);
+
+//# sourceMappingURL=index.js.map

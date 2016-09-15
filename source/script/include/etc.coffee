@@ -19,12 +19,12 @@ $.info = (param...) ->
   d = new Date()
   t = ((if a < 10 then '0' + a else a) for a in [d.getHours(), d.getMinutes(), d.getSeconds()]).join ':'
 
-  arr = ["[#{colors.gray t}]"]
+  arr = ["[#{t}]"]
   switch type
     when 'default' then null
-    when 'success', 'done', 'ok' then arr.push "<#{colors.green type.toUpperCase()}>"
-    when 'fail', 'error', 'fatal' then arr.push "<#{colors.red type.toUpperCase()}>"
-    else arr.push "<#{colors.cyan type.toUpperCase()}>"
+    when 'success', 'done', 'ok' then arr.push "<#{type.toUpperCase()}>"
+    when 'fail', 'error', 'fatal' then arr.push "<#{type.toUpperCase()}>"
+    else arr.push "<#{type.toUpperCase()}>"
   arr.push msg
 
   $.log arr.join ' ' #log
@@ -33,7 +33,7 @@ $.info = (param...) ->
 
 #i
 $.i = (msg) ->
-  $.log colors.red msg
+  $.log msg
   msg
 
 #timeStamp
@@ -98,10 +98,24 @@ $.shell = (cmd, callback) ->
 
   if $.type(cmd) == 'array'
     cmd = if fn.platform == 'win32' then cmd.join('&') else cmd.join('&&')
-  $.info 'shell', colors.magenta cmd
+  $.info 'shell', cmd
 
   #execute
   child = fn.exec cmd
   child.stdout.on 'data', (data) -> fn.info data
   child.stderr.on 'data', (data) -> fn.info data
   child.on 'close', -> callback?()
+
+#serialize
+$.serialize = (string) ->
+  switch $.type string
+    when 'object' then string
+    when 'string'
+      if !~string.search /=/ then return {}
+      res = {}
+      for a in _.trim(string.replace /\?/g, '').split '&'
+        b = a.split '='
+        [key, value] = [_.trim(b[0]), _.trim b[1]]
+        if key.length then res[key] = value
+      res
+    else {}

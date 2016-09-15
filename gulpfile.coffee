@@ -1,24 +1,25 @@
-#require
-$ = require './index'
-_ = $._
+_ = require 'lodash'
+$ = {}
+$.i = (msg) -> console.log msg
+$.info = (arg...) -> $.i _.last arg
+try $ = require './index'
 
-argv = require('minimist')(process.argv.slice 2) #argv
+argv = require('minimist')(process.argv.slice 2)
 
-gulp = require 'gulp' #gulp
+gulp = require 'gulp'
 watch = require 'gulp-watch'
 plumber = require 'gulp-plumber'
 concat = require 'gulp-concat'
 replace = require 'gulp-replace'
 using = require 'gulp-using'
+
 coffee = require 'gulp-coffee'
-uglify = require 'gulp-uglify' #minify
-lint = require 'gulp-coffeelint' #lint
+yaml = require 'gulp-yaml'
 
-colors = require 'colors/safe'
+uglify = require 'gulp-uglify'
+lint = require 'gulp-coffeelint'
 
-#error
-#uncaughtException
-process.on 'uncaughtException', (err) -> $.log err.stack
+process.on 'uncaughtException', (err) -> $.log err.stack #error
 
 #function
 
@@ -26,9 +27,7 @@ process.on 'uncaughtException', (err) -> $.log err.stack
 task = {}
 $.task = (name, fn) ->
   gulp.task name, ->
-    #show base
-    $.info 'base', 'running at ' + colors.magenta project.base
-    #do
+    $.info 'base', "running at #{project.base}"
     task[name]()
   task[name] = fn
 
@@ -38,14 +37,14 @@ project = base: process.cwd()
 project.name = project.base.replace /.*\\|.*\//, ''
 
 path = source: './source'
-path.coffee = path.source + '/**/*.coffee'
+path.coffee = "#{path.source}/**/*.coffee"
 
 _coffee = -> coffee map: true
+_yaml = -> yaml safe: true
 
-#watch
-$.task 'watch', -> watch path.source + '/script/include/**/*.coffee', -> task.build()
+$.task 'watch', ->
+  watch "#{path.source}/script/include/**/*.coffee", -> task.build()
 
-#build
 $.task 'build', (callback) ->
   fn = {}
 
@@ -60,7 +59,9 @@ $.task 'build', (callback) ->
       'ajax'
       'etc'
     ]
-    gulp.src (path.source + '/script/include/' + a + '.coffee' for a in list)
+    list = ("#{path.source}/script/include/#{a}.coffee" for a in list)
+    $.i list
+    gulp.src list
     .pipe plumber()
     .pipe using()
     .pipe concat 'index.coffee'
@@ -80,39 +81,23 @@ $.task 'build', (callback) ->
 #lint
 $.task 'lint', ->
   #coffee lint
-  gulp.src path.coffee
+  gulp.src ['./gulpfile.coffee', './test.coffee', path.coffee]
   .pipe plumber()
   .pipe using()
   .pipe lint()
   .pipe lint.reporter()
 
-#prepare
 $.task 'prepare', ->
-
-  #gulpfile
-  gulp.src './gulpfile.coffee'
+  gulp.src './coffeelint.yml'
   .pipe plumber()
   .pipe using()
-  .pipe _coffee()
-  .pipe gulp.dest ''
+  .pipe _yaml()
+  .pipe gulp.dest './'
 
-  #coffeelint
-  gulp.src './coffeelint.cson'
-  .pipe plumber()
-  .pipe using()
-  .pipe cson()
-  .pipe gulp.dest ''
-
-#work
-$.task 'work', -> $.shell 'gulp watch' #watch
-
-#noop
+$.task 'work', -> $.shell 'gulp watch'
 $.task 'noop', -> null
-
-#test
 $.task 'test', -> $.shell 'node test.js'
 
-#set
 $.task 'set', ->
   if argv.version
     fs = require 'fs'
