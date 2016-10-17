@@ -1,50 +1,110 @@
-$.Callbacks = (options) ->
-  options = $.extend {}, options
+# $.Callbacks().add()
+# $.Callbacks().disable()
+# $.Callbacks().disabled()
+# $.Callbacks().empty()
+# $.Callbacks().fire()
+# $.Callbacks().fired()
+# $.Callbacks().fireWith()
+# $.Callbacks().has()
+# $.Callbacks().lock()
+# $.Callbacks().locked()
+# $.Callbacks().remove()
+# $.Callbacks()
 
-  res = {}
-  status = res._status =
-    fired: false
-  list = res._list = []
+# Callbacks()
+class Callbacks
 
-  #method
-  res.add = (args...) ->
+  constructor: (option) ->
+
+    @option = $.extend
+      once: false
+      memory: false
+      unique: false
+      stopOnFalse: false
+    , option
+
+    @status =
+      isDisabled: false
+      isLocked: false
+      isFired: false
+    @list = []
+
+  # Callbacks().add()
+  add: (args...) ->
+    if @locked() then return @
+
+    _push = (fn) =>
+      @list.push fn
+      if @option.memory and @fired()
+        fn @args...
+
     for fn in args when $.type(fn) == 'function'
-      if options.unique
-        if !res.has(fn)
-          list.push fn
+      if @option.unique
+        if !@has(fn) then _push fn
         continue
-      list.push fn
-    res
+      _push fn
 
-  res.remove = (fn) ->
-    _.remove list, (_fn) -> _fn == fn
-    res
+    @
 
-  res.has = (fn) -> fn in list
+  # Callbacks().disable()
+  disable: ->
+    @status.isDisabled = true
+    @
 
-  res.empty = ->
-    list = []
-    res
+  # Callbacks().disabled()
+  disabled: -> !!@status.isDisabled
 
-  res.fire = (args...) ->
-    if options.once and status.fired
-      return res
+  # Callbacks().empty()
+  empty: ->
+    if @locked() then return @
+    @list = []
+    @
 
-    for fn in list
-      fn args...
-    status.fired = true
-    res
+  # Callbacks().fire()
+  fire: (args...) ->
+    if @disabled() then return @
+    if @option.once and @fired() then return @
 
-  res.fireWith = (context, args...) ->
-    if options.once and status.fired
-      return res
+    for fn in @list
+      res = fn args...
+      if @option.stopOnFalse and res == false then break
+    @status.isFired = true
 
-    for fn in list
-      fn.apply context, args
-    status.fired = true
-    res
+    if @option.memory then @args = args
 
-  res.fired = -> status.fired
+    @
 
-  #return
-  res
+  # Callbacks().fired()
+  fired: -> !!@status.isFired
+
+  # Callbacks().fireWith()
+  fireWith: (context, args...) ->
+    if @disabled() then return @
+    if @option.once and @fired() then return @
+
+    for fn in @list
+      res = fn.apply context, args
+      if @option.stopOnFalse and res == false then break
+    @status.isFired = true
+
+    @
+
+  # Callbacks().has()
+  has: (fn) -> fn in @list
+
+  # Callbacks().lock()
+  lock: ->
+    @status.isLocked = true
+    @
+
+  # Callbacks().locked()
+  locked: -> !!@status.isLocked
+
+  # Callbacks().remove()
+  remove: (fn) ->
+    if @locked() then return @
+    _.remove @list, (_fn) -> _fn == fn
+    @
+
+# $.Callbacks()
+$.Callbacks = (args...) -> new Callbacks args...

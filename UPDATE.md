@@ -1,6 +1,13 @@
 # UPDATES
 ---
 
+### v0.3.15 @ 10.17.2016
+- Rewrote `$.Callbacks()`.
+- Rewrote `$.Deferred()`.
+- Rewrote `$.when()`.
+- Updated *gulp* files.
+- Updated *test* files.
+
 ### v0.3.14 @ 9.15.2016
 - Did not require [colors.js](https://github.com/Marak/colors.js) now.
 - Added `$.serialize()`.

@@ -9,7 +9,7 @@ argv = require('minimist')(process.argv.slice 2)
 gulp = require 'gulp'
 watch = require 'gulp-watch'
 plumber = require 'gulp-plumber'
-concat = require 'gulp-concat'
+include = require 'gulp-include'
 replace = require 'gulp-replace'
 using = require 'gulp-using'
 
@@ -43,38 +43,24 @@ _coffee = -> coffee map: true
 _yaml = -> yaml safe: true
 
 $.task 'watch', ->
-  watch "#{path.source}/script/include/**/*.coffee", -> task.build()
+  list = [
+    "#{path.source}/script/index.coffee"
+    "#{path.source}/script/include/**/*.coffee"
+  ]
+  watch list, -> task.build()
 
 $.task 'build', (callback) ->
   fn = {}
 
-  fn.coffee = _.throttle ->
-    list = [
-      'init'
-      'error'
-      'basic'
-      'callback'
-      'promise'
-      'parse'
-      'ajax'
-      'etc'
-    ]
-    list = ("#{path.source}/script/include/#{a}.coffee" for a in list)
-    $.i list
-    gulp.src list
+  fn.coffee = (cb) ->
+    gulp.src "#{path.source}/script/index.coffee"
     .pipe plumber()
     .pipe using()
-    .pipe concat 'index.coffee'
+    .pipe include()
+    .pipe _coffee()
+    #.pipe uglify()
     .pipe gulp.dest './'
-    .on 'end', ->
-      gulp.src './index.coffee'
-      .pipe plumber()
-      .pipe using()
-      .pipe _coffee()
-      .pipe uglify()
-      .pipe gulp.dest './'
-
-      callback?()
+    .on 'end', -> cb?()
 
   fn.coffee()
 
