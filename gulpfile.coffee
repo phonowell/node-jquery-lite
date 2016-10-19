@@ -21,9 +21,9 @@ lint = require 'gulp-coffeelint'
 
 process.on 'uncaughtException', (err) -> $.log err.stack #error
 
-#function
+# function
 
-#bind
+# bind
 task = {}
 $.task = (name, fn) ->
   gulp.task name, ->
@@ -31,8 +31,8 @@ $.task = (name, fn) ->
     task[name]()
   task[name] = fn
 
-#param
-#project
+# param
+# project
 project = base: process.cwd()
 project.name = project.base.replace /.*\\|.*\//, ''
 
@@ -58,13 +58,13 @@ $.task 'build', (callback) ->
     .pipe using()
     .pipe include()
     .pipe _coffee()
-    #.pipe uglify()
+    .pipe uglify()
     .pipe gulp.dest './'
     .on 'end', -> cb?()
 
   fn.coffee()
 
-#lint
+# lint
 $.task 'lint', ->
   #coffee lint
   gulp.src ['./gulpfile.coffee', './test.coffee', path.coffee]
@@ -88,37 +88,41 @@ $.task 'set', ->
   if argv.version
     fs = require 'fs'
 
-    #version
+    # version
     ver = argv.version
 
-    #function
+    # function
     fn = {}
 
-    #package
-    fn.package = ->
-      gulp.src 'package.json'
+    # package
+    fn.package = (cb) ->
+      src = 'package.json'
+      gulp.src src
       .pipe plumber()
       .pipe using()
       .pipe replace /"version": "[\d\.]+"/, "\"version\": \"#{ver}\""
       .pipe gulp.dest ''
+      .on 'end', -> cb?()
 
-    #init
-    fn.init = ->
-      gulp.src path.source + '/script/include/init.coffee'
+    # init
+    fn.init = (cb) ->
+      src = "#{path.source}/script/include/init.coffee"
+      gulp.src src
       .pipe plumber()
       .pipe using()
       .pipe replace /version: '[\d\.]+'/, "version: '#{ver}'"
       .pipe gulp.dest path.source + '/script/include'
+      .on 'end', -> cb?()
 
-    #test
-    fn.test = ->
-      gulp.src 'test.coffee'
+    # test
+    fn.test = (cb) ->
+      src = 'test.coffee'
+      gulp.src src
       .pipe plumber()
       .pipe using()
       .pipe replace /a = '[\d\.]+'/, "a = '#{ver}'"
       .pipe gulp.dest ''
+      .on 'end', -> cb?()
 
-    #execute
-    fn.package()
-    fn.init()
-    fn.test()
+    # execute
+    fn.package -> fn.init -> fn.test()

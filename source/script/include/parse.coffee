@@ -1,8 +1,8 @@
-#parseTime
+# parseTime
 $.parseTime = (param, future) ->
   $.parseTime.trans $.timeStamp(param), future
 
-#trans
+# trans
 $.parseTime.trans = (t, future) ->
 
   dt = new Date t
@@ -61,7 +61,7 @@ $.parseTime.trans = (t, future) ->
   #just now
   '刚刚'
 
-#parseShortDate
+# parseShortDate
 $.parseShortDate = (param) ->
   date = if $.type(param) == 'date' then param else new Date param
   arr = [
@@ -75,29 +75,23 @@ $.parseShortDate = (param) ->
       arr[i] = '0' + arr[i]
   arr.join ''
 
-#parseString
+# parseString
 $.parseString = (data) ->
   switch $.type d = data
     when 'string' then d
-    when 'number' then d.toString()
     when 'array'
       (JSON.stringify _obj: d)
       .replace /\{(.*)\}/, '$1'
       .replace /"_obj":/, ''
     when 'object'then JSON.stringify d
-    when 'boolean' then d.toString()
-    when 'undefined' then 'undefined'
-    when 'null' then 'null'
-    else
-      try d.toString()
-      catch err then ''
+    else String d
 
-#parsePts
+# parsePts
 $.parsePts = (number) ->
   if (n = (number or 0) | 0) >= 1e5 then (((n * 0.001) | 0) / 10) + '万'
   else n.toString().replace /(\d)(?=(\d{3})+(?!\d))/g, '$1,'
 
-#parseJson
+# parseJson
 $.parseJson = $.parseJSON = (data) ->
   if $.type(data) != 'string'
     return data
@@ -109,13 +103,13 @@ $.parseJson = $.parseJSON = (data) ->
       else data
   catch err then data
 
-#parseSafe
+# parseSafe
 $.parseSafe = _.escape
 
-#parseTemp
+# parseTemp
 $.parseTemp = (string, object) ->
   s = string
   for k, v of object
     s = s.replace (new RegExp '\\[' + k + '\\]', 'g'), v
-  #return
+  # return
   s

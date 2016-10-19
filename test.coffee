@@ -43,7 +43,7 @@ $subject = [
 # version
 do ->
   $divide 'Version'
-  a = '0.3.15'
+  a = '0.3.16'
   $test $.version, a, "$.version [is] #{a}"
 
 # $.Callbacks().add()
@@ -223,7 +223,6 @@ do ->
 # $.Deferred().then()
 # $.Deferred()
 # $.when()
-# .promise()
 $.next 100, ->
   $divide '$.Deferred()'
 

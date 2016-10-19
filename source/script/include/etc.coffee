@@ -1,4 +1,4 @@
-#next
+# next
 $.next = (param...) ->
   [time, fn] = if !param[1] then [0, param[0]] else param
 
@@ -8,10 +8,10 @@ $.next = (param...) ->
 
   process.nextTick fn
 
-#log
+# log
 $.log = console.log
 
-#info
+# info
 $.info = (param...) ->
   [type, msg] = if !param[1] then ['default', param[0]] else param
 
@@ -31,12 +31,12 @@ $.info = (param...) ->
 
   msg
 
-#i
+# i
 $.i = (msg) ->
   $.log msg
   msg
 
-#timeStamp
+# timeStamp
 $.timeStamp = (param) ->
   #check param
   switch $.type p = param
@@ -74,7 +74,7 @@ $.timeStamp = (param) ->
       parseInt(d.getTime() / 1e3) * 1e3
     else $.now()
 
-#time
+# time
 $.timeString = (time) ->
   d = if time then new Date time else new Date()
 
@@ -86,7 +86,7 @@ $.timeString = (time) ->
     fn d.getSeconds()
   ].join ':'
 
-#shell
+# shell
 $.shell = (cmd, callback) ->
   fn = $.shell
   fn.platform or= (require 'os').platform()
@@ -106,7 +106,7 @@ $.shell = (cmd, callback) ->
   child.stderr.on 'data', (data) -> fn.info data
   child.on 'close', -> callback?()
 
-#serialize
+# serialize
 $.serialize = (string) ->
   switch $.type string
     when 'object' then string

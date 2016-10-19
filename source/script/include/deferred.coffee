@@ -13,7 +13,6 @@
 # $.Deferred().then()
 # $.Deferred()
 # $.when()
-# .promise()
 
 # Deferred()
 class Deferred
@@ -167,5 +166,3 @@ $.when = (args...) ->
     def.resolve.apply def, list.def
 
   def.promise()
-
-#.promise()

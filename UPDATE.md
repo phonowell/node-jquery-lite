@@ -1,6 +1,11 @@
 # UPDATES
 ---
 
+### v0.3.16 @ 10.19.2016
+- Rewrote `$.parseString()`.
+- Updated *gulp* files.
+- Updated *test* files.
+
 ### v0.3.15 @ 10.17.2016
 - Rewrote `$.Callbacks()`.
 - Rewrote `$.Deferred()`.
