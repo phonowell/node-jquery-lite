@@ -535,6 +535,15 @@ do ->
     , "$.parseString(#{$.parseString $subject[i]}) [is] #{$.parseString a}"
 
 # $.parseTemp()
+do ->
+  $divide '$.parseTemp()'
+  temp = '[a] is falling love with [b]!'
+  arg =
+    a: 'Homura'
+    b: 'Madoka'
+  res = $.parseTemp temp, arg
+  $test res, 'Homura is falling love with Madoka!'
+  , "$.parseTemp(#{temp}, #{$.parseString arg}) [is] #{res}"
 
 # $.parseTime()
 do ->

@@ -19,7 +19,7 @@ yaml = require 'gulp-yaml'
 uglify = require 'gulp-uglify'
 lint = require 'gulp-coffeelint'
 
-process.on 'uncaughtException', (err) -> $.log err.stack #error
+process.on 'uncaughtException', (err) -> $.log err.stack # error
 
 # function
 
@@ -66,7 +66,7 @@ $.task 'build', (callback) ->
 
 # lint
 $.task 'lint', ->
-  #coffee lint
+  # coffee lint
   gulp.src ['./gulpfile.coffee', './test.coffee', path.coffee]
   .pipe plumber()
   .pipe using()
