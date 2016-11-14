@@ -4,6 +4,7 @@ $.trim = _.trim # trim
 $.now = _.now # now
 $.each = _.each # each
 $.noop = _.noop # noop
+$.truncate = _.truncate or _.trunc # trunc
 
 # type
 $.type = (param) ->

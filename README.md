@@ -43,6 +43,7 @@ $ npm i node-jquery-lite
 - `$.shell()`
 - `$.timeStamp()`
 - `$.timeString()`
+- `$.truncate()`
     
 ## Attention
 ---

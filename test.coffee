@@ -573,6 +573,8 @@ do ->
 
 # $.timeString()
 
+# $.truncate()
+
 # ajax
 $.next 300, ->
   $divide 'Ajax'
