@@ -39,10 +39,8 @@ $ npm i node-jquery-lite
 - `$.parseShortDate()`
 - `$.parseString()`
 - `$.parseTemp()`
-- `$.parseTime()`
 - `$.shell()`
 - `$.timeStamp()`
-- `$.timeString()`
 - `$.truncate()`
     
 ## Attention

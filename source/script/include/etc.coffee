@@ -36,55 +36,32 @@ $.i = (msg) ->
   $.log msg
   msg
 
-# timeStamp
-$.timeStamp = (param) ->
-  #check param
-  switch $.type p = param
-    when 'number' then p
-    when 'string'
-      #check string
-      if !~p.search /[\s\.\-\/]/
-        return $.now()
+$.timeStamp = (arg) ->
 
-      #check :
-      if ~p.search /\:/
-        #has got :, 2013.8.6 12:00
-        a = p.split ' '
-        #check :
-        if !~a[0].search /\:/
-          #2013.8.6 12:00
-          b = a[0].replace(/[\-\/]/g, '.').split '.'
-          c = a[1].split ':'
-        else
-          #12:00 2013.8.6
-          b = a[1].replace(/[\-\/]/g, '.').split '.'
-          c = a[0].split ':'
-      else
-        #has got no :, 2013.8.6
-        b = p.replace(/[\-\/]/g, '.').split '.'
-        c = [0, 0, 0]
+  type = $.type arg
 
-      #trans arr into nums
-      for i in [0..2]
-        b[i] = parseInt b[i]
-        c[i] = parseInt(c[i] or 0)
-      d = new Date()
-      d.setFullYear b[0], (b[1] - 1), b[2]
-      d.setHours c[0], c[1], c[2]
-      parseInt(d.getTime() / 1e3) * 1e3
-    else $.now()
+  if type == 'number' then return _.floor arg, -3
 
-# time
-$.timeString = (time) ->
-  d = if time then new Date time else new Date()
+  if type != 'string' then return _.floor _.now(), -3
 
-  fn = (n) -> if (n < 10) then '0' + n else n
+  str = _.trim arg
+  .replace /\s+/g, ' '
+  .replace /[-|/]/g, '.'
 
-  [
-    fn d.getHours()
-    fn d.getMinutes()
-    fn d.getSeconds()
-  ].join ':'
+  date = new Date()
+
+  arr = str.split ' '
+
+  b = arr[0].split '.'
+  date.setFullYear b[0], (b[1] - 1), b[2]
+
+  if !(a = arr[1])
+    date.setHours 0, 0, 0, 0
+  else
+    a = a.split ':'
+    date.setHours a[0], a[1], a[2] or 0, 0
+
+  date.getTime()
 
 # shell
 $.shell = (cmd, callback) ->

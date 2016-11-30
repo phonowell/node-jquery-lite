@@ -43,7 +43,7 @@ $subject = [
 # version
 do ->
   $divide 'Version'
-  a = '0.3.16'
+  a = '0.3.17'
   $test $.version, a, "$.version [is] #{a}"
 
 # $.Callbacks().add()
@@ -545,33 +545,48 @@ do ->
   $test res, 'Homura is falling love with Madoka!'
   , "$.parseTemp(#{temp}, #{$.parseString arg}) [is] #{res}"
 
-# $.parseTime()
-do ->
-  $divide '$.parseTime()'
-  for a in [
-    # before
-    [_.now(), undefined, '刚刚']
-    [_.now() - 45e3, undefined, '45秒前']
-    [_.now() - 6e4, undefined, '1分钟前']
-    [_.now() - 36e5, undefined, '1小时前']
-    ['2012.12.21 12:00', undefined, '2012年12月21日(星期五) 12时00分']
-    # after
-    [_.now() + 45e3, true, '45秒后']
-    [_.now() + 6e4, true, '1分钟后']
-    [_.now() + 36e5, true, '1小时后']
-    ['2050.2.28', true, '2050年2月28日(星期一) 0时00分']
-    # error
-    [_.now() + 1e3, undefined, '刚刚']
-    [_.now() - 45e3, true, '45秒前']
-  ]
-    $test $.parseTime(a[0], a[1]), a[2]
-    , "$.parseTime(#{$.parseString a[0]}, #{$.parseString a[1]}) [is] #{a[2]}"
-
 # $.shell()
 
 # $.timeStamp()
+do ->
+  $divide '$.timeStamp()'
 
-# $.timeString()
+  res = $.timeStamp()
+  ts = _.floor $.now(), -3
+  $test res, ts, "$.timeStamp() [is] #{ts}"
+
+  now = $.now()
+  res = $.timeStamp now
+  ts = _.floor now, -3
+  $test res, ts, "$.timeStamp(#{now}) [is] #{ts}"
+
+  list = [
+    [2012, 12, 21]
+    [1997, 7, 1]
+    [1970, 1, 1]
+  ]
+
+  for a in list
+    res = $.timeStamp p = a.join '.'
+    date = new Date()
+    date.setFullYear a[0], a[1] - 1, a[2]
+    date.setHours 0, 0, 0, 0
+    ts = _.floor date.getTime(), -3
+    $test res, ts, "$.timeStamp('#{p}') [is] #{ts}"
+
+  list = [
+    [2012, 12, 21, 12, 21]
+    [1997, 7, 1, 19, 30]
+    [1970, 1, 1, 8, 1]
+  ]
+
+  for a in list
+    res = $.timeStamp p = "#{a[0...3].join '.'} #{a[3...].join ':'}"
+    date = new Date()
+    date.setFullYear a[0], a[1] - 1, a[2]
+    date.setHours a[3], a[4], 0, 0
+    ts = _.floor date.getTime(), -3
+    $test res, ts, "$.timeStamp('#{p}') [is] #{ts}"
 
 # $.truncate()
 

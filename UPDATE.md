@@ -1,8 +1,11 @@
 # UPDATES
 ---
 
-### v0.3.17 @ 11.??.2016
+### v0.3.17 @ 11.30.2016
 - Added `$.truncate()`.
+- Removed `$.parseTime()`.
+- Removed `$.timeString()`.
+- Rewrote `$.timeStamp()`.
 - Updated *gulp* files.
 - Updated *test* files.
 

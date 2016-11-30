@@ -1,6 +1,6 @@
 {
   "name": "node-jquery-lite",
-  "version": "0.3.16",
+  "version": "0.3.17",
   "description": "A tiny plugin for nodejs to write lines in jquery style.",
   "main": "./index.js",
   "scripts": {
