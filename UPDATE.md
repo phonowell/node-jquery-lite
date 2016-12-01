@@ -1,6 +1,4 @@
 # UPDATES
----
-
 ### v0.4.0 @ 12.1.2016
 - Removed `$.i()`.
 - Removed `$.info()`.
