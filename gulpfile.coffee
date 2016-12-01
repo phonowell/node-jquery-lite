@@ -1,8 +1,11 @@
 _ = require 'lodash'
+
 $ = {}
-$.i = (msg) -> console.log msg
-$.info = (arg...) -> $.i _.last arg
 try $ = require './index'
+
+$.i or= console.log
+$.log or= console.log
+$.info or= (arg...) -> $.i _.last arg
 
 argv = require('minimist')(process.argv.slice 2)
 
