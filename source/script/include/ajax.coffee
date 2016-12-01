@@ -30,7 +30,7 @@ $.get = (url, query) ->
 
     type = parseType res
 
-    def.resolve if type == 'json' then $.parseJson(body) else body
+    def.resolve if type == 'json' then JSON.parse body else body
 
   def.promise()
 
@@ -51,6 +51,6 @@ $.post = (url, query) ->
 
     type = parseType res
 
-    def.resolve if type == 'json' then $.parseJson(body) else body
+    def.resolve if type == 'json' then JSON.parse body else body
 
   def.promise()

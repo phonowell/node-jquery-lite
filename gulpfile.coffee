@@ -23,6 +23,28 @@ process.on 'uncaughtException', (err) -> $.log err.stack # error
 
 # function
 
+$.log = console.log
+
+# shell
+$.shell = (cmd, callback) ->
+  fn = $.shell
+  fn.platform or= (require 'os').platform()
+  fn.exec or= (require 'child_process').exec
+  fn.info or= (string) ->
+    text = $.trim string
+    if !text.length then return
+    $.log text.replace(/\r/g, '\n').replace /\n{2,}/g, ''
+
+  if $.type(cmd) == 'array'
+    cmd = if fn.platform == 'win32' then cmd.join('&') else cmd.join('&&')
+  $.info 'shell', cmd
+
+  #execute
+  child = fn.exec cmd
+  child.stdout.on 'data', (data) -> fn.info data
+  child.stderr.on 'data', (data) -> fn.info data
+  child.on 'close', -> callback?()
+
 # bind
 task = {}
 $.task = (name, fn) ->
@@ -49,7 +71,7 @@ $.task 'watch', ->
   ]
   watch list, -> task.build()
 
-$.task 'build', (callback) ->
+$.task 'build', ->
   fn = {}
 
   fn.coffee = (cb) ->

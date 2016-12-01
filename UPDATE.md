@@ -1,6 +1,23 @@
 # UPDATES
 ---
 
+### v0.4.0 @ 12.1.2016
+- Removed `$.i()`.
+- Removed `$.info()`.
+- Removed `$.log()`.
+- Removed `$.next()`.
+- Removed `$.parseJson()`.
+- Removed `$.parsePts()`.
+- Removed `$.parseSafe()`.
+- Removed `$.parseShortDate()`.
+- Removed `$.parseString()`.
+- Removed `$.parseTemp()`.
+- Removed `$.shell()`.
+- Removed `$.timeStamp()`.
+- Removed `$.truncate()`.
+- Updated *gulp* files.
+- Updated *test* files.
+
 ### v0.3.17 @ 11.30.2016
 - Added `$.truncate()`.
 - Removed `$.parseTime()`.

@@ -13,7 +13,6 @@ $ npm i node-jquery-lite
 ## Methods
 ---
 
-### Methods like jQuery
 - `$.Callbacks()`
 - `$.Deferred()`
 - `$.each()`
@@ -27,21 +26,6 @@ $ npm i node-jquery-lite
 - `$.trim()`
 - `$.type()`
 - `$.when()`
-
-### Methods else
-- `$.i()`
-- `$.info()`
-- `$.log()`
-- `$.next()`
-- `$.parseJson()`
-- `$.parsePts()`
-- `$.parseSafe()`
-- `$.parseShortDate()`
-- `$.parseString()`
-- `$.parseTemp()`
-- `$.shell()`
-- `$.timeStamp()`
-- `$.truncate()`
     
 ## Attention
 ---
