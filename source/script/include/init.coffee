@@ -1,5 +1,7 @@
 _ = require 'lodash'
+request = require 'request'
 
 module.exports = $ =
   _: _
-  version: '0.4.0'
+  request: request
+  version: '0.4.1'

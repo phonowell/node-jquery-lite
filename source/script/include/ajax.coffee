@@ -1,5 +1,3 @@
-request = require 'request'
-
 parseType = (res) ->
   type = res.headers['content-type']
 
@@ -19,7 +17,7 @@ $.get = (url, query) ->
     _.extend _query, query
     url = "#{_url}?#{$.param _query}"
 
-  request
+  $.request
     method: 'GET'
     url: url
     gzip: true
@@ -39,7 +37,7 @@ $.post = (url, query) ->
 
   def = $.Deferred()
 
-  request
+  $.request
     method: 'POST'
     url: url
     form: query

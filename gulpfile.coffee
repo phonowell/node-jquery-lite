@@ -1,11 +1,7 @@
-_ = require 'lodash'
+$ = require './index'
+_ = $._
 
-$ = {}
-try $ = require './index'
-
-$.i or= console.log
-$.log or= console.log
-$.info or= (arg...) -> $.i _.last arg
+fs = require 'fs'
 
 argv = require('minimist')(process.argv.slice 2)
 
@@ -22,13 +18,18 @@ yaml = require 'gulp-yaml'
 uglify = require 'gulp-uglify'
 lint = require 'gulp-coffeelint'
 
-process.on 'uncaughtException', (err) -> $.log err.stack # error
-
 # function
 
 $.log = console.log
 
-# shell
+$.i = (msg) ->
+  $.log msg
+  msg
+
+$.info = (type, msg) ->
+  console.log "<#{type.toUpperCase()}> #{msg}"
+  msg
+
 $.shell = (cmd, callback) ->
   fn = $.shell
   fn.platform or= (require 'os').platform()
@@ -42,7 +43,6 @@ $.shell = (cmd, callback) ->
     cmd = if fn.platform == 'win32' then cmd.join('&') else cmd.join('&&')
   $.info 'shell', cmd
 
-  #execute
   child = fn.exec cmd
   child.stdout.on 'data', (data) -> fn.info data
   child.stderr.on 'data', (data) -> fn.info data
@@ -110,44 +110,40 @@ $.task 'noop', -> null
 $.task 'test', -> $.shell 'node test.js'
 
 $.task 'set', ->
-  if argv.version
-    fs = require 'fs'
 
-    # version
-    ver = argv.version
+  if !(ver = argv.version) then return
 
-    # function
-    fn = {}
+  fn = {}
 
-    # package
-    fn.package = (cb) ->
-      src = 'package.json'
-      gulp.src src
-      .pipe plumber()
-      .pipe using()
-      .pipe replace /"version": "[\d\.]+"/, "\"version\": \"#{ver}\""
-      .pipe gulp.dest ''
-      .on 'end', -> cb?()
+  # package.json
+  fn.package = (cb) ->
+    src = 'package.json'
+    gulp.src src
+    .pipe plumber()
+    .pipe using()
+    .pipe replace /"version": "[\d.]+"/, "\"version\": \"#{ver}\""
+    .pipe gulp.dest ''
+    .on 'end', -> cb?()
 
-    # init
-    fn.init = (cb) ->
-      src = "#{path.source}/script/include/init.coffee"
-      gulp.src src
-      .pipe plumber()
-      .pipe using()
-      .pipe replace /version: '[\d\.]+'/, "version: '#{ver}'"
-      .pipe gulp.dest path.source + '/script/include'
-      .on 'end', -> cb?()
+  # init
+  fn.init = (cb) ->
+    src = "#{path.source}/script/include/init.coffee"
+    gulp.src src, base: path.source
+    .pipe plumber()
+    .pipe using()
+    .pipe replace /version: '[\d.]+'/, "version: '#{ver}'"
+    .pipe gulp.dest path.source
+    .on 'end', -> cb?()
 
-    # test
-    fn.test = (cb) ->
-      src = 'test.coffee'
-      gulp.src src
-      .pipe plumber()
-      .pipe using()
-      .pipe replace /a = '[\d\.]+'/, "a = '#{ver}'"
-      .pipe gulp.dest ''
-      .on 'end', -> cb?()
+  # test
+  fn.test = (cb) ->
+    src = 'test.coffee'
+    gulp.src src
+    .pipe plumber()
+    .pipe using()
+    .pipe replace /version = '[\d.]+'/, "version = '#{ver}'"
+    .pipe gulp.dest ''
+    .on 'end', -> cb?()
 
-    # execute
-    fn.package -> fn.init -> fn.test()
+  # execute
+  fn.package -> fn.init -> fn.test()

@@ -63,8 +63,8 @@ $subject = [
 # version
 do ->
   $.divide 'Version'
-  a = '0.4.0'
-  $.test $.version, a, "$.version [is] #{a}"
+  version = '0.4.1'
+  $.test $.version, version, "$.version [is] #{version}"
 
 # $.Callbacks().add()
 # $.Callbacks().disable()
