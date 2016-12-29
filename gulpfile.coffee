@@ -1,149 +1,60 @@
 $ = require './index'
 _ = $._
 
-fs = require 'fs'
-
-argv = require('minimist')(process.argv.slice 2)
+Promise = require 'bluebird'
+co = Promise.coroutine
 
 gulp = require 'gulp'
-watch = require 'gulp-watch'
-plumber = require 'gulp-plumber'
-include = require 'gulp-include'
-replace = require 'gulp-replace'
-using = require 'gulp-using'
 
-coffee = require 'gulp-coffee'
-yaml = require 'gulp-yaml'
+$$ = require 'fire-keeper'
+$$.use gulp
 
-uglify = require 'gulp-uglify'
-lint = require 'gulp-coffeelint'
+# task
 
-# function
+gulp.task 'watch', ->
 
-$.log = console.log
-
-$.i = (msg) ->
-  $.log msg
-  msg
-
-$.info = (type, msg) ->
-  console.log "<#{type.toUpperCase()}> #{msg}"
-  msg
-
-$.shell = (cmd, callback) ->
-  fn = $.shell
-  fn.platform or= (require 'os').platform()
-  fn.exec or= (require 'child_process').exec
-  fn.info or= (string) ->
-    text = $.trim string
-    if !text.length then return
-    $.log text.replace(/\r/g, '\n').replace /\n{2,}/g, ''
-
-  if $.type(cmd) == 'array'
-    cmd = if fn.platform == 'win32' then cmd.join('&') else cmd.join('&&')
-  $.info 'shell', cmd
-
-  child = fn.exec cmd
-  child.stdout.on 'data', (data) -> fn.info data
-  child.stderr.on 'data', (data) -> fn.info data
-  child.on 'close', -> callback?()
-
-# bind
-task = {}
-$.task = (name, fn) ->
-  gulp.task name, ->
-    $.info 'base', "running at #{project.base}"
-    task[name]()
-  task[name] = fn
-
-# param
-# project
-project = base: process.cwd()
-project.name = project.base.replace /.*\\|.*\//, ''
-
-path = source: './source'
-path.coffee = "#{path.source}/**/*.coffee"
-
-_coffee = -> coffee map: true
-_yaml = -> yaml safe: true
-
-$.task 'watch', ->
   list = [
-    "#{path.source}/script/index.coffee"
-    "#{path.source}/script/include/**/*.coffee"
+    './source/index.coffee'
+    './source/include/**/*.coffee'
   ]
-  watch list, -> task.build()
 
-$.task 'build', ->
-  fn = {}
+  $$.watch list, -> gulp.tasks.build.fn()
 
-  fn.coffee = (cb) ->
-    gulp.src "#{path.source}/script/index.coffee"
-    .pipe plumber()
-    .pipe using()
-    .pipe include()
-    .pipe _coffee()
-    .pipe uglify()
-    .pipe gulp.dest './'
-    .on 'end', -> cb?()
+gulp.task 'build', co ->
+  yield $$.delete [
+    './index.js'
+    './source/index.js'
+  ]
+  yield $$.compile './source/index.coffee'
+  yield $$.copy './source/index.js'
 
-  fn.coffee()
+gulp.task 'lint', co -> yield $$.lint 'coffee'
 
-# lint
-$.task 'lint', ->
-  # coffee lint
-  gulp.src ['./gulpfile.coffee', './test.coffee', path.coffee]
-  .pipe plumber()
-  .pipe using()
-  .pipe lint()
-  .pipe lint.reporter()
+gulp.task 'prepare', co ->
+  yield $$.delete [
+    './gulpfile.js'
+    './coffeelint.json'
+    './test.js'
+  ]
+  yield $$.compile './gulpfile.coffee'
+  yield $$.compile './coffeelint.yml'
+  yield $$.compile './test.coffee'
 
-$.task 'prepare', ->
-  gulp.src './coffeelint.yml'
-  .pipe plumber()
-  .pipe using()
-  .pipe _yaml()
-  .pipe gulp.dest './'
+gulp.task 'work', co -> yield $$.shell 'gulp watch'
 
-$.task 'work', -> $.shell 'gulp watch'
-$.task 'noop', -> null
-$.task 'test', -> $.shell 'node test.js'
+gulp.task 'set', co ->
 
-$.task 'set', ->
+  if !(ver = $$.argv.version) then return
 
-  if !(ver = argv.version) then return
+  yield $$.replace './package.json'
+  , /"version": "[\d.]+"/, "\"version\": \"#{ver}\""
 
-  fn = {}
+  yield $$.replace './source/include/init.coffee'
+  , /version: '[\d.]+'/, "version: '#{ver}'"
 
-  # package.json
-  fn.package = (cb) ->
-    src = 'package.json'
-    gulp.src src
-    .pipe plumber()
-    .pipe using()
-    .pipe replace /"version": "[\d.]+"/, "\"version\": \"#{ver}\""
-    .pipe gulp.dest ''
-    .on 'end', -> cb?()
+  yield $$.replace './test.coffee'
+  , /version = '[\d.]+'/, "version = '#{ver}'"
 
-  # init
-  fn.init = (cb) ->
-    src = "#{path.source}/script/include/init.coffee"
-    gulp.src src, base: path.source
-    .pipe plumber()
-    .pipe using()
-    .pipe replace /version: '[\d.]+'/, "version: '#{ver}'"
-    .pipe gulp.dest path.source
-    .on 'end', -> cb?()
+gulp.task 'test', co -> yield $$.shell 'node test.js'
 
-  # test
-  fn.test = (cb) ->
-    src = 'test.coffee'
-    gulp.src src
-    .pipe plumber()
-    .pipe using()
-    .pipe replace /version = '[\d.]+'/, "version = '#{ver}'"
-    .pipe gulp.dest ''
-    .on 'end', -> cb?()
-
-  # execute
-  fn.package -> fn.init -> fn.test()
+gulp.task 'noop', -> null
