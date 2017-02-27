@@ -1,12 +1,11 @@
+# https://github.com/request/request
+
 parseType = (res) ->
   type = res.headers['content-type']
-
-  if type and ~type.search /application\/json/
-    return 'json'
-
+  if type and ~type.search /application\/json/ then return 'json'
   'text'
 
-#get
+# get
 $.get = (url, query) ->
 
   def = $.Deferred()
@@ -22,6 +21,7 @@ $.get = (url, query) ->
     url: url
     gzip: true
   , (err, res, body) ->
+
     if err
       def.reject err
       return
@@ -32,7 +32,7 @@ $.get = (url, query) ->
 
   def.promise()
 
-#post
+# post
 $.post = (url, query) ->
 
   def = $.Deferred()
@@ -43,6 +43,7 @@ $.post = (url, query) ->
     form: query
     gzip: true
   , (err, res, body) ->
+
     if err
       def.reject err
       return

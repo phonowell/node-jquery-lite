@@ -23,27 +23,25 @@ $.info = (args...) ->
     when 1 then console.log args[0]
     when 2 then console.log "<#{args[0].toUpperCase()}> #{args[1]}"
 
+$.parseString = (arg) -> new String arg
+
+# test function
 
 $total = [0, 0]
-$.test = (a, b, msg) ->
+$test = (a, b, msg) ->
   $total[0]++
-  if a == b
-    $.info 'success', $.parseOK msg
+  if a == b then $.info 'success', $ok msg
   else
-    $.info 'fail', $.parseOK msg, false
-    $.log "# #{a} is not #{b}"
     $total[1]++
+    $.info 'fail', $ok msg, false
+    $.log "# <#{a}> is not <#{b}>"
 
-$.divide = (title) -> $.log "#{_.repeat '-', 16}#{if title then "> #{title}" else ''}"
+$divide = (title) -> $.log "#{_.repeat '-', 16}#{if title then "> #{title}" else ''}"
 
-$.parseOK = (msg, ok) ->
-  if !~msg.search /\[is]/
-    return msg
-  if ok == false
-    return msg.replace /\[is]/, 'is not'
-  msg.replace /\[is]/, 'is'
-
-$.parseString = (arg) -> new String arg
+$ok = (msg, ok) ->
+  if !~msg.search /\[is]/ then return msg
+  if ok == false then return msg.replace /\[is]/g, 'is not'
+  msg.replace /\[is]/g, 'is'
 
 $subject = [
   1024 # number
@@ -62,9 +60,9 @@ $subject = [
 
 # version
 do ->
-  $.divide 'Version'
+  $divide 'Version'
   version = '0.4.1'
-  $.test $.version, version, "$.version [is] #{version}"
+  $test $.version, version, "$.version [is] #{version}"
 
 # $.Callbacks().add()
 # $.Callbacks().disable()
@@ -79,7 +77,7 @@ do ->
 # $.Callbacks().remove()
 # $.Callbacks()
 do ->
-  $.divide '$.Callbacks()'
+  $divide '$.Callbacks()'
 
   # $.Callbacks().add()
   do ->
@@ -89,7 +87,7 @@ do ->
     for i in [0..2]
       cb.add fn
     cb.fire()
-    $.test a, 3, '$.Callbacks().add() [is] ok'
+    $test a, 3, '$.Callbacks().add() [is] ok'
 
   # $.Callbacks().disable()
   do ->
@@ -99,13 +97,13 @@ do ->
     for i in [0..2]
       cb.add fn
     cb.disable().fire()
-    $.test a, 0, '$.Callbacks().disable() [is] ok'
+    $test a, 0, '$.Callbacks().disable() [is] ok'
 
   # $.Callbacks().disabled()
   do ->
     cb = $.Callbacks()
     cb.disable()
-    $.test cb.disabled(), true, '$.Callbacks().disabled() [is] ok'
+    $test cb.disabled(), true, '$.Callbacks().disabled() [is] ok'
 
   # $.Callbacks().empty()
   do ->
@@ -115,7 +113,7 @@ do ->
     for i in [0..2]
       cb.add fn
     cb.empty().fire()
-    $.test a, 0, '$.Callbacks().empty() [is] ok'
+    $test a, 0, '$.Callbacks().empty() [is] ok'
 
   # $.Callbacks().fire()
   do ->
@@ -125,13 +123,13 @@ do ->
     for i in [0..2]
       cb.add fn
     cb.fire 2
-    $.test a, 6, '$.Callbacks().fire() [is] ok'
+    $test a, 6, '$.Callbacks().fire() [is] ok'
 
   # $.Callbacks().fired()
   do ->
     cb = $.Callbacks()
     cb.fire()
-    $.test cb.fired(), true, '$.Callbacks().fired() [is] ok'
+    $test cb.fired(), true, '$.Callbacks().fired() [is] ok'
 
   # $.Callbacks().fireWith()
   do ->
@@ -141,7 +139,7 @@ do ->
     for i in [0..2]
       cb.add fn
     cb.fireWith a, 2, 3
-    $.test a.v, 18, '$.Callbacks().fireWith() [is] ok'
+    $test a.v, 18, '$.Callbacks().fireWith() [is] ok'
 
   # $.Callbacks().has()
   do ->
@@ -152,7 +150,7 @@ do ->
     for i in [0..2]
       cb.add fn
     cb.fire()
-    $.test cb.has(fn) == true and cb.has(_fn) == false, true
+    $test cb.has(fn) == true and cb.has(_fn) == false, true
     , '$.Callbacks().has() [is] ok'
 
   # $.Callbacks().lock()
@@ -162,13 +160,13 @@ do ->
     fn = -> null
     for i in [0..2]
       cb.add fn
-    $.test cb.list.length, 0, '$.Callbacks().lock() [is] ok'
+    $test cb.list.length, 0, '$.Callbacks().lock() [is] ok'
 
   # $.Callbacks().locked()
   do ->
     cb = $.Callbacks()
     cb.lock()
-    $.test cb.locked(), true, '$.Callbacks().locked() [is] ok'
+    $test cb.locked(), true, '$.Callbacks().locked() [is] ok'
 
   # $.Callbacks().remove()
   do ->
@@ -181,7 +179,7 @@ do ->
     cb.add _fn
     .remove fn
     .fire()
-    $.test a, 2, '$.Callbacks().remove() [is] ok'
+    $test a, 2, '$.Callbacks().remove() [is] ok'
 
   # $.Callbacks()
   do ->
@@ -193,7 +191,7 @@ do ->
       for i in [0..2]
         cb.add fn
       cb.fire().fire()
-      $.test a, 3, '$.Callbacks({once: true}) [is] ok'
+      $test a, 3, '$.Callbacks({once: true}) [is] ok'
     # memory: true
     do ->
       cb = $.Callbacks memory: true
@@ -204,7 +202,7 @@ do ->
       .fire 2 # 0 + 2 = 2
       .add _fn # 2 + 2 * 2 = 6
       .fire 3 # 6 + 3 + 3 * 2 = 15
-      $.test a, 15, '$.Callbacks({memory: true}) [is] ok'
+      $test a, 15, '$.Callbacks({memory: true}) [is] ok'
     # unique: true
     do ->
       cb = $.Callbacks unique: true
@@ -213,7 +211,7 @@ do ->
       for i in [0..2]
         cb.add fn
       cb.fire()
-      $.test a, 1, '$.Callbacks({unique: true}) [is] ok'
+      $test a, 1, '$.Callbacks({unique: true}) [is] ok'
     # stopOnFalse: true
     do ->
       cb = $.Callbacks stopOnFalse: true
@@ -226,7 +224,7 @@ do ->
       .add _fn
       .add fn
       .fire()
-      $.test a, 2, '$.Callbacks({stopOnFalse: true}) [is] ok'
+      $test a, 2, '$.Callbacks({stopOnFalse: true}) [is] ok'
 
 # $.Deferred().always()
 # $.Deferred().done()
@@ -244,39 +242,39 @@ do ->
 # $.Deferred()
 # $.when()
 $.next 100, ->
-  $.divide '$.Deferred()'
+  $divide '$.Deferred()'
 
   # $.Deferred().always()
   do ->
     def = $.Deferred()
     def.always (data) ->
-      $.test data, 0, "$.Deferred().always() [is] ok(resolve)"
+      $test data, 0, "$.Deferred().always() [is] ok(resolve)"
     $.next -> def.resolve 0
   do ->
     def = $.Deferred()
     def.always (data) ->
-      $.test data, 1, "$.Deferred().always() [is] ok(reject)"
+      $test data, 1, "$.Deferred().always() [is] ok(reject)"
     $.next -> def.reject 1
 
   # $.Deferred().done()
   do ->
     def = $.Deferred()
     def.done (data) ->
-      $.test data, 0, "$.Deferred().done() [is] ok"
+      $test data, 0, "$.Deferred().done() [is] ok"
     $.next -> def.resolve 0
 
   # $.Deferred().fail()
   do ->
     def = $.Deferred()
     def.fail (data) ->
-      $.test data, 0, "$.Deferred().fail() [is] ok"
+      $test data, 0, "$.Deferred().fail() [is] ok"
     $.next -> def.reject 0
 
   # $.Deferred().notify()
   do ->
     def = $.Deferred()
     def.progress (data) ->
-      $.test data, 0, "$.Deferred().notify() [is] ok"
+      $test data, 0, "$.Deferred().notify() [is] ok"
     $.next -> def.notify 0
 
   # $.Deferred().notifyWith()
@@ -285,14 +283,14 @@ $.next 100, ->
     a = v: 0
     def.progress (data) ->
       @v += data
-      $.test a.v, 2, "$.Deferred().notifyWith() [is] ok"
+      $test a.v, 2, "$.Deferred().notifyWith() [is] ok"
     $.next -> def.notifyWith a, 2
 
   # $.Deferred().progress()
   do ->
     def = $.Deferred()
     def.progress (data) ->
-      $.test data, 0, "$.Deferred().progress() [is] ok"
+      $test data, 0, "$.Deferred().progress() [is] ok"
     $.next -> def.notify 0
 
   # $.Deferred().promise()
@@ -301,7 +299,7 @@ $.next 100, ->
   do ->
     def = $.Deferred()
     def.fail (data) ->
-      $.test data, 0, "$.Deferred().reject() [is] ok"
+      $test data, 0, "$.Deferred().reject() [is] ok"
     $.next -> def.reject 0
 
   # $.Deferred().rejectWith()
@@ -310,14 +308,14 @@ $.next 100, ->
     a = v: 0
     def.fail (data) ->
       @v += data
-      $.test a.v, 2, "$.Deferred().rejectWith() [is] ok"
+      $test a.v, 2, "$.Deferred().rejectWith() [is] ok"
     $.next -> def.rejectWith a, 2
 
   # $.Deferred().resolve()
   do ->
     def = $.Deferred()
     def.done (data) ->
-      $.test data, 0, "$.Deferred().resolve() [is] ok"
+      $test data, 0, "$.Deferred().resolve() [is] ok"
     $.next -> def.resolve 0
 
   # $.Deferred().resolveWith()
@@ -326,28 +324,28 @@ $.next 100, ->
     a = v: 0
     def.done (data) ->
       @v += data
-      $.test a.v, 2, "$.Deferred().resolveWith() [is] ok"
+      $test a.v, 2, "$.Deferred().resolveWith() [is] ok"
     $.next -> def.resolveWith a, 2
 
   # $.Deferred().state()
   do ->
     def = $.Deferred()
-    $.test def.state(), 'pending', '$.Deferred().state() [is] ok(pending)'
+    $test def.state(), 'pending', '$.Deferred().state() [is] ok(pending)'
   do ->
     def = $.Deferred()
     def.done ->
-      $.test def.state(), 'resolved', '$.Deferred().state() [is] ok(resolved)'
+      $test def.state(), 'resolved', '$.Deferred().state() [is] ok(resolved)'
     $.next -> def.resolve()
   do ->
     def = $.Deferred()
-    def.fail -> $.test def.state(), 'rejected', '$.Deferred().state() [is] ok(rejected)'
+    def.fail -> $test def.state(), 'rejected', '$.Deferred().state() [is] ok(rejected)'
     $.next -> def.reject()
 
   # $.Deferred().then()
   do ->
     def = $.Deferred()
     fnDone = (data) ->
-      $.test data, 0, '$.Deferred().then() [is] ok(resolve)'
+      $test data, 0, '$.Deferred().then() [is] ok(resolve)'
     fnFail = -> null
     def.then fnDone, fnFail
     $.next -> def.resolve 0
@@ -355,7 +353,7 @@ $.next 100, ->
     def = $.Deferred()
     fnDone = -> null
     fnFail = (data) ->
-      $.test data, 0, '$.Deferred().then() [is] ok(reject)'
+      $test data, 0, '$.Deferred().then() [is] ok(reject)'
     def.then fnDone, fnFail
     $.next -> def.reject 0
 
@@ -375,7 +373,7 @@ $.next 100, ->
 
 # $.serialize()
 do ->
-  $.divide '$.serialize()'
+  $divide '$.serialize()'
 
   for a, i in [
     {}
@@ -391,7 +389,7 @@ do ->
     {}
     {}
   ]
-    $.test _.isEqual($.serialize($subject[i]), a), true
+    $test _.isEqual($.serialize($subject[i]), a), true
     , "$.serialize(#{$.parseString $subject[i]}) [is] #{$.parseString a}"
 
   a = '?a=1&b=2&c=3&d=4'
@@ -400,14 +398,14 @@ do ->
     b: '2'
     c: '3'
     d: '4'
-  $.test _.isEqual($.serialize(a), b), true
+  $test _.isEqual($.serialize(a), b), true
   , "$.serialize(#{$.parseString a}) [is] #{$.parseString b}"
 
 # $.trim()
 
 # $.type()
 do ->
-  $.divide '$.type()'
+  $divide '$.type()'
   for a, i in [
     'number'
     'string'
@@ -422,12 +420,12 @@ do ->
     'undefined'
     'number'
   ]
-    $.test $.type($subject[i]), a
+    $test $.type($subject[i]), a
     , "$.type(#{$.parseString $subject[i]}) [is] #{$.parseString a}"
 
 # $.when()
 $.next 200, ->
-  $.divide '$.when()'
+  $divide '$.when()'
 
   # resolve
   do ->
@@ -447,7 +445,7 @@ $.next 200, ->
         res = res and args[1][0] == 1 and args[1][1] == 2
         res = res and args[2][0] == 3 and args[2][1] == 4 and args[2][2] == 5
         res = res and args[3][0] == 'a' and args[3][1] == 'b'
-        $.test res, true, "$.when() [is] ok(resolve - #{i}/#{count})"
+        $test res, true, "$.when() [is] ok(resolve - #{i}/#{count})"
 
       a.resolve 0
       c.resolve 3, 4, 5
@@ -463,7 +461,7 @@ $.next 200, ->
       .fail (args...) ->
         res = true
         res = res and args[0] == 1 and args[1] == 2
-        $.test res, true, "$.when() [is] ok(reject - #{i}/#{count})"
+        $test res, true, "$.when() [is] ok(reject - #{i}/#{count})"
       a.reject 1, 2
 
     do (i = ++index) ->
@@ -473,7 +471,7 @@ $.next 200, ->
       .fail (args...) ->
         res = true
         res = res and args[0] == 1 and args[1] == 2
-        $.test res, true, "$.when() [is] ok(reject - #{i}/#{count})"
+        $test res, true, "$.when() [is] ok(reject - #{i}/#{count})"
       a.resolve()
       b.reject 1, 2
 
@@ -483,11 +481,11 @@ $.next 200, ->
       .fail (args...) ->
         res = true
         res = res and args[0] == 1 and args[1] == 2
-        $.test res, true, "$.when() [is] ok(reject - #{i}/#{count})"
+        $test res, true, "$.when() [is] ok(reject - #{i}/#{count})"
 
 # ajax
 $.next 300, ->
-  $.divide 'Ajax'
+  $divide 'Ajax'
 
   # server
   app.use bodyParser.urlencoded extended: true
@@ -507,17 +505,17 @@ $.next 300, ->
   $.when $.get("#{base}/ping", salt: salt), $.get("#{base}/json", salt: salt)
   .always (data...) ->
     res = parseInt(data[0]) == parseInt(data[1].value) == salt
-    $.test res, true, '$.get() [is] ok'
+    $test res, true, '$.get() [is] ok'
 
   # post
   $.when $.post("#{base}/ping", salt: salt), $.post("#{base}/json", salt: salt)
   .always (data...) ->
     res = parseInt(data[0]) == parseInt(data[1].value) == salt
-    $.test res, true, '$.post() [is] ok'
+    $test res, true, '$.post() [is] ok'
 
 # result
 $.next 500, ->
-  $.divide 'Result'
+  $divide 'Result'
   msg = "There has got #{$total[1]} fail(s) from #{$total[0]} test(s)."
   $.info 'result', msg
 

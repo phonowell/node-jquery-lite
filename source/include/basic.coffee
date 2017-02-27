@@ -9,7 +9,7 @@ $.noop = _.noop # noop
 $.type = (arg) ->
 
   type = Object::toString.call arg
-  .replace /^\[object\s(.+)\]$/, '$1'
+  .replace /^\[object\s(.+)]$/, '$1'
   .toLowerCase()
 
   if type == 'uint8array' then return 'buffer'
