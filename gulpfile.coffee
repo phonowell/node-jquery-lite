@@ -24,14 +24,8 @@ $$.task 'build', co ->
 $$.task 'lint', co -> yield $$.lint 'coffee'
 
 $$.task 'prepare', co ->
-  yield $$.delete [
-    './gulpfile.js'
-    './coffeelint.json'
-    './test.js'
-  ]
-  yield $$.compile './gulpfile.coffee'
+  yield $$.delete './coffeelint.json'
   yield $$.compile './coffeelint.yml'
-  yield $$.compile './test.coffee'
 
 $$.task 'set', co ->
 
