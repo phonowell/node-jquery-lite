@@ -25,9 +25,9 @@
 
   $.noop = _.noop;
 
-  $.type = function(param) {
+  $.type = function(arg) {
     var type;
-    type = Object.prototype.toString.call(param).replace(/^\[object\s(.+)\]$/, '$1').toLowerCase();
+    type = Object.prototype.toString.call(arg).replace(/^\[object\s(.+)\]$/, '$1').toLowerCase();
     if (type === 'uint8array') {
       return 'buffer';
     }

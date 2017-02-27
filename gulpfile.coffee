@@ -1,11 +1,6 @@
 $$ = require 'fire-keeper'
-
 {_, Promise} = $$.library
-
 co = Promise.coroutine
-
-# config
-$$.config 'useHarmony', true
 
 # task
 
@@ -23,7 +18,7 @@ $$.task 'build', co ->
     './index.js'
     './source/index.js'
   ]
-  yield $$.compile './source/index.coffee'
+  yield $$.compile './source/index.coffee', minify: false
   yield $$.copy './source/index.js'
 
 $$.task 'lint', co -> yield $$.lint 'coffee'
@@ -51,4 +46,18 @@ $$.task 'set', co ->
   yield $$.replace './test.coffee'
   , /version = '[\d.]+'/, "version = '#{ver}'"
 
-$$.task 'test', co -> yield $$.shell 'node test.js'
+$$.task 'test', co ->
+  yield $$.compile './test.coffee'
+  yield $$.shell 'node test'
+  yield $$.delete './test.js'
+
+$$.task 'init', co ->
+
+  yield $$.delete './.gitignore'
+  yield $$.copy './../kokoro/.gitignore'
+
+  yield $$.delete './.npmignore'
+  yield $$.copy './../kokoro/.npmignore'
+
+  yield $$.delete './coffeelint.yml'
+  yield $$.copy './../kokoro/coffeelint.yml'

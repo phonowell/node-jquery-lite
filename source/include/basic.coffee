@@ -6,9 +6,14 @@ $.each = _.each # each
 $.noop = _.noop # noop
 
 # type
-$.type = (param) ->
-  type = Object::toString.call(param).replace(/^\[object\s(.+)\]$/, '$1').toLowerCase()
+$.type = (arg) ->
+
+  type = Object::toString.call arg
+  .replace /^\[object\s(.+)\]$/, '$1'
+  .toLowerCase()
+
   if type == 'uint8array' then return 'buffer'
+
   type
 
 # serialize
