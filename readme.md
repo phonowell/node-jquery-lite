@@ -18,7 +18,7 @@ b = $.get '/api/path/b'
 
 $.when a, b
 .fail (msg) -> console.log msg
-.done (data) ->
+.done (data...) ->
   if $.type(data) != 'array' then return
   ...  
 ```
