@@ -1,5 +1,11 @@
 # UPDATES
 
+### v0.5.0 @ 3.3.2017
+
+- Required [Deferred](https://github.com/webspinner/Deferred) now.
+- Updated *gulp* files.
+- Updated *test* files.
+
 ### v0.4.1 @ 12.21.2016
 
 - Added `$.request()`.

@@ -10,7 +10,7 @@
   module.exports = $ = {
     _: _,
     request: request,
-    version: '0.4.1'
+    version: '0.5.0'
   };
 
   $.extend = _.extend;
@@ -27,7 +27,7 @@
 
   $.type = function(arg) {
     var type;
-    type = Object.prototype.toString.call(arg).replace(/^\[object\s(.+)\]$/, '$1').toLowerCase();
+    type = Object.prototype.toString.call(arg).replace(/^\[object\s(.+)]$/, '$1').toLowerCase();
     if (type === 'uint8array') {
       return 'buffer';
     }
@@ -35,7 +35,7 @@
   };
 
   $.serialize = function(string) {
-    var a, b, j, key, len, ref, ref1, res, value;
+    var a, b, i, key, len, ref, ref1, res, value;
     switch ($.type(string)) {
       case 'object':
         return string;
@@ -45,8 +45,8 @@
         }
         res = {};
         ref = _.trim(string.replace(/\?/g, '')).split('&');
-        for (j = 0, len = ref.length; j < len; j++) {
-          a = ref[j];
+        for (i = 0, len = ref.length; i < len; i++) {
+          a = ref[i];
           b = a.split('=');
           ref1 = [_.trim(b[0]), _.trim(b[1])], key = ref1[0], value = ref1[1];
           if (key.length) {
@@ -76,7 +76,7 @@
     }
 
     Callbacks.prototype.add = function() {
-      var _push, args, fn, j, len;
+      var _push, args, fn, i, len;
       args = 1 <= arguments.length ? slice.call(arguments, 0) : [];
       if (this.locked()) {
         return this;
@@ -89,8 +89,8 @@
           }
         };
       })(this);
-      for (j = 0, len = args.length; j < len; j++) {
-        fn = args[j];
+      for (i = 0, len = args.length; i < len; i++) {
+        fn = args[i];
         if (!($.type(fn) === 'function')) {
           continue;
         }
@@ -123,7 +123,7 @@
     };
 
     Callbacks.prototype.fire = function() {
-      var args, fn, j, len, ref, res;
+      var args, fn, i, len, ref, res;
       args = 1 <= arguments.length ? slice.call(arguments, 0) : [];
       if (this.disabled()) {
         return this;
@@ -132,8 +132,8 @@
         return this;
       }
       ref = this.list;
-      for (j = 0, len = ref.length; j < len; j++) {
-        fn = ref[j];
+      for (i = 0, len = ref.length; i < len; i++) {
+        fn = ref[i];
         res = fn.apply(null, args);
         if (this.option.stopOnFalse && res === false) {
           break;
@@ -151,7 +151,7 @@
     };
 
     Callbacks.prototype.fireWith = function() {
-      var args, context, fn, j, len, ref, res;
+      var args, context, fn, i, len, ref, res;
       context = arguments[0], args = 2 <= arguments.length ? slice.call(arguments, 1) : [];
       if (this.disabled()) {
         return this;
@@ -160,8 +160,8 @@
         return this;
       }
       ref = this.list;
-      for (j = 0, len = ref.length; j < len; j++) {
-        fn = ref[j];
+      for (i = 0, len = ref.length; i < len; i++) {
+        fn = ref[i];
         res = fn.apply(context, args);
         if (this.option.stopOnFalse && res === false) {
           break;
@@ -208,200 +208,11 @@
     })(Callbacks, args, function(){});
   };
 
-  Deferred = (function() {
-    var _add;
+  Deferred = require('Deferred');
 
-    function Deferred() {
-      this.status = {
-        isRejected: false,
-        isResolved: false,
-        state: 'pending'
-      };
-      this.list = {
-        resolve: $.Callbacks({
-          once: true
-        }),
-        reject: $.Callbacks({
-          once: true
-        }),
-        notify: $.Callbacks()
-      };
-    }
+  $.Deferred = Deferred;
 
-    _add = function(fn, list) {
-      if ($.type(fn) === 'function') {
-        return list.add(fn);
-      }
-    };
-
-    Deferred.prototype.always = function(cb) {
-      this.done(cb);
-      return this.fail(cb);
-    };
-
-    Deferred.prototype.done = function(cb) {
-      _add(cb, this.list.resolve);
-      return this;
-    };
-
-    Deferred.prototype.fail = function(cb) {
-      _add(cb, this.list.reject);
-      return this;
-    };
-
-    Deferred.prototype.notify = function() {
-      var args, ref;
-      args = 1 <= arguments.length ? slice.call(arguments, 0) : [];
-      this.args = args;
-      (ref = this.list.notify).fire.apply(ref, args);
-      return this;
-    };
-
-    Deferred.prototype.notifyWith = function() {
-      var args, ref;
-      args = 1 <= arguments.length ? slice.call(arguments, 0) : [];
-      this.args = args;
-      (ref = this.list.notify).fireWith.apply(ref, args);
-      return this;
-    };
-
-    Deferred.prototype.progress = function(cb) {
-      _add(cb, this.list.notify);
-      return this;
-    };
-
-    Deferred.prototype.promise = function() {
-      return this;
-    };
-
-    Deferred.prototype.reject = function() {
-      var args, ref;
-      args = 1 <= arguments.length ? slice.call(arguments, 0) : [];
-      this.status.state = 'rejected';
-      this.args = args;
-      (ref = this.list.reject).fire.apply(ref, args);
-      return this;
-    };
-
-    Deferred.prototype.rejectWith = function() {
-      var args, ref;
-      args = 1 <= arguments.length ? slice.call(arguments, 0) : [];
-      this.status.state = 'rejected';
-      this.args = args;
-      (ref = this.list.reject).fireWith.apply(ref, args);
-      return this;
-    };
-
-    Deferred.prototype.resolve = function() {
-      var args, ref;
-      args = 1 <= arguments.length ? slice.call(arguments, 0) : [];
-      this.status.state = 'resolved';
-      this.args = args;
-      (ref = this.list.resolve).fire.apply(ref, args);
-      return this;
-    };
-
-    Deferred.prototype.resolveWith = function() {
-      var args, ref;
-      args = 1 <= arguments.length ? slice.call(arguments, 0) : [];
-      this.status.state = 'resolved';
-      this.args = args;
-      (ref = this.list.resolve).fireWith.apply(ref, args);
-      return this;
-    };
-
-    Deferred.prototype.state = function() {
-      return this.status.state;
-    };
-
-    Deferred.prototype.then = function() {
-      var args;
-      args = 1 <= arguments.length ? slice.call(arguments, 0) : [];
-      this.done(args[0]);
-      return this.fail(args[1]);
-    };
-
-    return Deferred;
-
-  })();
-
-  $.Deferred = function() {
-    return new Deferred();
-  };
-
-  $.when = function() {
-    var _d, _i, args, def, fn1, j, len, list, parse;
-    args = 1 <= arguments.length ? slice.call(arguments, 0) : [];
-    def = $.Deferred();
-    parse = function(arr) {
-      if (arr.length === 1) {
-        return arr[0];
-      } else {
-        return arr;
-      }
-    };
-    list = {
-      state: [],
-      def: []
-    };
-    fn1 = function(d, i) {
-      var ref, state;
-      if (!(d != null ? (ref = d.status) != null ? ref.state : void 0 : void 0)) {
-        list.state[i] = 'resolved';
-        list.def[i] = d;
-        return;
-      }
-      state = d.status.state;
-      if (state === 'resolved') {
-        list.state[i] = 'resolved';
-        list.def[i] = parse(d.args);
-        return;
-      }
-      if (state === 'rejected') {
-        list.state = null;
-        list.def = d.args;
-        return;
-      }
-      list.state[i] = 'pending';
-      return d.done(function() {
-        var _args;
-        _args = 1 <= arguments.length ? slice.call(arguments, 0) : [];
-        return def.notify(i, 'resolved', _args);
-      }).fail(function() {
-        var _args;
-        _args = 1 <= arguments.length ? slice.call(arguments, 0) : [];
-        return def.reject.apply(def, _args);
-      });
-    };
-    for (_i = j = 0, len = args.length; j < len; _i = ++j) {
-      _d = args[_i];
-      fn1(_d, _i);
-      if (!list.state) {
-        break;
-      }
-    }
-    if (!list.state) {
-      $.next(function() {
-        return def.reject.apply(def, list.def);
-      });
-      return def.promise();
-    }
-    if (!(indexOf.call(list.state, 'pending') >= 0)) {
-      $.next(function() {
-        return def.resolve.apply(def, list.def);
-      });
-      return def.promise();
-    }
-    def.progress(function(i, state, _arg) {
-      list.state[i] = state;
-      list.def[i] = parse(_arg);
-      if (indexOf.call(list.state, 'pending') >= 0) {
-        return;
-      }
-      return def.resolve.apply(def, list.def);
-    });
-    return def.promise();
-  };
+  $.when = Deferred.when;
 
   parseType = function(res) {
     var type;

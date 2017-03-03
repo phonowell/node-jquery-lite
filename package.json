@@ -1,10 +1,10 @@
 {
   "name": "node-jquery-lite",
-  "version": "0.4.1",
-  "description": "A tiny plugin for nodejs to write lines in jquery style.",
+  "version": "0.5.0",
+  "description": "A tiny plugin for nodejs to write lines in jQuery style.",
   "main": "./index.js",
   "scripts": {
-    "test": "node test.js"
+    "test": "mocha"
   },
   "repository": {
     "type": "git",
@@ -13,9 +13,7 @@
   "keywords": [
     "node-jquery-lite",
     "nodejs",
-    "jquery",
-    "lite",
-    "coffeescript"
+    "jquery"
   ],
   "author": "Mimiko Phonowell <phnonwell@gmail.com>",
   "license": "GPL",
@@ -28,9 +26,11 @@
     "body-parser": "^1.15.2",
     "coffee-script": "^1.12.2",
     "express": "^4.14.0",
-    "fire-keeper": "phonowell/fire-keeper"
+    "fire-keeper": "phonowell/fire-keeper",
+    "mocha": "^3.2.0"
   },
   "dependencies": {
+    "Deferred": "^0.1.1",
     "lodash": "^4.17.3",
     "request": "^2.79.0"
   }
