@@ -12,37 +12,19 @@ $ npm i node-jquery-lite
 
 ```
 $ = require 'node-jquery-lite'
-
-a = $.get '/api/path/a'
-b = $.get '/api/path/b'
-
-$.when a, b
-.fail (msg) -> console.log msg
-.done (data...) ->
-  if $.type(data) != 'array' then return
-  ...  
+console.log $.now()
 ```
 
 ## Methods
 
 - `$.Callbacks()`
-- `$.Deferred()`
 - `$.each()`
 - `$.extend()`
-- `$.get()`
 - `$.noop()`
 - `$.now()`
 - `$.param()`
-- `$.post()`
-- `$.serialize()`
 - `$.trim()`
 - `$.type()`
-- `$.when()`
-
-Methods below come from required libraries.
-
-- `$._()`
-- `$.request()`
     
 ## Attention
 

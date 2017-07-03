@@ -2,10 +2,7 @@ $ = require './../index'
 _ = $._
 
 assert = require 'assert'
-
-express = require 'express'
-app = express()
-bodyParser = require 'body-parser'
+check = assert.equal
 
 # function
 
@@ -24,9 +21,6 @@ $.parseString = (arg) -> new String arg
 
 # test function
 
-check = assert.equal
-checkDeep = assert.deepEqual
-
 $SUBJECT = [
   1024 # number
   'hello world' # string
@@ -43,9 +37,9 @@ $SUBJECT = [
 ]
 
 describe '$.version', ->
-  VERSION = '0.5.0'
+  VERSION = '0.6.0'
   it "$.version is #{VERSION}", ->
-    check $.version, VERSION
+    check $.VERSION, VERSION
 
 # $.Callbacks().add()
 # $.Callbacks().disable()
@@ -212,169 +206,15 @@ describe '$.Callbacks()', ->
 
       check a, 2
 
-# $.Deferred().always()
-# $.Deferred().done()
-# $.Deferred().fail()
-# $.Deferred().notify()
-# $.Deferred().notifyWith()
-# $.Deferred().progress()
-# $.Deferred().promise()
-# $.Deferred().reject()
-# $.Deferred().rejectWith()
-# $.Deferred().resolve()
-# $.Deferred().resolveWith()
-# $.Deferred().state()
-# $.Deferred().then()
-# $.Deferred()
-# $.when()
-
-describe '$.Deferred()', ->
-
-  describe '$.Deferred().always()', ->
-
-    it 'resolve', ->
-      def = $.Deferred()
-      def.always (data) -> check data, 0,
-      $.next -> def.resolve 0
-    it 'reject', ->
-      def = $.Deferred()
-      def.always (data) -> check data, 1
-      $.next -> def.reject 1
-
-  it '$.Deferred().done()', ->
-    def = $.Deferred()
-    def.done (data) -> check data, 0
-    $.next -> def.resolve 0
-
-  it '$.Deferred().fail()', ->
-    def = $.Deferred()
-    def.fail (data) -> check data, 0
-    $.next -> def.reject 0
-
-  it '$.Deferred().notify()', ->
-    def = $.Deferred()
-    def.progress (data) -> check data, 0
-    $.next -> def.notify 0
-
-  it '$.Deferred().notifyWith()', ->
-    def = $.Deferred()
-    a = v: 0
-    def.progress (data) ->
-      @v += data
-      check a.v, 2
-    $.next -> def.notifyWith a, 2
-
-  it '$.Deferred().progress()', ->
-    def = $.Deferred()
-    def.progress (data) -> check data, 0
-    $.next -> def.notify 0
-
-  # $.Deferred().promise()
-
-  it '$.Deferred().reject()', ->
-    def = $.Deferred()
-    def.fail (data) -> check data, 0
-    $.next -> def.reject 0
-
-  it '$.Deferred().rejectWith()', ->
-    def = $.Deferred()
-    a = v: 0
-    def.fail (data) ->
-      @v += data
-      check a.v, 2
-    $.next -> def.rejectWith a, 2
-
-  it '$.Deferred().resolve()', ->
-    def = $.Deferred()
-    def.done (data) -> check data, 0
-    $.next -> def.resolve 0
-
-  it '$.Deferred().resolveWith()', ->
-    def = $.Deferred()
-    a = v: 0
-    def.done (data) ->
-      @v += data
-      check a.v, 2
-    $.next -> def.resolveWith a, 2
-
-  describe '$.Deferred().state()', ->
-
-    it 'pending', ->
-      def = $.Deferred()
-      check def.state(), 'pending'
-
-    it 'resolved', ->
-      def = $.Deferred()
-      def.done -> check def.state(), 'resolved'
-      $.next -> def.resolve()
-
-    it 'rejected', ->
-      def = $.Deferred()
-      def.fail -> check def.state(), 'rejected'
-      $.next -> def.reject()
-
-  describe '$.Deferred().then()', ->
-
-    it 'resolve', ->
-      def = $.Deferred()
-      fnDone = (data) -> check data, 0
-      fnFail = -> null
-      def.then fnDone, fnFail
-      $.next -> def.resolve 0
-
-    it 'reject', ->
-      def = $.Deferred()
-      fnDone = -> null
-      fnFail = (data) -> check data, 0
-      def.then fnDone, fnFail
-      $.next -> def.reject 0
-
 # $.each()
 
 # $.extend()
-
-# $.get()
 
 # $.noop()
 
 # $.now()
 
 # $.param()
-
-# $.post()
-
-describe '$.serialize()', ->
-
-  LIST = [
-    {}
-    {}
-    {}
-    {}
-    {a: 1, b: 2}
-    {}
-    {}
-    {}
-    {}
-    {}
-    {}
-    {}
-  ]
-  _.each LIST, (a, i) ->
-    p = $SUBJECT[i]
-    type = $.type p
-    if type == 'number' and _.isNaN p then type = 'NaN'
-
-    it type, -> checkDeep $.serialize(p), a
-
-  it 'params', ->
-    a = '?a=1&b=2&c=3&d=4'
-    b =
-      a: '1'
-      b: '2'
-      c: '3'
-      d: '4'
-
-    checkDeep $.serialize(a), b
 
 # $.trim()
 
@@ -395,111 +235,3 @@ describe '$.type()', ->
   ]
   _.each LIST, (a, i) ->
     it a, -> check $.type($SUBJECT[i]), a
-
-describe '$.when()', ->
-
-  it 'resolve', (done) ->
-
-    a = $.Deferred()
-    b = [1, 2]
-    c = $.Deferred()
-    d = $.Deferred().resolve 'a', 'b'
-
-    $.when a, b, c, d
-    .done (args...) ->
-      # a
-      check args[0], 0
-
-      # b
-      check args[1][0], 1
-      check args[1][1], 2
-
-      # c
-      check args[2][0], 3
-      check args[2][1], 4
-      check args[2][2], 5
-
-      # d
-      check args[3][0], 'a'
-      check args[3][1], 'b'
-
-      done()
-
-    a.resolve 0
-    c.resolve 3, 4, 5
-
-  describe 'reject', ->
-
-    it 'case 1', (done) ->
-      a = $.Deferred()
-
-      $.when a
-      .fail (args...) ->
-        check args[0], 1
-        check args[1], 2
-        done()
-
-      a.reject 1, 2
-
-    it 'case 2', (done) ->
-      a = $.Deferred()
-      b = $.Deferred()
-
-      $.when a, b
-      .fail (args...) ->
-        check args[0], 1
-        check args[1], 2
-        done()
-
-      a.resolve()
-      b.reject 1, 2
-
-    it 'case 3', (done) ->
-      a = $.Deferred().reject 1, 2
-
-      $.when a
-      .fail (args...) ->
-        check args[0], 1
-        check args[1], 2
-        done()
-
-describe 'ajax', ->
-
-  app.use bodyParser.urlencoded extended: true
-
-  app.get '/ping', (req, res) -> res.send req.query.salt
-  app.post '/ping', (req, res) -> res.send req.body.salt
-
-  app.get '/json', (req, res) -> res.json value: req.query.salt
-  app.post '/json', (req, res) -> res.json value: req.body.salt
-
-  app.listen port = 9453
-  base = "http://localhost:#{port}"
-
-  salt = _.now()
-
-  it '$.get()', ->
-
-    list = []
-    list.push $.get "#{base}/ping", {salt}
-    list.push $.get "#{base}/json", {salt}
-
-    $.when.apply $, list
-    .done (data...) ->
-      a = parseInt data[0]
-      b = parseInt data[1].value
-      check a, salt
-      check b, salt
-
-  it '$.post()', ->
-
-    list = []
-    list.push $.post "#{base}/ping", {salt}
-    list.push $.post "#{base}/json", {salt}
-
-    $.when.apply $, list
-    .done (data...) ->
-      a = parseInt data[0]
-      b = parseInt data[1].value
-      check a, salt
-      check b, salt

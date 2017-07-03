@@ -1,17 +1,18 @@
 (function() {
-  var $, Callbacks, Deferred, _, parseType, request,
+  var $, Callbacks, VERSION, _,
     slice = [].slice,
     indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
 
   _ = require('lodash');
 
-  request = require('request');
+  VERSION = '0.6.0';
 
-  module.exports = $ = {
+  $ = {
     _: _,
-    request: request,
-    version: '0.5.0'
+    VERSION: VERSION
   };
+
+  module.exports = $;
 
   $.extend = _.extend;
 
@@ -32,31 +33,6 @@
       return 'buffer';
     }
     return type;
-  };
-
-  $.serialize = function(string) {
-    var a, b, i, key, len, ref, ref1, res, value;
-    switch ($.type(string)) {
-      case 'object':
-        return string;
-      case 'string':
-        if (!~string.search(/=/)) {
-          return {};
-        }
-        res = {};
-        ref = _.trim(string.replace(/\?/g, '')).split('&');
-        for (i = 0, len = ref.length; i < len; i++) {
-          a = ref[i];
-          b = a.split('=');
-          ref1 = [_.trim(b[0]), _.trim(b[1])], key = ref1[0], value = ref1[1];
-          if (key.length) {
-            res[key] = value;
-          }
-        }
-        return res;
-      default:
-        return {};
-    }
   };
 
   Callbacks = (function() {
@@ -206,66 +182,6 @@
       var child = new ctor, result = func.apply(child, args);
       return Object(result) === result ? result : child;
     })(Callbacks, args, function(){});
-  };
-
-  Deferred = require('Deferred');
-
-  $.Deferred = Deferred;
-
-  $.when = Deferred.when;
-
-  parseType = function(res) {
-    var type;
-    type = res.headers['content-type'];
-    if (type && ~type.search(/application\/json/)) {
-      return 'json';
-    }
-    return 'text';
-  };
-
-  $.get = function(url, query) {
-    var _query, _url, def;
-    def = $.Deferred();
-    if (query) {
-      _url = url.replace(/\?.*/, '');
-      _query = $.serialize(url.replace(/.*\?/, ''));
-      _.extend(_query, query);
-      url = _url + "?" + ($.param(_query));
-    }
-    $.request({
-      method: 'GET',
-      url: url,
-      gzip: true
-    }, function(err, res, body) {
-      var type;
-      if (err) {
-        def.reject(err);
-        return;
-      }
-      type = parseType(res);
-      return def.resolve(type === 'json' ? JSON.parse(body) : body);
-    });
-    return def.promise();
-  };
-
-  $.post = function(url, query) {
-    var def;
-    def = $.Deferred();
-    $.request({
-      method: 'POST',
-      url: url,
-      form: query,
-      gzip: true
-    }, function(err, res, body) {
-      var type;
-      if (err) {
-        def.reject(err);
-        return;
-      }
-      type = parseType(res);
-      return def.resolve(type === 'json' ? JSON.parse(body) : body);
-    });
-    return def.promise();
   };
 
 }).call(this);

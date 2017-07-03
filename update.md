@@ -1,5 +1,16 @@
 # UPDATES
 
+### v0.6.0 @ 7.3.2017
+
+- Did not require [Deferred](https://github.com/webspinner/Deferred) now.
+- Removed `$.Deferred()`.
+- Removed `$.get()`.
+- Removed `$.post()`.
+- Removed `$.serialize()`.
+- Removed `$.when()`.
+- Updated *gulp* files.
+- Updated *test* files.
+
 ### v0.5.0 @ 3.3.2017
 
 - Required [Deferred](https://github.com/webspinner/Deferred) now.
