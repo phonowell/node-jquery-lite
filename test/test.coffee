@@ -3,6 +3,7 @@ _ = $._
 
 assert = require 'assert'
 check = assert.equal
+checkDeep = assert.deepEqual
 
 # function
 
@@ -215,6 +216,19 @@ describe '$.Callbacks()', ->
 # $.now()
 
 # $.param()
+
+describe '$.parseJSON()', ->
+
+  _.each $SUBJECT, (a, i) ->
+    p = $SUBJECT[i]
+    type = $.type p
+
+    if type == 'number' and _.isNaN p
+      # NaN
+      it 'NaN', -> check _.isEqual($.parseJSON(p), a), true
+      return
+
+    it type, -> checkDeep $.parseJSON(p), a
 
 # $.trim()
 

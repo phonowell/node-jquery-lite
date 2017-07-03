@@ -23,6 +23,7 @@ console.log $.now()
 - `$.noop()`
 - `$.now()`
 - `$.param()`
+- `$.parseJSON()`
 - `$.trim()`
 - `$.type()`
     

@@ -14,17 +14,49 @@
 
   module.exports = $;
 
-  $.extend = _.extend;
 
-  $.param = (require('querystring')).stringify;
-
-  $.trim = _.trim;
-
-  $.now = _.now;
+  /*
+  
+    $.each()
+    $.extend()
+    $.noop()
+    $.now()
+    $.param()
+    $.parseJSON(data)
+  
+  
+    $.trim()
+    $.type(arg)
+   */
 
   $.each = _.each;
 
+  $.extend = _.extend;
+
   $.noop = _.noop;
+
+  $.now = _.now;
+
+  $.param = (require('querystring')).stringify;
+
+  $.parseJSON = function(data) {
+    var err, ref, res;
+    if ($.type(data) !== 'string') {
+      return data;
+    }
+    try {
+      res = eval("(" + data + ")");
+      if ((ref = $.type(res)) === 'object' || ref === 'array') {
+        return res;
+      }
+      return data;
+    } catch (error) {
+      err = error;
+      return data;
+    }
+  };
+
+  $.trim = _.trim;
 
   $.type = function(arg) {
     var type;

@@ -3,6 +3,7 @@
 ### v0.6.0 @ 7.3.2017
 
 - Did not require [Deferred](https://github.com/webspinner/Deferred) now.
+- Added `$.parseJSON()`.
 - Removed `$.Deferred()`.
 - Removed `$.get()`.
 - Removed `$.post()`.
