@@ -5,7 +5,7 @@
 
   _ = require('lodash');
 
-  VERSION = '0.6.0';
+  VERSION = '0.6.1';
 
   $ = {
     _: _,
@@ -23,8 +23,6 @@
     $.now()
     $.param()
     $.parseJSON(data)
-  
-  
     $.trim()
     $.type(arg)
    */
@@ -40,19 +38,31 @@
   $.param = (require('querystring')).stringify;
 
   $.parseJSON = function(data) {
-    var err, ref, res;
-    if ($.type(data) !== 'string') {
-      return data;
-    }
-    try {
-      res = eval("(" + data + ")");
-      if ((ref = $.type(res)) === 'object' || ref === 'array') {
-        return res;
+    var _parse;
+    _parse = function(string) {
+      var err, ref, res;
+      try {
+        res = eval("(" + string + ")");
+        if ((ref = $.type(res)) === 'object' || ref === 'array') {
+          return res;
+        }
+        return data;
+      } catch (error) {
+        err = error;
+        return data;
       }
-      return data;
-    } catch (error) {
-      err = error;
-      return data;
+    };
+    switch ($.type(data)) {
+      case 'array':
+        return data;
+      case 'buffer':
+        return _parse(data.toString());
+      case 'object':
+        return data;
+      case 'string':
+        return _parse(data);
+      default:
+        throw new Error('invalid argument type');
     }
   };
 

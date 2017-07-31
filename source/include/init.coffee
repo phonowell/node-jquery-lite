@@ -1,6 +1,6 @@
 _ = require 'lodash'
 
-VERSION = '0.6.0'
+VERSION = '0.6.1'
 
 $ = {_, VERSION}
 

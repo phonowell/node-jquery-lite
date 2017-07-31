@@ -38,7 +38,7 @@ $SUBJECT = [
 ]
 
 describe '$.version', ->
-  VERSION = '0.6.0'
+  VERSION = '0.6.1'
   it "$.version is #{VERSION}", ->
     check $.VERSION, VERSION
 
@@ -222,6 +222,8 @@ describe '$.parseJSON()', ->
   _.each $SUBJECT, (a, i) ->
     p = $SUBJECT[i]
     type = $.type p
+
+    unless type in 'array buffer object string'.split ' ' then return
 
     if type == 'number' and _.isNaN p
       # NaN

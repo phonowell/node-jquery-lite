@@ -6,8 +6,6 @@
   $.now()
   $.param()
   $.parseJSON(data)
-
-
   $.trim()
   $.type(arg)
 
@@ -24,13 +22,20 @@ $.now = _.now
 $.param = (require 'querystring').stringify
 
 $.parseJSON = (data) ->
-  if $.type(data) != 'string' then return data
 
-  try
-    res = eval "(#{data})"
-    if $.type(res) in ['object', 'array'] then return res
-    data
-  catch err then data
+  _parse = (string) ->
+    try
+      res = eval "(#{string})"
+      if $.type(res) in ['object', 'array'] then return res
+      data
+    catch err then data
+
+  switch $.type data
+    when 'array' then data
+    when 'buffer' then _parse data.toString()
+    when 'object' then data
+    when 'string' then _parse data
+    else throw new Error 'invalid argument type'
 
 $.trim = _.trim
 
