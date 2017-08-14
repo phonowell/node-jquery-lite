@@ -34,6 +34,7 @@ $$.task 'lint', co ->
   yield $$.lint [
     './gulpfile.coffee'
     './source/**/*.coffee'
+    './test/**/*.coffee'
   ]
 
 $$.task 'prepare', co ->
@@ -43,8 +44,12 @@ $$.task 'prepare', co ->
     minify: false
 
 $$.task 'test', co ->
+
   yield $$.compile './test/**/*.coffee'
-  $$.shell 'start npm test'
+
+  yield $$.shell 'npm test'
+
+  yield $$.remove './test/**/*.js'
 
 $$.task 'set', co ->
 

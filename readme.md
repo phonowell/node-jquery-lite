@@ -17,7 +17,6 @@ console.log $.now()
 
 ## Methods
 
-- `$.Callbacks()`
 - `$.each()`
 - `$.extend()`
 - `$.noop()`

@@ -1,5 +1,11 @@
 # UPDATES
 
+### v0.7.0 @ 8.14.2017
+
+- Removed `$.Callbacks()`.
+- Updated *gulp* files.
+- Updated *test* files.
+
 ### v0.6.1 @ 7.31.2017
 
 - Updated `$.parseJSON()`.
