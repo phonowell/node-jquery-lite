@@ -15,7 +15,7 @@
     "nodejs",
     "jquery"
   ],
-  "author": "Mimiko Phonowell <phnonwell@gmail.com>",
+  "author": "Mimiko Phonowell <phonowell@gmail.com>",
   "license": "GPL",
   "url": "https://github.com/phonowell/node-jquery-lite",
   "bugs": {
@@ -23,9 +23,8 @@
   },
   "homepage": "https://github.com/phonowell/node-jquery-lite",
   "devDependencies": {
-    "coffee-script": "^1.12.7",
-    "fire-keeper": "^0.0.43",
-    "mocha": "^3.4.2"
+    "fire-keeper": "0.0.53",
+    "mocha": "^3.5.0"
   },
   "dependencies": {
     "lodash": "^4.17.4"
