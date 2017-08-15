@@ -1,7 +1,5 @@
 _ = require 'lodash'
 
-VERSION = '0.7.0'
-
-$ = {_, VERSION}
+$ = {_}
 
 module.exports = $

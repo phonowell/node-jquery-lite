@@ -35,12 +35,6 @@ checkIsLodash = (name) ->
 
 # test lines
 
-describe '$.version', ->
-  VERSION = '0.7.0'
-  it "$.version is #{VERSION}", ->
-    if $.VERSION != VERSION
-      throw new Error()
-
 # each()
 checkIsLodash 'each'
 

@@ -1,13 +1,10 @@
 (function() {
-  var $, VERSION, _;
+  var $, _;
 
   _ = require('lodash');
 
-  VERSION = '0.7.0';
-
   $ = {
-    _: _,
-    VERSION: VERSION
+    _: _
   };
 
   module.exports = $;

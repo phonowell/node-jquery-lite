@@ -58,12 +58,6 @@ $$.task 'set', co ->
   yield $$.replace './package.json'
   , /"version": "[\d.]+"/, "\"version\": \"#{ver}\""
 
-  yield $$.replace './source/include/init.coffee'
-  , /VERSION = '[\d.]+'/, "VERSION = '#{ver}'"
-
-  yield $$.replace './test/test.coffee'
-  , /VERSION = '[\d.]+'/, "VERSION = '#{ver}'"
-
 $$.task 'watch', ->
 
   # build
