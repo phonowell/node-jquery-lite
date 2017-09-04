@@ -32,34 +32,7 @@
 
   $.param = (require('querystring')).stringify;
 
-  $.parseJSON = function(data) {
-    var _parse;
-    _parse = function(string) {
-      var err, ref, res;
-      try {
-        res = eval("(" + string + ")");
-        if ((ref = $.type(res)) === 'object' || ref === 'array') {
-          return res;
-        }
-        return data;
-      } catch (error) {
-        err = error;
-        return data;
-      }
-    };
-    switch ($.type(data)) {
-      case 'array':
-        return data;
-      case 'buffer':
-        return _parse(data.toString());
-      case 'object':
-        return data;
-      case 'string':
-        return _parse(data);
-      default:
-        throw new Error('invalid argument type');
-    }
-  };
+  $.parseJSON = JSON.parse;
 
   $.trim = _.trim;
 

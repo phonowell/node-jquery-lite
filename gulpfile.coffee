@@ -11,21 +11,15 @@ co = Promise.coroutine
   prepare
   test
   set
-  watch
-  work
 
 ###
 
 $$.task 'build', co ->
 
-  yield $$.remove [
-    './index.js'
-    './source/index.js'
-  ]
+  yield $$.remove './index.js'
 
-  yield $$.compile './source/index.coffee',
+  yield $$.compile './source/index.coffee', './',
     minify: false
-  yield $$.copy './source/index.js', './'
 
 $$.task 'lint', co ->
 
@@ -57,24 +51,3 @@ $$.task 'set', co ->
 
   yield $$.replace './package.json'
   , /"version": "[\d.]+"/, "\"version\": \"#{ver}\""
-
-$$.task 'watch', ->
-
-  # build
-
-  deb = _.debounce $$.task('build'), 1e3
-  $$.watch [
-    './source/index.coffee'
-    './source/include/**/*.coffee'
-  ], deb
-
-  # test
-
-  $test = './test/test.coffee'
-  deb = _.debounce ->
-    $$.compile $test,
-      minify: false
-  , 1e3
-  $$.watch $test, deb
-
-$$.task 'work', -> $$.shell 'start gulp watch'

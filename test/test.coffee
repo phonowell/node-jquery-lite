@@ -3,7 +3,21 @@ _ = $._
 
 # function
 
-$.parseString = (arg) -> new String arg
+$.parseString = (data) ->
+
+  switch $.type data
+
+    when 'array'
+
+      (JSON.stringify __container__: data)
+      .replace /{(.*)}/, '$1'
+      .replace /"__container__":/, ''
+
+    when 'object' then JSON.stringify data
+
+    when 'string' then data
+
+    else new String data
 
 # test variable
 
@@ -56,22 +70,10 @@ describe '$.param()', ->
 
 describe '$.parseJSON()', ->
 
-  _.each SUBJECT, (a, i) ->
-    p = SUBJECT[i]
-    type = $.type p
+  it '$.parseJSON()', ->
 
-    unless type in 'array buffer object string'.split ' ' then return
-
-    if type == 'number' and _.isNaN p
-      # NaN
-      it 'NaN', ->
-        unless _.isEqual($.parseJSON(p), a)
-          throw new Error()
-      return
-
-    it type, ->
-      unless _.isEqual $.parseJSON(p), a
-        throw new Error()
+    if $.parseJSON != JSON.parse
+      throw new Error()
 
 # trim
 checkIsLodash 'trim'
