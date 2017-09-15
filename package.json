@@ -23,8 +23,8 @@
   },
   "homepage": "https://github.com/phonowell/node-jquery-lite",
   "devDependencies": {
-    "fire-keeper": "0.0.63",
-    "mocha": "^3.5.0"
+    "fire-keeper": "0.0.72",
+    "mocha": "^3.5.3"
   },
   "dependencies": {
     "lodash": "^4.17.4"
