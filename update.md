@@ -1,5 +1,9 @@
 # UPDATES
 
+### v0.7.2 @ 9.25.2017
+
+- Updated package(s).
+
 ### v0.7.1 @ 9.3.2017
 
 - Rewrote `$.parseJSON()`.
