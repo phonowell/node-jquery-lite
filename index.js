@@ -1,9 +1,12 @@
-module.exports = function($$) {
-  var _;
-  if ($$ == null) {
-    $$ = {};
-  }
+(function() {
+  var $$, _;
+
+  module.exports = $$ = {};
+
   _ = require('lodash');
+
+  $$._ = _;
+
 
   /*
   
@@ -16,13 +19,21 @@ module.exports = function($$) {
     trim()
     type(arg)
    */
+
   $$.each = _.each;
+
   $$.extend = _.extend;
+
   $$.noop = _.noop;
+
   $$.now = _.now;
+
   $$.param = (require('querystring')).stringify;
+
   $$.parseJSON = JSON.parse;
+
   $$.trim = _.trim;
+
   $$.type = function(arg) {
     var type;
     type = Object.prototype.toString.call(arg).replace(/^\[object\s(.+)]$/, '$1').toLowerCase();
@@ -31,5 +42,5 @@ module.exports = function($$) {
     }
     return type;
   };
-  return $$;
-};
+
+}).call(this);

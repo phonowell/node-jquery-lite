@@ -1,5 +1,5 @@
-console.log $ = require('./../index')()
-_ = require 'lodash'
+$ = require './../index'
+{_} = $
 
 # function
 

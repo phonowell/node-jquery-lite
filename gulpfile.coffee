@@ -18,7 +18,6 @@ $$.task 'build', co ->
   yield $$.remove './index.js'
 
   yield $$.compile './source/index.coffee', './',
-    bare: true
     minify: false
 
 $$.task 'lint', co ->

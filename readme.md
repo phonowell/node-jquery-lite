@@ -11,7 +11,7 @@ npm i node-jquery-lite
 ## Usage
 
 ```coffeescript
-$ = require('node-jquery-lite')()
+$ = require 'node-jquery-lite'
 console.log $.now()
 ```
 

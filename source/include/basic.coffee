@@ -1,40 +1,36 @@
-  # do keep a tab
+###
 
-  _ = require 'lodash'
+  each()
+  extend()
+  noop()
+  now()
+  param()
+  parseJSON(data)
+  trim()
+  type(arg)
 
-  ###
+###
 
-    each()
-    extend()
-    noop()
-    now()
-    param()
-    parseJSON(data)
-    trim()
-    type(arg)
+$$.each = _.each
 
-  ###
+$$.extend = _.extend
 
-  $$.each = _.each
+$$.noop = _.noop
 
-  $$.extend = _.extend
+$$.now = _.now
 
-  $$.noop = _.noop
+$$.param = (require 'querystring').stringify
 
-  $$.now = _.now
+$$.parseJSON = JSON.parse
 
-  $$.param = (require 'querystring').stringify
+$$.trim = _.trim
 
-  $$.parseJSON = JSON.parse
+$$.type = (arg) ->
 
-  $$.trim = _.trim
+  type = Object::toString.call arg
+  .replace /^\[object\s(.+)]$/, '$1'
+  .toLowerCase()
 
-  $$.type = (arg) ->
+  if type == 'uint8array' then return 'buffer'
 
-    type = Object::toString.call arg
-    .replace /^\[object\s(.+)]$/, '$1'
-    .toLowerCase()
-
-    if type == 'uint8array' then return 'buffer'
-
-    type
+  type
