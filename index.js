@@ -1,11 +1,11 @@
 (function() {
-  var $$, _;
+  var $, _;
 
-  module.exports = $$ = {};
+  module.exports = $ = {};
 
   _ = require('lodash');
 
-  $$._ = _;
+  $._ = _;
 
 
   /*
@@ -20,21 +20,21 @@
     type(arg)
    */
 
-  $$.each = _.each;
+  $.each = _.each;
 
-  $$.extend = _.extend;
+  $.extend = _.extend;
 
-  $$.noop = _.noop;
+  $.noop = _.noop;
 
-  $$.now = _.now;
+  $.now = _.now;
 
-  $$.param = (require('querystring')).stringify;
+  $.param = (require('querystring')).stringify;
 
-  $$.parseJSON = JSON.parse;
+  $.parseJSON = JSON.parse;
 
-  $$.trim = _.trim;
+  $.trim = _.trim;
 
-  $$.type = function(arg) {
+  $.type = function(arg) {
     var type;
     type = Object.prototype.toString.call(arg).replace(/^\[object\s(.+)]$/, '$1').toLowerCase();
     if (type === 'uint8array') {

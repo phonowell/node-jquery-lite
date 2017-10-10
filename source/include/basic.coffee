@@ -11,21 +11,21 @@
 
 ###
 
-$$.each = _.each
+$.each = _.each
 
-$$.extend = _.extend
+$.extend = _.extend
 
-$$.noop = _.noop
+$.noop = _.noop
 
-$$.now = _.now
+$.now = _.now
 
-$$.param = (require 'querystring').stringify
+$.param = (require 'querystring').stringify
 
-$$.parseJSON = JSON.parse
+$.parseJSON = JSON.parse
 
-$$.trim = _.trim
+$.trim = _.trim
 
-$$.type = (arg) ->
+$.type = (arg) ->
 
   type = Object::toString.call arg
   .replace /^\[object\s(.+)]$/, '$1'

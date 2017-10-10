@@ -1,4 +1,4 @@
-module.exports = $$ = {}
+module.exports = $ = {}
 
 _ = require 'lodash'
-$$._ = _
+$._ = _
