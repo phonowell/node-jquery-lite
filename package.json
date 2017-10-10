@@ -1,6 +1,6 @@
 {
   "name": "node-jquery-lite",
-  "version": "0.7.2",
+  "version": "0.8.0",
   "description": "A tiny plugin for nodejs to write lines in jQuery style.",
   "main": "./index.js",
   "scripts": {
@@ -23,8 +23,8 @@
   },
   "homepage": "https://github.com/phonowell/node-jquery-lite",
   "devDependencies": {
-    "fire-keeper": "0.0.72",
-    "mocha": "^3.5.3"
+    "fire-keeper": "0.0.74",
+    "mocha": "^4.0.1"
   },
   "dependencies": {
     "lodash": "^4.17.4"

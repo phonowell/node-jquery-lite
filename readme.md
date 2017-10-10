@@ -5,13 +5,13 @@ A tiny toy in order to write lines in jQuery style a little easier for Node.js.
 ## Install
 
 ```shell
-$ npm i node-jquery-lite
+npm i node-jquery-lite
 ```
 
 ## Usage
 
 ```coffeescript
-$ = require 'node-jquery-lite'
+$ = require('node-jquery-lite')()
 console.log $.now()
 ```
 
@@ -33,7 +33,7 @@ This project is **NOT STABLE**.
 ## Test
 
 ```shell
-$ npm test
+npm test
 ```
 
 ## Updates

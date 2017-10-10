@@ -1,5 +1,9 @@
 # UPDATES
 
+### v0.8.0 @ 10.11.2017
+
+- Rewrote `module.exports()`.
+
 ### v0.7.2 @ 9.25.2017
 
 - Updated package(s).
@@ -7,20 +11,14 @@
 ### v0.7.1 @ 9.3.2017
 
 - Rewrote `$.parseJSON()`.
-- Updated *gulp* files.
-- Updated *test* files.
 
 ### v0.7.0 @ 8.14.2017
 
 - Removed `$.Callbacks()`.
-- Updated *gulp* files.
-- Updated *test* files.
 
 ### v0.6.1 @ 7.31.2017
 
 - Updated `$.parseJSON()`.
-- Updated *gulp* files.
-- Updated *test* files.
 
 ### v0.6.0 @ 7.3.2017
 
@@ -31,14 +29,10 @@
 - Removed `$.post()`.
 - Removed `$.serialize()`.
 - Removed `$.when()`.
-- Updated *gulp* files.
-- Updated *test* files.
 
 ### v0.5.0 @ 3.3.2017
 
 - Required [Deferred](https://github.com/webspinner/Deferred) now.
-- Updated *gulp* files.
-- Updated *test* files.
 
 ### v0.4.1 @ 12.21.2016
 
@@ -59,8 +53,6 @@
 - Removed `$.shell()`.
 - Removed `$.timeStamp()`.
 - Removed `$.truncate()`.
-- Updated *gulp* files.
-- Updated *test* files.
 
 ### v0.3.17 @ 11.30.2016
 
@@ -68,34 +60,25 @@
 - Removed `$.parseTime()`.
 - Removed `$.timeString()`.
 - Rewrote `$.timeStamp()`.
-- Updated *gulp* files.
-- Updated *test* files.
 
 ### v0.3.16 @ 10.19.2016
 
 - Rewrote `$.parseString()`.
-- Updated *gulp* files.
-- Updated *test* files.
 
 ### v0.3.15 @ 10.17.2016
 
 - Rewrote `$.Callbacks()`.
 - Rewrote `$.Deferred()`.
 - Rewrote `$.when()`.
-- Updated *gulp* files.
-- Updated *test* files.
 
 ### v0.3.14 @ 9.15.2016
 
 - Did not require [colors.js](https://github.com/Marak/colors.js) now.
 - Added `$.serialize()`.
-- Updated *gulp* files.
-- Updated *test* files.
 
 ### v0.3.13 @ 5.3.2016
 
 - Removed `$.rnd()`.
-- Updated *test* files.
 
 ### v0.3.12 @ 4.13.2016
 
@@ -104,7 +87,6 @@
 ### v0.3.11 @ 3.16.2016
 
 - Updated `$.parseJson()`.
-- Updated *test* files.
 
 ### v0.3.10 @ 3.15.2016
 
@@ -118,7 +100,6 @@
 ### v0.3.8 @ 2.22.2016
 
 - Added `$.when()`.
-- Updated *test* files.
 
 ### v0.3.7 @ 2.19.2016
 
@@ -127,20 +108,16 @@
 - Rewrote `$.Callbacks()`.
 - Rewrote `$.Deferred()`.
 - Updated `$.info()`.
-- Updated *test* files.
 
 ### v0.3.6 @ 2.17.2016
 
 - Added `$.shell()`.
 - Updated `$.i()`.
 - Updated `$.info()`.
-- Updated *gulp* files.
 
 ### v0.3.5 @ 2.15.2016
 
 - Updated `$.info()`.
-- Updated *gulp* files.
-- Updated *test* files.
 - Removed useless files.
 
 ### v0.3.4 @ 2.14.2016
@@ -150,14 +127,11 @@
 - Rewrote `$.i()`.
 - Rewrote `$.info()`.
 - Rewrote `$.parseTime()`.
-- Updated *gulp* files.
-- Updated *test* files.
 
 ### v0.3.3 @ 11.18.2015
 
 - Rewrote `$.Callbacks()`.
 - Rewrote `$.type()`.
-- Updated *test* files.
 
 ### v0.3.2 @ 11.4.2015
 
@@ -166,13 +140,11 @@
 - Removed `$.env`.
 - Rewrote `$.get()`.
 - Rewrote `$.post()`.
-- Updated *test* files.
 
 ### v0.3.1 @ 10.28.2015
 
 - Added `$.noop()`.
 - Rewrote `$.type()`.
-- Updated *test* files.
 
 ### v0.3.0 @ 10.27.2015
 
@@ -196,7 +168,6 @@
 - Rewrote `$.timeStamp()`.
 - Rewrote `$.timeString()`.
 - Rewrote `$.try()`.
-- Added *test* files.
 
 ### v0.2.8 @ 1.19.2015
 

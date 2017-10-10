@@ -6,11 +6,10 @@ co = Promise.coroutine
 
 ###
 
-  build
-  lint
-  prepare
-  test
-  set
+  build()
+  lint()
+  test()
+  set(ver)
 
 ###
 
@@ -19,6 +18,7 @@ $$.task 'build', co ->
   yield $$.remove './index.js'
 
   yield $$.compile './source/index.coffee', './',
+    bare: true
     minify: false
 
 $$.task 'lint', co ->
@@ -31,12 +31,6 @@ $$.task 'lint', co ->
     './test/**/*.coffee'
   ]
 
-$$.task 'prepare', co ->
-
-  yield $$.remove './test/test.js'
-  yield $$.compile './test/test.coffee',
-    minify: false
-
 $$.task 'test', co ->
 
   yield $$.compile './test/**/*.coffee'
@@ -47,7 +41,9 @@ $$.task 'test', co ->
 
 $$.task 'set', co ->
 
-  if !(ver = $$.argv.version) then return
+  {ver} = $$.argv
+  if !ver
+    throw new Error 'empty ver'
 
   yield $$.replace './package.json'
   , /"version": "[\d.]+"/, "\"version\": \"#{ver}\""
