@@ -1,11 +1,13 @@
 (function() {
   var $, _;
 
-  module.exports = $ = {};
+  $ = {};
 
   _ = require('lodash');
 
   $._ = _;
+
+  module.exports = $;
 
 
   /*

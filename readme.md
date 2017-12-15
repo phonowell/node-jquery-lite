@@ -25,10 +25,6 @@ console.log $.now()
 - `$.parseJSON()`
 - `$.trim()`
 - `$.type()`
-    
-## Attention
-
-This project is **NOT STABLE**.
 
 ## Test
 

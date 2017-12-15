@@ -1,4 +1,10 @@
-# UPDATES
+# node-jquery-lite
+
+## UPDATES
+
+### v0.8.2 @ 12.15.2017
+
+- Updated project.
 
 ### v0.8.1 @ 10.11.2017
 

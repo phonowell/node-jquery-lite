@@ -1,6 +1,6 @@
 {
   "name": "node-jquery-lite",
-  "version": "0.8.1",
+  "version": "0.8.2",
   "description": "A tiny plugin for nodejs to write lines in jQuery style.",
   "main": "./index.js",
   "scripts": {
@@ -16,14 +16,14 @@
     "jquery"
   ],
   "author": "Mimiko Phonowell <phonowell@gmail.com>",
-  "license": "GPL",
+  "license": "MIT",
   "url": "https://github.com/phonowell/node-jquery-lite",
   "bugs": {
     "url": "https://github.com/phonowell/node-jquery-lite/issues"
   },
   "homepage": "https://github.com/phonowell/node-jquery-lite",
   "devDependencies": {
-    "fire-keeper": "0.0.79",
+    "fire-keeper": "0.0.86",
     "mocha": "^4.0.1"
   },
   "dependencies": {
