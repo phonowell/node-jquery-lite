@@ -1,48 +1,50 @@
 $$ = require 'fire-keeper'
-{_, Promise} = $$.library
-co = Promise.coroutine
+{_} = $$.library
 
 # task
 
 ###
 
-  build()
-  lint()
-  test()
-  set(ver)
+build()
+lint()
+test()
+set(ver)
 
 ###
 
-$$.task 'build', co ->
+$$.task 'build', ->
 
-  yield $$.remove './index.js'
+  await $$.remove './index.js'
 
-  yield $$.compile './source/index.coffee', './',
+  await $$.compile './source/index.coffee', './',
     minify: false
 
-$$.task 'lint', co ->
+$$.task 'lint', ->
 
-  yield $$.task('kokoro')()
+  await $$.task('kokoro')()
 
-  yield $$.lint [
+  await $$.lint [
     './gulpfile.coffee'
     './source/**/*.coffee'
     './test/**/*.coffee'
   ]
 
-$$.task 'test', co ->
+$$.task 'test', ->
 
-  yield $$.compile './test/**/*.coffee'
+  await $$.compile './test/**/*.coffee'
 
-  yield $$.shell 'npm test'
+  await $$.shell 'npm test'
 
-  yield $$.remove './test/**/*.js'
+  await $$.remove './test/**/*.js'
 
-$$.task 'set', co ->
+$$.task 'set', ->
 
   {ver} = $$.argv
   if !ver
     throw new Error 'empty ver'
 
-  yield $$.replace './package.json'
-  , /"version": "[\d.]+"/, "\"version\": \"#{ver}\""
+  pkg = './package.json'
+
+  data = await $$.read pkg
+  data.version = ver
+  await $$.write pkg, data

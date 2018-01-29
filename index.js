@@ -7,11 +7,11 @@
 
   $._ = _;
 
+  // return
   module.exports = $;
 
-
   /*
-  
+
     each()
     extend()
     noop()
@@ -20,8 +20,8 @@
     parseJSON(data)
     trim()
     type(arg)
-   */
 
+  */
   $.each = _.each;
 
   $.extend = _.extend;
