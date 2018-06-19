@@ -28,6 +28,7 @@ SUBJECT = [
   [1, 2, 3] # array
   {a: 1, b: 2} # object
   -> null # function
+  -> await new Promise (resolve) -> resolve() # async function
   new Date() # date
   new Error('All Right') # error
   new Buffer('String') # buffer
@@ -86,6 +87,7 @@ describe '$.type()', ->
     'array'
     'object'
     'function'
+    'async function'
     'date'
     'error'
     'buffer'

@@ -2,6 +2,10 @@
 
 ## UPDATES
 
+### v0.8.4 @ 6.19.2018
+
+- Updated `$.type()`.
+
 ### v0.8.3 @ 1.29.2018
 
 - Updated project.

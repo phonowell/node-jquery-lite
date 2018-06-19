@@ -4,26 +4,24 @@ $$ = require 'fire-keeper'
 # task
 
 ###
-
 build()
 lint()
 test()
 set(ver)
-
 ###
 
 $$.task 'build', ->
 
-  await $$.remove './index.js'
+  await $$.remove_ './index.js'
 
-  await $$.compile './source/index.coffee', './',
+  await $$.compile_ './source/index.coffee', './',
     minify: false
 
 $$.task 'lint', ->
 
   await $$.task('kokoro')()
 
-  await $$.lint [
+  await $$.lint_ [
     './gulpfile.coffee'
     './source/**/*.coffee'
     './test/**/*.coffee'
@@ -31,11 +29,11 @@ $$.task 'lint', ->
 
 $$.task 'test', ->
 
-  await $$.compile './test/**/*.coffee'
+  await $$.compile_ './test/**/*.coffee'
 
-  await $$.shell 'npm test'
+  await $$.shell_ 'npm test'
 
-  await $$.remove './test/**/*.js'
+  await $$.remove_ './test/**/*.js'
 
 $$.task 'set', ->
 
@@ -45,6 +43,6 @@ $$.task 'set', ->
 
   pkg = './package.json'
 
-  data = await $$.read pkg
+  data = await $$.read_ pkg
   data.version = ver
-  await $$.write pkg, data
+  await $$.write_ pkg, data

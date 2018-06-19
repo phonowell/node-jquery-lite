@@ -1,14 +1,12 @@
 ###
-
-  each()
-  extend()
-  noop()
-  now()
-  param()
-  parseJSON(data)
-  trim()
-  type(arg)
-
+each()
+extend()
+noop()
+now()
+param()
+parseJSON(data)
+trim()
+type(arg)
 ###
 
 $.each = _.each
@@ -31,6 +29,7 @@ $.type = (arg) ->
   .replace /^\[object\s(.+)]$/, '$1'
   .toLowerCase()
 
+  if type == 'asyncfunction' then return 'async function'
   if type == 'uint8array' then return 'buffer'
 
-  type
+  type # return
